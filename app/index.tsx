@@ -1,16 +1,19 @@
 import { Stack } from 'expo-router';
 
-import { Welcome } from '@/templates/Welcome';
+import HomePage from './components/HomePage';
 
-const Home = () => (
-  <>
-    <Stack.Screen
-      options={{
-        title: 'My home',
-      }}
-    />
-    <Welcome />
-  </>
-);
+const Home = () => {
+  const greeting = 'Hello from Home Page component';
+  return (
+    <>
+      <Stack.Screen
+        options={{
+          title: 'My home',
+        }}
+      />
+      <HomePage greeting={greeting} />
+    </>
+  );
+};
 
 export default Home;
