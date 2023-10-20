@@ -1,18 +1,27 @@
-import { Stack } from 'expo-router';
+import { useReducer } from 'react';
+import { SafeAreaView } from 'react-native';
+import { NativeRouter, Route, Routes } from 'react-router-native';
 
 import HomePage from './components/HomePage';
+import reducer from './services/reducerFunction';
+import appStyles from './services/styles/AppStyle';
 
 const Home = () => {
-  const greeting = 'Hello from Home Page component';
+  const [state, dispatch] = useReducer(reducer, {
+    carbon: 0,
+    greeting: 'Your carbon footprint',
+  });
   return (
-    <>
-      <Stack.Screen
-        options={{
-          title: 'My home',
-        }}
-      />
-      <HomePage greeting={greeting} />
-    </>
+    <NativeRouter>
+      <SafeAreaView style={appStyles.container}>
+        <Routes>
+          <Route
+            path="/"
+            element={<HomePage state={state} dispatch={dispatch} />}
+          />
+        </Routes>
+      </SafeAreaView>
+    </NativeRouter>
   );
 };
 

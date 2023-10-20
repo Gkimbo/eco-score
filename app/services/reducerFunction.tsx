@@ -1,9 +1,9 @@
 const reducer = (state: any, action: any) => {
   switch (action.type) {
-    case 'ADD_CLASS':
+    case 'CARBON':
       return {
         ...state,
-        classes: [...state.classes, action.payload],
+        carbon: state.carbon + action.payload,
       };
     case 'REMOVE_CLASS':
       return {
