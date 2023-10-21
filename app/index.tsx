@@ -62,13 +62,15 @@ const Home = () => {
                 element={<HomePage state={state} dispatch={dispatch} />}
               />
             ) : (
-              <Route
-                path="/"
-                element={<LandingPage state={state} dispatch={dispatch} />}
-              />
+              <>
+                <Route
+                  path="/"
+                  element={<LandingPage state={state} dispatch={dispatch} />}
+                />
+                <Route path="/sign-in" element={<SignIn />} />
+                <Route path="/sign-up" element={<SignUp />} />
+              </>
             )}
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
           </Routes>
         </SafeAreaView>
       </NativeRouter>

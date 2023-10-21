@@ -27,11 +27,17 @@ const LandingPageStyles = StyleSheet.create({
   logo: {
     width: heightLogo,
     height: heightLogo,
+    borderRadius: 80,
+    marginTop: 25,
+    marginBottom: 25,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
   title: {
     color: '#05375a',
     fontSize: 30,
     fontWeight: 'bold',
+    marginBottom: 5,
   },
   text: {
     color: 'grey',

@@ -5,6 +5,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigate } from 'react-router-native';
 
 import LandingPageStyles from '../../services/styles/LandingPageStyle';
+import SignUpForm from './forms/SignUpForm';
 
 const SignUp = () => {
   const { colors } = useTheme();
@@ -16,7 +17,13 @@ const SignUp = () => {
 
   return (
     <View style={LandingPageStyles.container}>
-      <Text style={LandingPageStyles.header}>Sign up page</Text>
+      <View>
+        <Text style={LandingPageStyles.header}>Sign up page</Text>
+        {/* <Image
+          source={require('../../../assets/photo-1542601906990-b4d3fb778b09.png')}
+          style={LandingPageStyles.logo}
+        /> */}
+      </View>
       <View style={LandingPageStyles.header}>
         <Animatable.View
           style={[
@@ -37,16 +44,12 @@ const SignUp = () => {
           >
             Sign Up Here!
           </Text>
-
-          <View style={LandingPageStyles.button}>
-            <TouchableOpacity onPress={handlePress}>
-              <View style={LandingPageStyles.signIn}>
-                <Text style={LandingPageStyles.text}>Have an Account?</Text>
-                <Text style={LandingPageStyles.textSign}>Back to sign in</Text>
-                <MaterialIcons name="navigate-next" color="black" size={25} />
-              </View>
-            </TouchableOpacity>
-          </View>
+          <SignUpForm />
+          <Text style={LandingPageStyles.text}>Already have an Account?</Text>
+          <TouchableOpacity onPress={handlePress}>
+            <Text style={LandingPageStyles.textSign}>Back to sign in</Text>
+            <MaterialIcons name="navigate-next" color="black" size={25} />
+          </TouchableOpacity>
         </Animatable.View>
       </View>
     </View>

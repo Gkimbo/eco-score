@@ -22,7 +22,10 @@ const LandingPage: React.FunctionComponent<IAppProps> = () => {
 
   return (
     <View style={LandingPageStyles.container}>
-      <Text style={LandingPageStyles.header}>Landing page</Text>
+      {/* <Image
+        source={require('../../assets/photo-1542601906990-b4d3fb778b09.png')}
+        style={LandingPageStyles.logo}
+      /> */}
       <View style={LandingPageStyles.header}>
         <Animatable.View
           style={[
