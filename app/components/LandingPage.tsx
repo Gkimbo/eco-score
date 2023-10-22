@@ -1,11 +1,13 @@
 import { useTheme } from '@react-navigation/native';
 import type React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigate } from 'react-router-native';
 
 import LandingPageStyles from '../services/styles/LandingPageStyle';
+
+const logoImage = require('../../assets/landing-photo.png');
 
 export interface IAppProps {
   state: any;
@@ -22,10 +24,7 @@ const LandingPage: React.FunctionComponent<IAppProps> = () => {
 
   return (
     <View style={LandingPageStyles.container}>
-      {/* <Image
-        source={require('../../assets/photo-1542601906990-b4d3fb778b09.png')}
-        style={LandingPageStyles.logo}
-      /> */}
+      <Image source={logoImage} style={LandingPageStyles.logo} />
       <View style={LandingPageStyles.header}>
         <Animatable.View
           style={[
@@ -45,6 +44,11 @@ const LandingPage: React.FunctionComponent<IAppProps> = () => {
             ]}
           >
             Whats Your Score?
+          </Text>
+          <Text style={LandingPageStyles.paragraph}>
+            Welcome to Eco Score! The first step towards a greener, more
+            sustainable future.{` Let's `}track, reduce, and revolutionize our
+            world together!
           </Text>
           <Text style={LandingPageStyles.text}>Sign in with your account</Text>
           <View style={LandingPageStyles.button}>

@@ -1,11 +1,14 @@
 import { useTheme } from '@react-navigation/native';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigate } from 'react-router-native';
 
+import formStyles from '../../services/styles/FormStyle';
 import LandingPageStyles from '../../services/styles/LandingPageStyle';
 import SignInForm from './forms/SignInForm';
+
+const logoImage = require('../../../assets/landing-photo.png');
 
 const SignIn = () => {
   const { colors } = useTheme();
@@ -17,13 +20,7 @@ const SignIn = () => {
 
   return (
     <View style={LandingPageStyles.container}>
-      <View>
-        <Text style={LandingPageStyles.header}>Sign in page</Text>
-        {/* <Image
-          source={require('../../../assets/photo-1542601906990-b4d3fb778b09.png')}
-          style={LandingPageStyles.logo}
-        /> */}
-      </View>
+      <Image source={logoImage} style={LandingPageStyles.logo} />
       <View style={LandingPageStyles.header}>
         <Animatable.View
           style={[
@@ -44,14 +41,18 @@ const SignIn = () => {
           >
             Sign In Here!
           </Text>
-
-          <SignInForm />
-          <Text style={LandingPageStyles.text}>Dont have and account?</Text>
-
-          <TouchableOpacity onPress={handlePress}>
-            <Text style={LandingPageStyles.textSign}>Sign Up Here</Text>
-            <MaterialIcons name="navigate-next" color="black" size={25} />
-          </TouchableOpacity>
+          <ScrollView contentContainerStyle={formStyles.container}>
+            <SignInForm />
+            <Text
+              style={LandingPageStyles.text}
+            >{`Don't have and account?`}</Text>
+            <TouchableOpacity onPress={handlePress}>
+              <View style={LandingPageStyles.buttonContainer}>
+                <Text style={LandingPageStyles.textSign}>Sign Up Here</Text>
+                <MaterialIcons name="navigate-next" color="black" size={25} />
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
         </Animatable.View>
       </View>
     </View>

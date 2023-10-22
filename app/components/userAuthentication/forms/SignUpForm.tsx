@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TextInput, TouchableOpacity } from 'react-native';
 
 import formStyles from '../../../services/styles/FormStyle';
 
@@ -19,7 +19,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <View>
+    <ScrollView contentContainerStyle={formStyles.container}>
       <TextInput
         {...register('firstName', { required: true, maxLength: 20 })}
         placeholder="First Name"
@@ -55,7 +55,7 @@ const SignUpForm = () => {
       <TouchableOpacity onPress={handleSubmit(onSubmit)}>
         <Text style={formStyles.button}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 

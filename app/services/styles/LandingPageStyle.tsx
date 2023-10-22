@@ -8,6 +8,8 @@ const widthScreen = height * 0.45;
 const LandingPageStyles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#009387',
   },
   header: {
@@ -33,20 +35,46 @@ const LandingPageStyles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+  logoReg: {
+    width: heightLogo * 0.3,
+    height: heightLogo * 0.3,
+    borderRadius: 20,
+    marginTop: 25,
+    marginBottom: 25,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
   title: {
     color: '#05375a',
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 5,
+    alignSelf: 'center',
   },
   text: {
     color: 'grey',
     marginTop: 5,
+    alignSelf: 'center',
   },
   button: {
     alignItems: 'flex-end',
     marginTop: 30,
   },
+
+  paragraph: {
+    marginTop: 40,
+    marginBottom: 40,
+    textAlign: 'justify',
+    color: 'black',
+    alignSelf: 'center',
+  },
+
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
   signIn: {
     width: 150,
     height: 40,

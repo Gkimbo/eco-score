@@ -1,11 +1,21 @@
 import { useTheme } from '@react-navigation/native';
-import { Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigate } from 'react-router-native';
 
+import formStyles from '../../services/styles/FormStyle';
 import LandingPageStyles from '../../services/styles/LandingPageStyle';
 import SignUpForm from './forms/SignUpForm';
+
+const logoImage = require('../../../assets/landing-photo.png');
 
 const SignUp = () => {
   const { colors } = useTheme();
@@ -16,14 +26,11 @@ const SignUp = () => {
   };
 
   return (
-    <View style={LandingPageStyles.container}>
-      <View>
-        <Text style={LandingPageStyles.header}>Sign up page</Text>
-        {/* <Image
-          source={require('../../../assets/photo-1542601906990-b4d3fb778b09.png')}
-          style={LandingPageStyles.logo}
-        /> */}
-      </View>
+    <KeyboardAvoidingView
+      style={LandingPageStyles.container}
+      behavior="padding"
+    >
+      <Image source={logoImage} style={LandingPageStyles.logoReg} />
       <View style={LandingPageStyles.header}>
         <Animatable.View
           style={[
@@ -44,15 +51,19 @@ const SignUp = () => {
           >
             Sign Up Here!
           </Text>
-          <SignUpForm />
-          <Text style={LandingPageStyles.text}>Already have an Account?</Text>
-          <TouchableOpacity onPress={handlePress}>
-            <Text style={LandingPageStyles.textSign}>Back to sign in</Text>
-            <MaterialIcons name="navigate-next" color="black" size={25} />
-          </TouchableOpacity>
+          <ScrollView contentContainerStyle={formStyles.container}>
+            <SignUpForm />
+            <Text style={LandingPageStyles.text}>Already have an Account?</Text>
+            <TouchableOpacity onPress={handlePress}>
+              <View style={LandingPageStyles.buttonContainer}>
+                <Text style={LandingPageStyles.textSign}>Back to sign in</Text>
+                <MaterialIcons name="navigate-next" color="black" size={25} />
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
         </Animatable.View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
