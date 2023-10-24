@@ -1,5 +1,12 @@
 import { useTheme } from '@react-navigation/native';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  KeyboardAvoidingView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigate } from 'react-router-native';
@@ -19,7 +26,10 @@ const SignIn = () => {
   };
 
   return (
-    <View style={LandingPageStyles.container}>
+    <KeyboardAvoidingView
+      style={LandingPageStyles.container}
+      behavior="padding"
+    >
       <Image source={logoImage} style={LandingPageStyles.logo} />
       <View style={LandingPageStyles.header}>
         <Animatable.View
@@ -55,7 +65,7 @@ const SignIn = () => {
           </ScrollView>
         </Animatable.View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
