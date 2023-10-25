@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
+const baseURL = 'http://localhost:3000';
 class FetchData {
-  static async get(endpoint: string) {
+  static async get(endpoint: any) {
     try {
-      const response = await fetch(endpoint);
+      const response = await fetch(baseURL + endpoint);
+      console.log('inside');
       if (!response.ok) {
         const error = new Error(`${response.status}(${response.statusText})`);
         throw error;

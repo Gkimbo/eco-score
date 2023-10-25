@@ -33,7 +33,6 @@ sessionRouter.post('/', (req, res, next) => {
 
 sessionRouter.get('/current', async (req, res) => {
   const message = 'Logging from the backend';
-  console.log(message);
   res.status(200).json({ message });
 });
 
