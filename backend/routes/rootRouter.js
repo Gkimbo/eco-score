@@ -1,8 +1,10 @@
-// const express = require('express');
-// const clientRouter = require('./clientRouter');
+const express = require('express');
+const clientRouter = require('./clientRouter');
+const userSessionsRouter = require('./api/v1/userSessionsRouter');
 
-// const rootRouter = new express.Router();
+const rootRouter = new express.Router();
 
-// rootRouter.use('/', clientRouter);
+rootRouter.use('/api/v1/user-sessions', userSessionsRouter);
+rootRouter.use('/', clientRouter);
 
-// module.exports = rootRouter;
+module.exports = rootRouter;

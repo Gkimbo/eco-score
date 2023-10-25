@@ -1,16 +1,4 @@
 {
-  "overrides": [
-    {
-      "files": ["*.js"],
-      "options": {
-        "parser": "babel"
-      }
-    },
-    {
-      "files": ["*.json"],
-      "options": {
-        "parser": "json"
-      }
-    }
-  ]
+	"semi": true,
+	"singleQuote": false
 }

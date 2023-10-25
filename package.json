@@ -1,5 +1,5 @@
 {
-  "name": "react-native-boilerplate",
+  "name": "eco-score",
   "version": "1.0.0",
   "main": "Main.tsx",
   "scripts": {
@@ -84,5 +84,10 @@
     "rimraf": "^5.0.1",
     "tailwindcss": "3.3.2",
     "typescript": "^5.1.6"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "prettier --write"
+    }
   }
 }

@@ -1,33 +1,38 @@
-import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
+import FetchData from '../../../services/fetchData';
 import formStyles from '../../../services/styles/FormStyle';
 
-interface IFormInput {
-  userName: string;
-  password: string;
-  age: number;
-}
+// interface IFormInput {
+//   userName: string;
+//   password: string;
+//   age: number;
+// }
 
 const SignInForm = () => {
-  const { register, handleSubmit } = useForm<IFormInput>();
-  const onSubmit = (data: IFormInput) => {
-    console.log(data);
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onSubmit = () => {
+    FetchData.get('/api/v1/user-sessions/current');
   };
 
   return (
     <View>
       <TextInput
-        {...register('userName', { required: true, maxLength: 20 })}
+        value={userName}
+        onChangeText={setUserName}
         placeholder="User Name"
         style={formStyles.input}
       />
       <TextInput
-        {...register('password', { pattern: /^[A-Za-z]+$/i })}
+        value={password}
+        onChangeText={setPassword}
         placeholder="Password"
         style={formStyles.input}
       />
-      <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+      <TouchableOpacity onPress={onSubmit}>
         <Text style={formStyles.button}>Sign In</Text>
       </TouchableOpacity>
     </View>

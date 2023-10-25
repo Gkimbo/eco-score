@@ -1,20 +1,24 @@
-// const express = require('express');
+/* eslint-disable no-console */
+/* eslint-disable no-unused-vars */
 
-// const router = new express.Router();
+const express = require('express');
 
-// const clientRoutes = ['/'];
-// // const authedClientRoutes = ['/profile'];
+const router = new express.Router();
 
-// // router.get(authedClientRoutes, (req, res) => {
-// //     if (req.user) {
-// //         res.sendFile(getClientIndexPath());
-// //     } else {
-// //         res.redirect('/user-sessions/new');
-// //     }
-// // });
+const clientRoutes = ['/'];
+// const authedClientRoutes = ['/profile'];
 
-// router.get(clientRoutes, (req, res) => {
-//     res.send('Hello from the client folder');
+// router.get(authedClientRoutes, (req, res) => {
+//     if (req.user) {
+//         res.sendFile(getClientIndexPath());
+//     } else {
+//         res.redirect('/user-sessions/new');
+//     }
 // });
 
-// module.exports = router;
+router.get(clientRoutes, (req, res) => {
+  console.log('Hello from the client folder');
+  res.send('<h1>Dont know if this worked<h1>');
+});
+
+module.exports = router;
