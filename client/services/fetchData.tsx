@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 
 class FetchData {
-	static async get() {
+	static async get(url: string) {
 		try {
-			const response = await fetch("http://localhost:3000/api/v1/test");
+			const response = await fetch("http://localhost:3000" + url);
 			if (!response.ok) {
 				const error = new Error("No data received");
 				throw error;

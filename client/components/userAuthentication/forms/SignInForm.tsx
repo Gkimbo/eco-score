@@ -16,7 +16,7 @@ const SignInForm = () => {
 	const [password, setPassword] = useState("");
 
 	const onSubmit = async () => {
-		const response = await FetchData.get();
+		const response = await FetchData.get("/api/v1/user-sessions/current");
 		console.log(response);
 	};
 
