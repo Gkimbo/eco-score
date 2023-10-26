@@ -1,18 +1,17 @@
 /* eslint-disable no-console */
-const baseURL = 'http://localhost:3000';
+
 class FetchData {
-  static async get(endpoint: any) {
+  static async get() {
     try {
-      const response = await fetch(baseURL + endpoint);
-      console.log('inside');
+      const response = await fetch('http://localhost:3000/api/v1/test');
       if (!response.ok) {
-        const error = new Error(`${response.status}(${response.statusText})`);
+        const error = new Error('No data received');
         throw error;
       }
       const responseData = await response.json();
       return responseData;
     } catch (error) {
-      return `Error in fetch!! ${error}`;
+      return error;
     }
   }
 }

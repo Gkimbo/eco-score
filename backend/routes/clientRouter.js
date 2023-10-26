@@ -18,7 +18,7 @@ const clientRoutes = ['/'];
 
 router.get(clientRoutes, (req, res) => {
   console.log('Hello from the client folder');
-  res.send('<h1>Dont know if this worked<h1>');
+  res.send('<h1>this worked<h1>');
 });
 
 module.exports = router;

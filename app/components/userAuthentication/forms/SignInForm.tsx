@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 
@@ -14,10 +15,9 @@ const SignInForm = () => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const onSubmit = () => {
-    FetchData.get('/api/v1/user-sessions/current').then((response) => {
-      console.log(response);
-    });
+  const onSubmit = async () => {
+    const response = await FetchData.get();
+    console.log(response);
   };
 
   return (
