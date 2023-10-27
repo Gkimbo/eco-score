@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 const express = require("express");
 const passport = require("passport");
-const { User } = require("../../../models");
+const User = require("../../../models/models/User");
 
 const sessionRouter = express.Router();
 
