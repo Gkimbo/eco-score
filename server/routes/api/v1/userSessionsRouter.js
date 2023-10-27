@@ -2,8 +2,9 @@
 /* eslint-disable no-unused-vars */
 const express = require("express");
 const passport = require("passport");
+const { User } = require("../../../models");
 
-const sessionRouter = new express.Router();
+const sessionRouter = express.Router();
 
 const isAuthenticated = (req, res, next) => {
 	if (req.isAuthenticated()) {
@@ -12,12 +13,24 @@ const isAuthenticated = (req, res, next) => {
 	res.status(401).json(undefined);
 };
 
-sessionRouter.post("/", passport.authenticate("local"), (req, res) => {
-	res.status(201).json(req.user);
+sessionRouter.post("/", passport.authenticate("local"), async (req, res) => {
+	try {
+		const user = await User.findOne({ where: { id: req.user.id } });
+		res.status(201).json(user);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Internal server error" });
+	}
 });
 
-sessionRouter.get("/current", isAuthenticated, (req, res) => {
-	res.status(200).json(req.user);
+sessionRouter.get("/current", isAuthenticated, async (req, res) => {
+	try {
+		const user = await User.findOne({ where: { id: req.user.id } });
+		res.status(200).json(user);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Internal server error" });
+	}
 });
 
 sessionRouter.delete("/", (req, res) => {

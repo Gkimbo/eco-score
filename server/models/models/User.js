@@ -2,10 +2,17 @@ const { Sequelize, DataTypes } = require("sequelize");
 const bcrypt = require("bcrypt");
 
 // Step 1: Create a new instance of the Sequelize class and define the database connection
-const sequelize = new Sequelize("mydatabase", "username", "password", {
-	host: "localhost",
-	dialect: "postgres",
-});
+
+const sequelize = new Sequelize(
+	"eco-score_development",
+	"postgres",
+	"password",
+	{
+		host: "localhost",
+		port: 5432,
+		dialect: "postgres",
+	}
+);
 
 // Step 2: Define the User model
 const User = sequelize.define("User", {

@@ -1,22 +1,19 @@
 const express = require("express");
-const User = require("../../../models/User");
+const { User } = require("../../../models");
 
-const usersRouter = new express.Router();
+const usersRouter = express.Router();
 
 usersRouter.post("/login", async (req, res) => {
 	try {
-		const { username, password } = req.body;
+		const { username, password, email } = req.body;
 
-		// Create a new user
-		const newUser = new User({
+		const newUser = await User.create({
 			username,
 			password,
+			email,
 		});
 
-		// Save the new user to the database
-		const savedUser = await newUser.save();
-
-		res.status(201).json(savedUser);
+		res.status(201).json(newUser);
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "Failed to create user" });
