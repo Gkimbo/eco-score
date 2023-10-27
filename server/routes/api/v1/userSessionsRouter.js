@@ -1,44 +1,41 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-vars */
-const express = require('express');
-// import passport from 'passport';
+const express = require("express");
+const passport = require("passport");
+const { User } = require("../../../models");
 
-const sessionRouter = new express.Router();
+const sessionRouter = express.Router();
 
-sessionRouter.post('/', (req, res, next) => {
-  // return passport.authenticate('local', (err, user) => {
-  //     if (err) {
-  //         // eslint-disable-next-line no-console
-  //         console.log(err);
-  //     }
+const isAuthenticated = (req, res, next) => {
+	if (req.isAuthenticated()) {
+		return next();
+	}
+	res.status(401).json(undefined);
+};
 
-  //     if (user) {
-  //         return req.login(user, () => {
-  //             return res.status(201).json(user);
-  //         });
-  //     }
-
-  return res.status(401).json(undefined);
-  // })(req, res, next);
+sessionRouter.post("/", passport.authenticate("local"), async (req, res) => {
+	try {
+		const user = await User.findOne({ where: { id: req.user.id } });
+		res.status(201).json(user);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Internal server error" });
+	}
 });
 
-// sessionRouter.get('/current', async (req, res) => {
-//     console.log(req);
-// if (req.user) {
-//     res.status(200).json(req.user);
-// } else {
-//     res.status(401).json(undefined);
-// }
-// });
-
-sessionRouter.get('/current', async (req, res) => {
-  const message = 'Logging from the backend';
-  res.status(200).json({ message });
+sessionRouter.get("/current", isAuthenticated, async (req, res) => {
+	try {
+		const user = await User.findOne({ where: { id: req.user.id } });
+		res.status(200).json(user);
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({ message: "Internal server error" });
+	}
 });
 
-sessionRouter.delete('/', (req, res) => {
-  req.logout();
-  res.status(200).json({ message: 'User signed out' });
+sessionRouter.delete("/", (req, res) => {
+	req.logout();
+	res.status(200).json({ message: "User signed out" });
 });
 
 module.exports = sessionRouter;
