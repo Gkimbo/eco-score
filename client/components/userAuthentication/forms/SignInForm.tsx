@@ -1,22 +1,21 @@
 /* eslint-disable no-console */
-import { useState } from "react";
+import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
 import FetchData from "../../../services/fetchData";
 import formStyles from "../../../services/styles/FormStyle";
-
-// interface IFormInput {
-//   userName: string;
-//   password: string;
-//   age: number;
-// }
 
 const SignInForm = () => {
 	const [userName, setUserName] = useState("");
 	const [password, setPassword] = useState("");
 
 	const onSubmit = async () => {
-		const response = await FetchData.get("/api/v1/user-sessions/current");
+		const loginData = {
+			userName: userName,
+			password: password,
+		};
+
+		const response = await FetchData.login(loginData);
 		console.log(response);
 	};
 
