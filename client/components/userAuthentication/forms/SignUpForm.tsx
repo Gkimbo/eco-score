@@ -17,7 +17,15 @@ interface IFormInput {
 	email: string;
 }
 
-const SignUpForm = () => {
+export interface IAppProps {
+	state: any;
+	dispatch: any;
+}
+
+const SignUpForm: React.FunctionComponent<IAppProps> = ({
+	state,
+	dispatch,
+}) => {
 	const [userName, setUserName] = useState("");
 	const [password, setPassword] = useState("");
 	const [email, setEmail] = useState("");
@@ -75,6 +83,7 @@ const SignUpForm = () => {
 		) {
 			setErrors([response]);
 		} else if (response.username) {
+			dispatch({ type: "CURRENT_USER", payload: response });
 			setRedirect(true);
 		}
 	};
