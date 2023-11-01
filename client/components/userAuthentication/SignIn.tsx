@@ -17,7 +17,12 @@ import SignInForm from "./forms/SignInForm";
 
 const logoImage = require("../../assets/landing-photo.png");
 
-const SignIn = () => {
+export interface IAppProps {
+	state: any;
+	dispatch: any;
+}
+
+const SignIn: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 	const { colors } = useTheme();
 	const navigate = useNavigate();
 
@@ -52,7 +57,7 @@ const SignIn = () => {
 						Sign In Here!
 					</Text>
 					<ScrollView contentContainerStyle={formStyles.container}>
-						<SignInForm />
+						<SignInForm state={state} dispatch={dispatch} />
 						<Text
 							style={LandingPageStyles.text}
 						>{`Don't have and account?`}</Text>

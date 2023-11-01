@@ -17,7 +17,12 @@ import SignUpForm from "./forms/SignUpForm";
 
 const logoImage = require("../../assets/landing-photo.png");
 
-const SignUp = () => {
+export interface IAppProps {
+	state: any;
+	dispatch: any;
+}
+
+const SignUp: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 	const { colors } = useTheme();
 	const navigate = useNavigate();
 
@@ -52,7 +57,7 @@ const SignUp = () => {
 						Sign Up Here!
 					</Text>
 					<ScrollView contentContainerStyle={formStyles.container}>
-						<SignUpForm />
+						<SignUpForm state={state} dispatch={dispatch} />
 						<Text style={LandingPageStyles.text}>Already have an Account?</Text>
 						<TouchableOpacity onPress={handlePress}>
 							<View style={LandingPageStyles.buttonContainer}>

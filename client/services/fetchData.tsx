@@ -6,6 +6,7 @@ interface IFormInput {
 	password: string;
 	email: string;
 }
+
 interface ILoginInput {
 	userName: string;
 	password: string;
@@ -38,7 +39,13 @@ class FetchData {
 				}),
 			});
 			if (!response.ok) {
-				throw new Error("Failed to login");
+				if (response.status === 401) {
+					return "Invalid password";
+				} else if (response.status === 404) {
+					return "That User Name does not exist, please sign up.";
+				} else {
+					throw new Error("Failed to login");
+				}
 			}
 			const responseData = await response.json();
 			return responseData;

@@ -1,5 +1,6 @@
 const getCurrentUser = async () => {
-	const response = await fetch("/api/v1/user-sessions/current", {
+	const baseURL = "http://localhost:3000";
+	const response = await fetch(`${baseURL}/api/v1/user-sessions/current`, {
 		headers: new Headers({
 			"Content-Type": "application/json",
 		}),

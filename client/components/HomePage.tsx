@@ -7,7 +7,6 @@ import SignOutButton from "./userAuthentication/SignoutButton";
 export interface IAppProps {
 	state: any;
 	dispatch: any;
-	user: any;
 }
 
 const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
