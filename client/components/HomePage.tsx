@@ -17,7 +17,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 
 	return (
 		<View style={homePageStyles.container}>
-			<SignOutButton />
+			<SignOutButton dispatch={dispatch} />
 			<Text style={homePageStyles.header}>{state.greeting}</Text>
 			<TouchableOpacity onPress={handlePress}>
 				<View style={homePageStyles.button}>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	ScrollView,
 	Text,
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-native";
 
 import FetchData from "../../../services/fetchData";
 import formStyles from "../../../services/styles/FormStyle";
+import { AuthContext } from "../../../services/AuthContext";
 
 interface IFormInput {
 	userName: string;
@@ -32,6 +33,8 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 	const [redirect, setRedirect] = useState(false);
 	const [errors, setErrors] = useState<string[]>([]);
 	const navigate = useNavigate();
+	const { login } = useContext(AuthContext);
+
 	const validate = () => {
 		const validationErrors: string[] = [];
 
@@ -82,8 +85,9 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 			response === "Username already exists"
 		) {
 			setErrors([response]);
-		} else if (response.username) {
-			dispatch({ type: "CURRENT_USER", payload: response });
+		} else if (response.user) {
+			dispatch({ type: "CURRENT_USER", payload: response.token });
+			login(response.token);
 			setRedirect(true);
 		}
 	};

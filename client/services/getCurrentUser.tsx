@@ -3,6 +3,7 @@ const getCurrentUser = async () => {
 	const response = await fetch(`${baseURL}/api/v1/user-sessions/current`, {
 		headers: new Headers({
 			"Content-Type": "application/json",
+			Authorization: `Bearer ${localStorage.getItem("token")}`,
 		}),
 	});
 	if (!response.ok) {
@@ -11,7 +12,7 @@ const getCurrentUser = async () => {
 		throw error;
 	}
 	const userData = await response.json();
-	return userData;
+	return userData.token;
 };
 
 export default getCurrentUser;

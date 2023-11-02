@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { useTheme } from "@react-navigation/native";
 import type React from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -5,6 +6,7 @@ import * as Animatable from "react-native-animatable";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { useNavigate } from "react-router-native";
 import LandingPageStyles from "../services/styles/LandingPageStyle";
+import { AuthContext } from "../services/AuthContext";
 
 const logoImage = require("../assets/landing-photo.png");
 
@@ -16,6 +18,7 @@ export interface IAppProps {
 const LandingPage: React.FunctionComponent<IAppProps> = () => {
 	const { colors } = useTheme();
 	const navigate = useNavigate();
+	const { user } = useContext(AuthContext);
 
 	const handlePress = () => {
 		navigate("/sign-in");

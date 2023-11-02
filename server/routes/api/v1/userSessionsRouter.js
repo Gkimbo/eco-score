@@ -4,16 +4,12 @@ const express = require("express");
 const passport = require("passport");
 const User = require("../../../models/models/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const UserSerializer = require("../../../serializers/userSerializer");
+const authenticateToken = require("../../../middleware/authenticatedToken");
 
 const sessionRouter = express.Router();
-
-const isAuthenticated = (req, res, next) => {
-	if (req.isAuthenticated()) {
-		return next();
-	}
-	res.status(401).json(undefined);
-};
+const secretKey = process.env.SESSION_SECRET;
 
 sessionRouter.post("/", passport.authenticate("local"), async (req, res) => {
 	try {
@@ -27,7 +23,6 @@ sessionRouter.post("/", passport.authenticate("local"), async (req, res) => {
 
 sessionRouter.post("/login", async (req, res) => {
 	const { username, password } = req.body;
-	console.log(req.body);
 
 	try {
 		const user = await User.findOne({ where: { username } });
@@ -40,7 +35,10 @@ sessionRouter.post("/login", async (req, res) => {
 						res.status(500).json({ message: "Internal server error" });
 					} else {
 						const serializedUser = UserSerializer.serializeOne(user);
-						return res.status(201).json({ user: serializedUser });
+						const token = jwt.sign({ userId: user.id }, secretKey, {
+							expiresIn: "1h",
+						});
+						return res.status(201).json({ user: serializedUser, token: token });
 					}
 				});
 			} else {
@@ -55,20 +53,23 @@ sessionRouter.post("/login", async (req, res) => {
 	}
 });
 
-sessionRouter.get("/current", async (req, res) => {
-	console.log("HELLOOOOOOOOOOO", req);
+sessionRouter.get("/current", authenticateToken, async (req, res) => {
 	try {
-		const user = await User.findOne({ where: { id: req.user.id } });
-		res.status(200).json(user);
+		const user = await User.findOne({ where: { id: req.userId } });
+		const token = jwt.sign({ userId: user.id }, secretKey, {
+			expiresIn: "1h",
+		});
+		res.status(200).json({ user, token });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ message: "Internal server error" });
 	}
 });
 
-sessionRouter.delete("/", (req, res) => {
-	req.logout();
-	res.status(200).json({ message: "User signed out" });
+sessionRouter.post("/logout", (req, res) => {
+	req.session.destroy();
+	res.clearCookie("token");
+	res.status(200).json({ message: "Logout successful" });
 });
 
 module.exports = sessionRouter;
