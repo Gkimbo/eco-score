@@ -1,6 +1,8 @@
 const express = require("express");
 const User = require("../../../models/models/User");
+const jwt = require("jsonwebtoken");
 const UserSerializer = require("../../../serializers/userSerializer");
+const secretKey = process.env.SESSION_SECRET;
 
 const usersRouter = express.Router();
 
@@ -18,7 +20,10 @@ usersRouter.post("/", async (req, res) => {
 					email,
 				});
 				const serializedUser = UserSerializer.serializeOne(newUser);
-				return res.status(201).json(serializedUser);
+				const token = jwt.sign({ userId: serializedUser.id }, secretKey, {
+					expiresIn: "1h",
+				});
+				return res.status(201).json({ user: serializedUser, token: token });
 			} else {
 				return res.status(410).json("Username already exists");
 			}

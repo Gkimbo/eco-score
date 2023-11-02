@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { ActivityIndicator, SafeAreaView, View } from "react-native";
 import { NativeRouter, Route, Routes } from "react-router-native";
 
@@ -9,6 +9,7 @@ import SignUp from "./components/userAuthentication/SignUp";
 import reducer from "./services/reducerFunction";
 import appStyles from "./services/styles/AppStyle";
 import getCurrentUser from "./services/getCurrentUser";
+import { AuthProvider } from "./services/AuthContext";
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -17,14 +18,12 @@ const Home = () => {
 		greeting: "Your carbon footprint",
 		currentUser: null,
 	});
-	console.log("THE LOGGED IN USER: ", state.currentUser);
 
 	const fetchCurrentUser = async () => {
 		try {
-			const user = await getCurrentUser();
-			dispatch({ type: "CURRENT_USER", payload: user });
+			const token = await getCurrentUser();
+			dispatch({ type: "CURRENT_USER", payload: { token } });
 		} catch (err) {
-			console.log("INSIDE");
 			dispatch({ type: "CURRENT_USER", payload: null });
 		}
 	};
@@ -45,31 +44,33 @@ const Home = () => {
 	}
 
 	return (
-		<NativeRouter>
-			<SafeAreaView style={appStyles.container}>
-				<Routes>
-					{state.currentUser ? (
+		<AuthProvider>
+			<NativeRouter>
+				<SafeAreaView style={appStyles.container}>
+					<Routes>
+						{state.currentUser ? (
+							<Route
+								path="/"
+								element={<HomePage state={state} dispatch={dispatch} />}
+							/>
+						) : (
+							<Route
+								path="/"
+								element={<LandingPage state={state} dispatch={dispatch} />}
+							/>
+						)}
 						<Route
-							path="/"
-							element={<HomePage state={state} dispatch={dispatch} />}
+							path="/sign-in"
+							element={<SignIn state={state} dispatch={dispatch} />}
 						/>
-					) : (
 						<Route
-							path="/"
-							element={<LandingPage state={state} dispatch={dispatch} />}
+							path="/sign-up"
+							element={<SignUp state={state} dispatch={dispatch} />}
 						/>
-					)}
-					<Route
-						path="/sign-in"
-						element={<SignIn state={state} dispatch={dispatch} />}
-					/>
-					<Route
-						path="/sign-up"
-						element={<SignUp state={state} dispatch={dispatch} />}
-					/>
-				</Routes>
-			</SafeAreaView>
-		</NativeRouter>
+					</Routes>
+				</SafeAreaView>
+			</NativeRouter>
+		</AuthProvider>
 	);
 };
 

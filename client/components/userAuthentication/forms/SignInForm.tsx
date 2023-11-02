@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useNavigate } from "react-router-native";
 
 import FetchData from "../../../services/fetchData";
 import formStyles from "../../../services/styles/FormStyle";
+import { AuthContext } from "../../../services/AuthContext";
 
 export interface IAppProps {
 	state: any;
@@ -20,6 +21,7 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 	const [redirect, setRedirect] = useState(false);
 	const [errors, setErrors] = useState<string[]>([]);
 	const navigate = useNavigate();
+	const { login } = useContext(AuthContext);
 
 	const validateForm = () => {
 		const validationErrors: string[] = [];
@@ -30,11 +32,12 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 			validationErrors.push("Please type your password");
 		}
 		setErrors(validationErrors);
+		return validationErrors.length === 0;
 	};
 
 	const onSubmit = async () => {
-		validateForm();
-		if (errors.length === 0) {
+		const isValid = validateForm();
+		if (isValid) {
 			const loginData = {
 				userName: userName,
 				password: password,
@@ -48,11 +51,10 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 				setErrors([response]);
 			}
 			if (response.user) {
-				console.log(response);
 				dispatch({ type: "CURRENT_USER", payload: response.user });
+				login(response.token);
 				setRedirect(true);
 			}
-			console.log(response);
 		}
 	};
 

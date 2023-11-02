@@ -1,35 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { useNavigate } from "react-router-native";
 
-const SignOutButton: React.FC = () => {
-	const [shouldRedirect, setShouldRedirect] = useState(false);
+export interface IAppProps {
+	dispatch: any;
+}
+
+const SignOutButton: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 	const navigate = useNavigate();
 
-	const signOut = async () => {
-		try {
-			const response = await fetch("/api/v1/user-sessions", {
-				method: "delete",
-				headers: {
-					"Content-Type": "application/json",
-				},
+	const signOut = () => {
+		fetch("http://localhost:3000/api/v1/user-sessions/logout", {
+			method: "POST",
+			credentials: "include",
+		})
+			.then((response) => {
+				if (response.ok) {
+					console.log("Successfully logged out");
+					localStorage.removeItem("token");
+					dispatch({ type: "CURRENT_USER", payload: null });
+				} else {
+					console.error("Failed to log out");
+				}
+			})
+			.catch((error) => {
+				console.error("An error occurred while logging out:", error);
 			});
-			if (!response.ok) {
-				const errorMessage = `${response.status} (${response.statusText})`;
-				const error = new Error(errorMessage);
-				throw error;
-			}
-			const respBody = await response.json();
-			setShouldRedirect(true);
-			return { status: "ok" };
-		} catch (err: any) {
-			console.error(`Error in fetch: ${err.message}`);
-		}
 	};
-
-	if (shouldRedirect) {
-		navigate("/");
-	}
 
 	return (
 		<TouchableOpacity style={styles.button} onPress={signOut}>
