@@ -1,12 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-	ScrollView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { ScrollView, Text, Pressable, View } from "react-native";
 import { useNavigate } from "react-router-native";
+import { TextInput } from "react-native-paper";
 
 import FetchData from "../../../services/fetchData";
 import formStyles from "../../../services/styles/FormStyle";
@@ -31,6 +26,7 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 	const [password, setPassword] = useState("");
 	const [email, setEmail] = useState("");
 	const [redirect, setRedirect] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const [errors, setErrors] = useState<string[]>([]);
 	const navigate = useNavigate();
 	const { login } = useContext(AuthContext);
@@ -111,19 +107,28 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 			)}
 
 			<TextInput
+				mode="outlined"
 				placeholder="User Name"
 				style={formStyles.input}
 				value={userName}
 				onChangeText={setUserName}
 			/>
 			<TextInput
-				placeholder="Password"
-				style={formStyles.input}
+				mode="outlined"
+				secureTextEntry={!showPassword}
 				value={password}
 				onChangeText={setPassword}
-				secureTextEntry
+				placeholder="Password"
+				right={
+					<TextInput.Icon
+						icon={showPassword ? "eye-off" : "eye"}
+						onPress={() => setShowPassword(!showPassword)}
+					/>
+				}
+				style={formStyles.input}
 			/>
 			<TextInput
+				mode="outlined"
 				placeholder="Email"
 				style={formStyles.input}
 				value={email}
@@ -131,9 +136,9 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 				keyboardType="email-address"
 			/>
 
-			<TouchableOpacity onPress={onSubmit}>
+			<Pressable onPress={onSubmit}>
 				<Text style={formStyles.button}>Register</Text>
-			</TouchableOpacity>
+			</Pressable>
 		</ScrollView>
 	);
 };

@@ -4,7 +4,7 @@ import {
 	KeyboardAvoidingView,
 	ScrollView,
 	Text,
-	TouchableOpacity,
+	Pressable,
 	View,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
@@ -59,12 +59,12 @@ const SignUp: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 					<ScrollView contentContainerStyle={formStyles.container}>
 						<SignUpForm state={state} dispatch={dispatch} />
 						<Text style={LandingPageStyles.text}>Already have an Account?</Text>
-						<TouchableOpacity onPress={handlePress}>
+						<Pressable onPress={handlePress}>
 							<View style={LandingPageStyles.buttonContainer}>
 								<Text style={LandingPageStyles.textSign}>Back to sign in</Text>
 								<MaterialIcons name="navigate-next" color="black" size={25} />
 							</View>
-						</TouchableOpacity>
+						</Pressable>
 					</ScrollView>
 				</Animatable.View>
 			</View>

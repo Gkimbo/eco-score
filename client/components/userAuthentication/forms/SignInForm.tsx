@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect, useContext } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, Pressable, View } from "react-native";
+import { TextInput } from "react-native-paper";
 import { useNavigate } from "react-router-native";
 
 import FetchData from "../../../services/fetchData";
@@ -20,6 +20,7 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 	const [password, setPassword] = useState("");
 	const [redirect, setRedirect] = useState(false);
 	const [errors, setErrors] = useState<string[]>([]);
+	const [showPassword, setShowPassword] = useState(false);
 	const navigate = useNavigate();
 	const { login } = useContext(AuthContext);
 
@@ -76,20 +77,29 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 				</View>
 			)}
 			<TextInput
+				mode="outlined"
 				value={userName}
 				onChangeText={setUserName}
 				placeholder="User Name"
 				style={formStyles.input}
 			/>
 			<TextInput
+				mode="outlined"
+				secureTextEntry={!showPassword}
 				value={password}
 				onChangeText={setPassword}
 				placeholder="Password"
+				right={
+					<TextInput.Icon
+						icon={showPassword ? "eye-off" : "eye"}
+						onPress={() => setShowPassword(!showPassword)}
+					/>
+				}
 				style={formStyles.input}
 			/>
-			<TouchableOpacity onPress={onSubmit}>
+			<Pressable onPress={onSubmit}>
 				<Text style={formStyles.button}>Sign In</Text>
-			</TouchableOpacity>
+			</Pressable>
 		</View>
 	);
 };

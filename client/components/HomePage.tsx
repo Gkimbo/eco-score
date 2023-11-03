@@ -1,8 +1,7 @@
 import type React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, Pressable, View } from "react-native";
 
 import homePageStyles from "../services/styles/HomePageStyle";
-import SignOutButton from "./userAuthentication/SignoutButton";
 
 export interface IAppProps {
 	state: any;
@@ -17,13 +16,18 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 
 	return (
 		<View style={homePageStyles.container}>
-			<SignOutButton dispatch={dispatch} />
 			<Text style={homePageStyles.header}>{state.greeting}</Text>
-			<TouchableOpacity onPress={handlePress}>
-				<View style={homePageStyles.button}>
-					<Text style={homePageStyles.text}>{state.carbon}</Text>
+			<Pressable onPress={handlePress}>
+				<View style={homePageStyles.circleContainer}>
+					<View
+						style={[
+							homePageStyles.circle,
+							{ height: `${Math.min(state.carbon, 100)}%` },
+						]}
+					/>
+					<Text style={homePageStyles.carbonText}>{state.carbon}</Text>
 				</View>
-			</TouchableOpacity>
+			</Pressable>
 		</View>
 	);
 };

@@ -6,8 +6,13 @@ import HomePage from "./components/HomePage";
 import LandingPage from "./components/LandingPage";
 import SignIn from "./components/userAuthentication/SignIn";
 import SignUp from "./components/userAuthentication/SignUp";
-import reducer from "./services/reducerFunction";
+import UserBasicInfoForm from "./components/calculationForms/UserBasicInfoForm";
+import BottomBar from "./components/navBar/BottomBar";
+
 import appStyles from "./services/styles/AppStyle";
+import homePageStyles from "./services/styles/HomePageStyle";
+
+import reducer from "./services/reducerFunction";
 import getCurrentUser from "./services/getCurrentUser";
 import { AuthProvider } from "./services/AuthContext";
 
@@ -15,7 +20,7 @@ const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [state, dispatch] = useReducer(reducer, {
 		carbon: 0,
-		greeting: "Your carbon footprint",
+		greeting: "Your Score!",
 		currentUser: null,
 	});
 
@@ -32,7 +37,7 @@ const Home = () => {
 		fetchCurrentUser();
 		setTimeout(() => {
 			setIsLoading(false);
-		}, 1000);
+		}, 2000);
 	}, []);
 
 	if (isLoading) {
@@ -49,10 +54,13 @@ const Home = () => {
 				<SafeAreaView style={appStyles.container}>
 					<Routes>
 						{state.currentUser ? (
-							<Route
-								path="/"
-								element={<HomePage state={state} dispatch={dispatch} />}
-							/>
+							<>
+								<Route
+									path="/"
+									element={<HomePage state={state} dispatch={dispatch} />}
+								/>
+								<Route path="/basic-form" element={<UserBasicInfoForm />} />
+							</>
 						) : (
 							<Route
 								path="/"
@@ -68,6 +76,11 @@ const Home = () => {
 							element={<SignUp state={state} dispatch={dispatch} />}
 						/>
 					</Routes>
+					{state.currentUser ? (
+						<View style={homePageStyles.bottomBarContainer}>
+							<BottomBar dispatch={dispatch} />
+						</View>
+					) : null}
 				</SafeAreaView>
 			</NativeRouter>
 		</AuthProvider>
