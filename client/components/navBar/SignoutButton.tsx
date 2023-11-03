@@ -17,9 +17,9 @@ const SignOutButton: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 		})
 			.then((response) => {
 				if (response.ok) {
-					console.log("Successfully logged out");
 					localStorage.removeItem("token");
 					dispatch({ type: "CURRENT_USER", payload: null });
+					navigate("/");
 				} else {
 					console.error("Failed to log out");
 				}
