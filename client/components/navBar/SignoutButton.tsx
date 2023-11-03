@@ -1,6 +1,7 @@
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { Pressable } from "react-native";
 import { useNavigate } from "react-router-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export interface IAppProps {
 	dispatch: any;
@@ -16,9 +17,9 @@ const SignOutButton: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 		})
 			.then((response) => {
 				if (response.ok) {
-					console.log("Successfully logged out");
 					localStorage.removeItem("token");
 					dispatch({ type: "CURRENT_USER", payload: null });
+					navigate("/");
 				} else {
 					console.error("Failed to log out");
 				}
@@ -29,9 +30,9 @@ const SignOutButton: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 	};
 
 	return (
-		<TouchableOpacity style={styles.button} onPress={signOut}>
-			<Text>Sign Out</Text>
-		</TouchableOpacity>
+		<Pressable style={styles.button} onPress={signOut}>
+			<Icon name="sign-out" size={20} color="white" />
+		</Pressable>
 	);
 };
 
@@ -39,12 +40,7 @@ const styles = {
 	button: {
 		backgroundColor: "blue",
 		padding: 10,
-		borderRadius: 5,
-	},
-	buttonText: {
-		color: "white",
-		fontSize: 16,
-		fontWeight: "bold",
+		borderRadius: 50,
 	},
 };
 
