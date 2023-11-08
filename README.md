@@ -50,7 +50,7 @@ npx sequelize-cli db:migrate:undo
 
 ```
 
-9. Create a `.env` file in the server of your project:
+7. Create a `.env` file in the server of your project:
    Run in the terminal
 
 ```bash
@@ -58,9 +58,9 @@ cd server
 touch .env
 ```
 
-10. Copy the keys from the .env.example file into it and add your own api keys.
+8. Copy the keys from the .env.example file into it and add your own api keys.
 
-11. Once you're done all that its time to launch the app
+9. Once you're done all that its time to launch the app
 
 ```bash
 cd client
@@ -75,7 +75,7 @@ cd server
 npm start
 ```
 
-12. Finally navigate to http://localhost:3000 in your browser and make sure you're all set!
+10. Finally navigate to http://localhost:3000 in your browser and make sure you're all set!
 
 ## 🌴 Technologies
 
