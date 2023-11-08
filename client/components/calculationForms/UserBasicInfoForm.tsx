@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-	ScrollView,
-	TextInput,
-	Switch,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Switch } from "react-native";
+import { TextInput } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 
 type UserBasicInfo = {
@@ -86,8 +80,9 @@ const UserBasicInfoForm = () => {
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
 			<Text style={styles.title}>User Basic Info form page</Text>
-			<Text>Where do you live?</Text>
+			<Text style={styles.subtitle}>Where do you live?</Text>
 			<TextInput
+				mode="outlined"
 				placeholder="Boston"
 				value={location}
 				onChangeText={handleLocationChange}
@@ -105,18 +100,19 @@ const UserBasicInfoForm = () => {
 			/>
 			<Text style={styles.subtitle}>What kind of car do you drive?</Text>
 			<TextInput
+				mode="outlined"
 				placeholder="Toyota Corolla"
 				value={car}
 				onChangeText={handleCarChange}
 				style={styles.input}
 			/>
-
+			<Text style={styles.subtitle}>How many miles do you drive?</Text>
 			<View style={styles.milesContainer}>
-				<Text style={styles.subtitle}>How many miles do you drive?</Text>
 				<TextInput
+					mode="outlined"
 					value={milesDriven}
 					onChangeText={handleMilesDrivenChange}
-					style={styles.input}
+					style={styles.unitInput}
 				/>
 
 				<RNPickerSelect
@@ -142,6 +138,7 @@ const UserBasicInfoForm = () => {
 						How many days a week do you commute?
 					</Text>
 					<TextInput
+						mode="outlined"
 						value={daysCommute}
 						onChangeText={handleDaysCommuteChange}
 						style={styles.input}
@@ -170,7 +167,9 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		marginBottom: 16,
-		backgroundColor: "grey",
+	},
+	modeInput: {
+		marginBottom: 30,
 	},
 	checkbox: {
 		marginBottom: 16,
@@ -182,7 +181,9 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		marginBottom: 8,
+		textAlign: "center",
 	},
+
 	milesContainer: {
 		flexDirection: "row",
 		alignItems: "center",
@@ -210,7 +211,7 @@ const pickerSelectStyles = StyleSheet.create({
 		paddingVertical: 8,
 		borderWidth: 1,
 		borderColor: "gray",
-		borderRadius: 8,
+		borderRadius: 4,
 		color: "black",
 	},
 });
