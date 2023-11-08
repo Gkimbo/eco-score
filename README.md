@@ -1,6 +1,6 @@
 <div align="center">
 
-# Eco Score![NPM version](https://img.shields.io/badge/npm-v8.19.2-blue)
+# Eco Score![NPM version](https://img.shields.io/badge/npm-v16.18.0-blue)
 
 Eco Score is a React Native application that empowers users to calculate and reduce their personal carbon footprint. The app offers personalized recommendations to lower environmental impact, while fostering social engagement by enabling users to compete with friends and family for the highest eco score and rewards.
 
