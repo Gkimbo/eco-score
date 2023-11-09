@@ -1,9 +1,18 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Switch } from "react-native";
+import React, { useState, useContext } from "react";
+import {
+	View,
+	Text,
+	StyleSheet,
+	ScrollView,
+	Switch,
+	Pressable,
+} from "react-native";
 import { TextInput } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
+import { AuthContext } from "../../services/AuthContext";
 
 type UserBasicInfo = {
+	user: any;
 	location: string;
 	homeOwnership: "rent" | "own";
 	car: string;
@@ -15,7 +24,9 @@ type UserBasicInfo = {
 };
 
 const UserBasicInfoForm = () => {
+	const { user } = useContext(AuthContext);
 	const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({
+		user: user,
 		location: "",
 		homeOwnership: "rent",
 		car: "",
@@ -77,81 +88,106 @@ const UserBasicInfoForm = () => {
 		setUserBasicInfo((prevState) => ({ ...prevState, daysCommute: text }));
 	};
 
+	const handleSubmit = async (event: any) => {
+		event.preventDefault();
+		try {
+			const response = await fetch("http://localhost:3000/api/v1/user-info", {
+				method: "post",
+				body: JSON.stringify(userBasicInfo),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				const error = new Error(`${response.status}(${response.statusText})`);
+				throw error;
+			}
+			const responseData = await response.json();
+			console.log(responseData);
+		} catch (err) {
+			console.log(err);
+		}
+	};
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
-			<Text style={styles.title}>User Basic Info form page</Text>
-			<Text style={styles.subtitle}>Where do you live?</Text>
-			<TextInput
-				mode="outlined"
-				placeholder="Boston"
-				value={location}
-				onChangeText={handleLocationChange}
-				style={styles.input}
-			/>
-			<Text style={styles.subtitle}>Do you rent or own?</Text>
-			<RNPickerSelect
-				value={homeOwnership}
-				onValueChange={handleHomeOwnershipChange}
-				style={pickerSelectStyles}
-				items={[
-					{ label: "Rent", value: "rent" },
-					{ label: "Own", value: "own" },
-				]}
-			/>
-			<Text style={styles.subtitle}>What kind of car do you drive?</Text>
-			<TextInput
-				mode="outlined"
-				placeholder="Toyota Corolla"
-				value={car}
-				onChangeText={handleCarChange}
-				style={styles.input}
-			/>
-			<Text style={styles.subtitle}>How many miles do you drive?</Text>
-			<View style={styles.milesContainer}>
+			<form onSubmit={handleSubmit}>
+				<Text style={styles.title}>User Basic Info form page</Text>
+				<Text style={styles.subtitle}>Where do you live?</Text>
 				<TextInput
 					mode="outlined"
-					value={milesDriven}
-					onChangeText={handleMilesDrivenChange}
-					style={styles.unitInput}
+					placeholder="Boston"
+					value={location}
+					onChangeText={handleLocationChange}
+					style={styles.input}
 				/>
-
+				<Text style={styles.subtitle}>Do you rent or own?</Text>
 				<RNPickerSelect
-					value={milesDrivenUnit}
-					onValueChange={handleMilesDrivenUnitChange}
+					value={homeOwnership}
+					onValueChange={handleHomeOwnershipChange}
 					style={pickerSelectStyles}
 					items={[
-						{ label: "Yearly", value: "yearly" },
-						{ label: "Monthly", value: "monthly" },
-						{ label: "Daily", value: "daily" },
+						{ label: "Rent", value: "rent" },
+						{ label: "Own", value: "own" },
 					]}
 				/>
-			</View>
-
-			<View style={styles.commuteContainer}>
-				<Text style={styles.subtitle}>Do you commute to work?</Text>
-				<Switch value={commute} onValueChange={handleCommuteChange} />
-			</View>
-
-			{commute && (
-				<>
-					<Text style={styles.subtitle}>
-						How many days a week do you commute?
-					</Text>
+				<Text style={styles.subtitle}>What kind of car do you drive?</Text>
+				<TextInput
+					mode="outlined"
+					placeholder="Toyota Corolla"
+					value={car}
+					onChangeText={handleCarChange}
+					style={styles.input}
+				/>
+				<Text style={styles.subtitle}>How many miles do you drive?</Text>
+				<View style={styles.milesContainer}>
 					<TextInput
 						mode="outlined"
-						value={daysCommute}
-						onChangeText={handleDaysCommuteChange}
-						style={styles.input}
+						value={milesDriven}
+						onChangeText={handleMilesDrivenChange}
+						style={styles.unitInput}
 					/>
-				</>
-			)}
 
-			<Text style={styles.subtitle}>Mode of transportation</Text>
-			<TextInput
-				value={transportation}
-				onChangeText={handleTransportationChange}
-				style={styles.input}
-			/>
+					<RNPickerSelect
+						value={milesDrivenUnit}
+						onValueChange={handleMilesDrivenUnitChange}
+						style={pickerSelectStyles}
+						items={[
+							{ label: "Yearly", value: "yearly" },
+							{ label: "Monthly", value: "monthly" },
+							{ label: "Daily", value: "daily" },
+						]}
+					/>
+				</View>
+
+				<View style={styles.commuteContainer}>
+					<Text style={styles.subtitle}>Do you commute to work?</Text>
+					<Switch value={commute} onValueChange={handleCommuteChange} />
+				</View>
+
+				{commute && (
+					<>
+						<Text style={styles.subtitle}>
+							How many days a week do you commute?
+						</Text>
+						<TextInput
+							mode="outlined"
+							value={daysCommute}
+							onChangeText={handleDaysCommuteChange}
+							style={styles.input}
+						/>
+					</>
+				)}
+
+				<Text style={styles.subtitle}>Mode of transportation</Text>
+				<TextInput
+					value={transportation}
+					onChangeText={handleTransportationChange}
+					style={styles.input}
+				/>
+				<Pressable onPress={handleSubmit}>
+					<Text>Submit</Text>
+				</Pressable>
+			</form>
 		</ScrollView>
 	);
 };
