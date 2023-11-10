@@ -2,7 +2,6 @@ const express = require("express");
 const User = require("../../../models/models/User");
 const jwt = require("jsonwebtoken");
 const UserSerializer = require("../../../serializers/userSerializer");
-// const authenticateToken = require("../../../middleware/authenticatedToken");
 
 const userInfoRouter = express.Router();
 const secretKey = process.env.SESSION_SECRET;
