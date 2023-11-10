@@ -36,7 +36,7 @@ sessionRouter.post("/login", async (req, res) => {
 					} else {
 						const serializedUser = UserSerializer.serializeOne(user);
 						const token = jwt.sign({ userId: user.id }, secretKey, {
-							expiresIn: "1h",
+							expiresIn: "8h",
 						});
 						return res.status(201).json({ user: serializedUser, token: token });
 					}

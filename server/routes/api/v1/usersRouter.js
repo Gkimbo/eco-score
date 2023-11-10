@@ -21,7 +21,7 @@ usersRouter.post("/", async (req, res) => {
 				});
 				const serializedUser = UserSerializer.serializeOne(newUser);
 				const token = jwt.sign({ userId: serializedUser.id }, secretKey, {
-					expiresIn: "1h",
+					expiresIn: "8h",
 				});
 				return res.status(201).json({ user: serializedUser, token: token });
 			} else {
