@@ -10,6 +10,7 @@ import {
 import { TextInput } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { AuthContext } from "../../services/AuthContext";
+import FetchData from "../../services/fetchData";
 
 type UserBasicInfo = {
 	user: any;
@@ -36,17 +37,6 @@ const UserBasicInfoForm = () => {
 		transportation: "",
 		daysCommute: "",
 	});
-
-	const {
-		location,
-		homeOwnership,
-		car,
-		milesDriven,
-		milesDrivenUnit,
-		commute,
-		transportation,
-		daysCommute,
-	} = userBasicInfo;
 
 	const handleLocationChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({ ...prevState, location: text }));
@@ -88,25 +78,11 @@ const UserBasicInfoForm = () => {
 		setUserBasicInfo((prevState) => ({ ...prevState, daysCommute: text }));
 	};
 
-	const handleSubmit = async (event: any) => {
+	const handleSubmit = (event: any) => {
 		event.preventDefault();
-		try {
-			const response = await fetch("http://localhost:3000/api/v1/user-info", {
-				method: "post",
-				body: JSON.stringify(userBasicInfo),
-				headers: {
-					"Content-Type": "application/json",
-				},
-			});
-			if (!response.ok) {
-				const error = new Error(`${response.status}(${response.statusText})`);
-				throw error;
-			}
-			const responseData = await response.json();
-			console.log(responseData);
-		} catch (err) {
-			console.log(err);
-		}
+		FetchData.addBasicInfo(userBasicInfo).then((response) => {
+			console.log(response);
+		});
 	};
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
@@ -116,13 +92,13 @@ const UserBasicInfoForm = () => {
 				<TextInput
 					mode="outlined"
 					placeholder="Boston"
-					value={location}
+					value={userBasicInfo.location}
 					onChangeText={handleLocationChange}
 					style={styles.input}
 				/>
 				<Text style={styles.subtitle}>Do you rent or own?</Text>
 				<RNPickerSelect
-					value={homeOwnership}
+					value={userBasicInfo.homeOwnership}
 					onValueChange={handleHomeOwnershipChange}
 					style={pickerSelectStyles}
 					items={[
@@ -134,7 +110,7 @@ const UserBasicInfoForm = () => {
 				<TextInput
 					mode="outlined"
 					placeholder="Toyota Corolla"
-					value={car}
+					value={userBasicInfo.car}
 					onChangeText={handleCarChange}
 					style={styles.input}
 				/>
@@ -142,13 +118,13 @@ const UserBasicInfoForm = () => {
 				<View style={styles.milesContainer}>
 					<TextInput
 						mode="outlined"
-						value={milesDriven}
+						value={userBasicInfo.milesDriven}
 						onChangeText={handleMilesDrivenChange}
 						style={styles.unitInput}
 					/>
 
 					<RNPickerSelect
-						value={milesDrivenUnit}
+						value={userBasicInfo.milesDrivenUnit}
 						onValueChange={handleMilesDrivenUnitChange}
 						style={pickerSelectStyles}
 						items={[
@@ -161,17 +137,20 @@ const UserBasicInfoForm = () => {
 
 				<View style={styles.commuteContainer}>
 					<Text style={styles.subtitle}>Do you commute to work?</Text>
-					<Switch value={commute} onValueChange={handleCommuteChange} />
+					<Switch
+						value={userBasicInfo.commute}
+						onValueChange={handleCommuteChange}
+					/>
 				</View>
 
-				{commute && (
+				{userBasicInfo.commute && (
 					<>
 						<Text style={styles.subtitle}>
 							How many days a week do you commute?
 						</Text>
 						<TextInput
 							mode="outlined"
-							value={daysCommute}
+							value={userBasicInfo.daysCommute}
 							onChangeText={handleDaysCommuteChange}
 							style={styles.input}
 						/>
@@ -180,7 +159,7 @@ const UserBasicInfoForm = () => {
 
 				<Text style={styles.subtitle}>Mode of transportation</Text>
 				<TextInput
-					value={transportation}
+					value={userBasicInfo.transportation}
 					onChangeText={handleTransportationChange}
 					style={styles.input}
 				/>
