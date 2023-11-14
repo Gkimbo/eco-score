@@ -2,6 +2,8 @@ const express = require("express");
 const User = require("../../../models/models/User");
 const jwt = require("jsonwebtoken");
 const UserSerializer = require("../../../serializers/userSerializer");
+const getCarbonIntensity = require("../../../services/getLocationCarbonIntensity");
+const CarCalculation = require("../../../services/CarClass");
 
 const userInfoRouter = express.Router();
 const secretKey = process.env.SESSION_SECRET;
