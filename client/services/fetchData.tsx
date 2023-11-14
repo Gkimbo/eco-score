@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import type { user } from "./types/userType";
 const baseURL = "http://localhost:3000";
 
 interface IFormInput {
@@ -10,6 +11,18 @@ interface IFormInput {
 interface ILoginInput {
 	userName: string;
 	password: string;
+}
+
+interface UserBasicInfo {
+	user: user;
+	location: string;
+	homeOwnership: string;
+	car: string;
+	milesDriven: string;
+	milesDrivenUnit: string;
+	commute: boolean;
+	transportation: string;
+	daysCommute: string;
 }
 
 class FetchData {
@@ -80,6 +93,26 @@ class FetchData {
 			return responseData;
 		} catch (error) {
 			return error;
+		}
+	}
+
+	static async addBasicInfo(data: UserBasicInfo) {
+		try {
+			const response = await fetch(baseURL + "/api/v1/user-info", {
+				method: "post",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				const error = new Error(`${response.status}(${response.statusText})`);
+				throw error;
+			}
+			const responseData = await response.json();
+			return responseData;
+		} catch (err) {
+			return err;
 		}
 	}
 }
