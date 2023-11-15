@@ -10,6 +10,7 @@ const secretKey = process.env.SESSION_SECRET;
 
 userInfoRouter.post("/", async (req, res) => {
 	const { token } = req.body.user;
+	console.log(req.body);
 	try {
 		const decodedToken = jwt.verify(token, secretKey);
 		const userId = decodedToken.userId;

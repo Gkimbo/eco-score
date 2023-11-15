@@ -17,12 +17,15 @@ interface UserBasicInfo {
 	user: user;
 	location: string;
 	homeOwnership: string;
-	car: string;
+	car: { make: string; model: string };
 	milesDriven: string;
 	milesDrivenUnit: string;
 	commute: boolean;
 	transportation: string;
 	daysCommute: string;
+	hasCar: boolean;
+	fuelType: string;
+	carBatterySize: string;
 }
 
 class FetchData {

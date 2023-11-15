@@ -16,12 +16,15 @@ type UserBasicInfo = {
 	user: any;
 	location: string;
 	homeOwnership: "rent" | "own";
-	car: string;
+	car: { make: string; model: string };
 	milesDriven: string;
 	milesDrivenUnit: "yearly" | "monthly" | "daily";
 	commute: boolean;
 	transportation: string;
 	daysCommute: string;
+	hasCar: boolean;
+	fuelType: string;
+	carBatterySize: string;
 };
 
 const UserBasicInfoForm = () => {
@@ -30,13 +33,17 @@ const UserBasicInfoForm = () => {
 		user: user,
 		location: "",
 		homeOwnership: "rent",
-		car: "",
+		car: { make: "", model: "" },
 		milesDriven: "",
 		milesDrivenUnit: "yearly",
 		commute: false,
 		transportation: "",
 		daysCommute: "",
+		hasCar: false,
+		fuelType: "gas",
+		carBatterySize: "68.6 kWh",
 	});
+	console.log(userBasicInfo);
 
 	const handleLocationChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({ ...prevState, location: text }));
@@ -49,12 +56,42 @@ const UserBasicInfoForm = () => {
 		}));
 	};
 
-	const handleCarChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, car: text }));
+	const handleCarMakeChange = (text: string) => {
+		setUserBasicInfo((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				make: text,
+			},
+		}));
+	};
+
+	const handleCarModelChange = (text: string) => {
+		setUserBasicInfo((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				model: text,
+			},
+		}));
 	};
 
 	const handleMilesDrivenChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({ ...prevState, milesDriven: text }));
+	};
+
+	const handleFuelTypeChange = (text: string) => {
+		setUserBasicInfo((prevState) => ({ ...prevState, fuelType: text }));
+	};
+
+	const handleCarBatterySizeChange = (text: string) => {
+		const value = text.replaceAll(/ kWh| Wh| kh| kW|kWh/g, "");
+		console.log(value);
+
+		setUserBasicInfo((prevState) => ({
+			...prevState,
+			carBatterySize: `${value} kWh`,
+		}));
 	};
 
 	const handleMilesDrivenUnitChange = (
@@ -67,6 +104,13 @@ const UserBasicInfoForm = () => {
 		setUserBasicInfo((prevState) => ({
 			...prevState,
 			commute: !prevState.commute,
+		}));
+	};
+
+	const handleHasCarChange = () => {
+		setUserBasicInfo((prevState) => ({
+			...prevState,
+			hasCar: !prevState.hasCar,
 		}));
 	};
 
@@ -91,7 +135,7 @@ const UserBasicInfoForm = () => {
 				<Text style={styles.subtitle}>Where do you live?</Text>
 				<TextInput
 					mode="outlined"
-					placeholder="Boston"
+					placeholder="Boston..."
 					value={userBasicInfo.location}
 					onChangeText={handleLocationChange}
 					style={styles.input}
@@ -106,34 +150,78 @@ const UserBasicInfoForm = () => {
 						{ label: "Own", value: "own" },
 					]}
 				/>
-				<Text style={styles.subtitle}>What kind of car do you drive?</Text>
-				<TextInput
-					mode="outlined"
-					placeholder="Toyota Corolla"
-					value={userBasicInfo.car}
-					onChangeText={handleCarChange}
-					style={styles.input}
-				/>
-				<Text style={styles.subtitle}>How many miles do you drive?</Text>
-				<View style={styles.milesContainer}>
-					<TextInput
-						mode="outlined"
-						value={userBasicInfo.milesDriven}
-						onChangeText={handleMilesDrivenChange}
-						style={styles.unitInput}
-					/>
-
-					<RNPickerSelect
-						value={userBasicInfo.milesDrivenUnit}
-						onValueChange={handleMilesDrivenUnitChange}
-						style={pickerSelectStyles}
-						items={[
-							{ label: "Yearly", value: "yearly" },
-							{ label: "Monthly", value: "monthly" },
-							{ label: "Daily", value: "daily" },
-						]}
+				<View style={styles.commuteContainer}>
+					<Text style={styles.subtitle}>Do you have a car?</Text>
+					<Switch
+						value={userBasicInfo.hasCar}
+						onValueChange={handleHasCarChange}
 					/>
 				</View>
+
+				{userBasicInfo.hasCar ? (
+					<View>
+						<Text style={styles.subtitle}>What kind of car do you drive?</Text>
+						<Text style={styles.smallTitle}>Make:</Text>
+
+						<TextInput
+							mode="outlined"
+							placeholder="Toyota..."
+							value={userBasicInfo.car.make}
+							onChangeText={handleCarMakeChange}
+							style={styles.input}
+						/>
+						<Text style={styles.smallTitle}>Model:</Text>
+						<TextInput
+							mode="outlined"
+							placeholder="Corolla..."
+							value={userBasicInfo.car.model}
+							onChangeText={handleCarModelChange}
+							style={styles.input}
+						/>
+						<Text style={styles.smallTitle}>Fuel Type:</Text>
+						<RNPickerSelect
+							value={userBasicInfo.fuelType}
+							onValueChange={handleFuelTypeChange}
+							style={pickerSelectStyles}
+							items={[
+								{ label: "Gas", value: "gas" },
+								{ label: "Diesel", value: "diesel" },
+								{ label: "Hybrid", value: "hybrid" },
+								{ label: "Electric", value: "electricity" },
+							]}
+						/>
+						{userBasicInfo.fuelType === "electricity" ? (
+							<>
+								<Text style={styles.smallTitle}>Battery Size:</Text>
+								<TextInput
+									mode="outlined"
+									value={`${userBasicInfo.carBatterySize}`}
+									onChangeText={handleCarBatterySizeChange}
+									style={styles.input}
+								/>
+							</>
+						) : null}
+						<Text style={styles.subtitle}>How many miles do you drive?</Text>
+						<View style={styles.milesContainer}>
+							<TextInput
+								mode="outlined"
+								value={userBasicInfo.milesDriven}
+								onChangeText={handleMilesDrivenChange}
+								style={styles.unitInput}
+							/>
+							<RNPickerSelect
+								value={userBasicInfo.milesDrivenUnit}
+								onValueChange={handleMilesDrivenUnitChange}
+								style={pickerSelectStyles}
+								items={[
+									{ label: "Yearly", value: "yearly" },
+									{ label: "Monthly", value: "monthly" },
+									{ label: "Daily", value: "daily" },
+								]}
+							/>
+						</View>
+					</View>
+				) : null}
 
 				<View style={styles.commuteContainer}>
 					<Text style={styles.subtitle}>Do you commute to work?</Text>
@@ -196,6 +284,12 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "bold",
 		marginBottom: 8,
+		textAlign: "center",
+	},
+	smallTitle: {
+		fontSize: 10,
+		fontWeight: "bold",
+		marginBottom: 4,
 		textAlign: "center",
 	},
 
