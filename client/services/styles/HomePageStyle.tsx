@@ -51,7 +51,6 @@ const homePageStyles = StyleSheet.create({
 		backgroundColor: "lightgray",
 		marginRight: 15,
 		marginLeft: 15,
-		marginBottom: 15,
 	},
 
 	logoutButton: {

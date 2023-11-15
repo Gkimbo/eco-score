@@ -51,7 +51,7 @@ const Home = () => {
 	return (
 		<AuthProvider>
 			<NativeRouter>
-				<SafeAreaView style={appStyles.container}>
+				<SafeAreaView style={{ ...appStyles.container, paddingBottom: 60 }}>
 					<Routes>
 						{state.currentUser ? (
 							<>
