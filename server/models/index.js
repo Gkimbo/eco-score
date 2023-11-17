@@ -7,6 +7,8 @@ const process = require("process");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
+const User = require("./models/User");
+const UserInformation = require("./models/UserInformation");
 const db = {};
 
 let sequelize;
@@ -37,6 +39,9 @@ fs.readdirSync(__dirname)
 		);
 		db[model.name] = model;
 	});
+
+User.hasMany(UserInformation, { foreignKey: "userId" });
+UserInformation.belongsTo(User, { foreignKey: "userId" });
 
 Object.keys(db).forEach((modelName) => {
 	if (db[modelName].associate) {
