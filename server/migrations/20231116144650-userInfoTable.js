@@ -4,24 +4,48 @@
 
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
-		await queryInterface.createTable("Users", {
+		await queryInterface.createTable("UserInformation", {
 			id: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 				autoIncrement: true,
 				primaryKey: true,
 			},
-			username: {
+			userId: {
+				type: Sequelize.INTEGER,
+				allowNull: false,
+				references: {
+					model: "Users", // name of the table
+					key: "id", // column in the table
+				},
+			},
+			location: {
 				type: Sequelize.STRING,
 				allowNull: false,
 				unique: true,
 			},
-			email: {
+			homeOwnership: {
 				type: Sequelize.STRING,
 				allowNull: false,
 				unique: true,
 			},
-			password: {
+			milesDriven: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			commute: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			transportation: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			daysCommute: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			hasCar: {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
@@ -39,8 +63,6 @@ module.exports = {
 	},
 
 	down: async (queryInterface, Sequelize) => {
-		await queryInterface.sequelize.query("SET CONSTRAINTS ALL DEFERRED");
-		await queryInterface.dropTable("Users");
-		await queryInterface.sequelize.query("SET CONSTRAINTS ALL IMMEDIATE");
+		await queryInterface.dropTable("UserInformation");
 	},
 };

@@ -1,8 +1,8 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const bcrypt = require("bcrypt");
+const UserInformation = require("./UserInformation");
 
 // Step 1: Create a new instance of the Sequelize class and define the database connection
-
 const sequelize = new Sequelize(
 	"eco-score_development",
 	"postgres",
@@ -51,14 +51,6 @@ User.prototype.validPassword = async function (password) {
 	}
 };
 
-// Step 5: Synchronize the models with the database
-sequelize
-	.sync()
-	.then(() => {
-		console.log("Database synchronized");
-	})
-	.catch((error) => {
-		console.error("Error synchronizing database:", error);
-	});
+// User.hasMany(UserInformation, { foreignKey: "userId" });
 
 module.exports = User;

@@ -1,4 +1,5 @@
 const axios = require("axios");
+const cheerio = require("cheerio");
 
 const carApiKey = process.env.API_NINJA_API_KEY;
 
