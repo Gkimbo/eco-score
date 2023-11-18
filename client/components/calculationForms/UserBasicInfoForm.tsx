@@ -14,39 +14,47 @@ import FetchData from "../../services/fetchData";
 
 type UserBasicInfo = {
 	user: any;
-	location: string;
+	zipcode: string;
 	homeOwnership: "rent" | "own";
-	car: { make: string; model: string };
+	car: {
+		make: string;
+		model: string;
+		year: string;
+		fuelType: string;
+		carBatterySize: string;
+	};
 	milesDriven: string;
 	milesDrivenUnit: "yearly" | "monthly" | "daily";
 	commute: boolean;
 	transportation: string;
 	daysCommute: string;
 	hasCar: boolean;
-	fuelType: string;
-	carBatterySize: string;
 };
 
 const UserBasicInfoForm = () => {
 	const { user } = useContext(AuthContext);
 	const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({
 		user: user,
-		location: "",
+		zipcode: "",
 		homeOwnership: "rent",
-		car: { make: "", model: "" },
+		car: {
+			make: "",
+			model: "",
+			year: "",
+			fuelType: "gas",
+			carBatterySize: "68.6 kWh",
+		},
 		milesDriven: "",
 		milesDrivenUnit: "yearly",
 		commute: false,
 		transportation: "",
 		daysCommute: "",
 		hasCar: false,
-		fuelType: "gas",
-		carBatterySize: "68.6 kWh",
 	});
 	console.log(userBasicInfo);
 
 	const handleLocationChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, location: text }));
+		setUserBasicInfo((prevState) => ({ ...prevState, zipcode: text }));
 	};
 
 	const handleHomeOwnershipChange = (value: string) => {
@@ -76,21 +84,38 @@ const UserBasicInfoForm = () => {
 		}));
 	};
 
+	const handleCarYearChange = (text: string) => {
+		setUserBasicInfo((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				year: text,
+			},
+		}));
+	};
+
 	const handleMilesDrivenChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({ ...prevState, milesDriven: text }));
 	};
 
 	const handleFuelTypeChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, fuelType: text }));
+		setUserBasicInfo((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				fuelType: text,
+			},
+		}));
 	};
 
 	const handleCarBatterySizeChange = (text: string) => {
 		const value = text.replaceAll(/ kWh| Wh| kh| kW|kWh/g, "");
-		console.log(value);
-
 		setUserBasicInfo((prevState) => ({
 			...prevState,
-			carBatterySize: `${value} kWh`,
+			car: {
+				...prevState.car,
+				carBatterySize: `${value} kWh`,
+			},
 		}));
 	};
 
@@ -135,8 +160,8 @@ const UserBasicInfoForm = () => {
 				<Text style={styles.subtitle}>Where do you live?</Text>
 				<TextInput
 					mode="outlined"
-					placeholder="Boston..."
-					value={userBasicInfo.location}
+					placeholder="Please Type your zipcode"
+					value={userBasicInfo.zipcode}
 					onChangeText={handleLocationChange}
 					style={styles.input}
 				/>
@@ -178,9 +203,17 @@ const UserBasicInfoForm = () => {
 							onChangeText={handleCarModelChange}
 							style={styles.input}
 						/>
+						<Text style={styles.smallTitle}>Year:</Text>
+						<TextInput
+							mode="outlined"
+							placeholder="2019"
+							value={userBasicInfo.car.year}
+							onChangeText={handleCarYearChange}
+							style={styles.input}
+						/>
 						<Text style={styles.smallTitle}>Fuel Type:</Text>
 						<RNPickerSelect
-							value={userBasicInfo.fuelType}
+							value={userBasicInfo.car.fuelType}
 							onValueChange={handleFuelTypeChange}
 							style={pickerSelectStyles}
 							items={[
@@ -190,12 +223,12 @@ const UserBasicInfoForm = () => {
 								{ label: "Electric", value: "electricity" },
 							]}
 						/>
-						{userBasicInfo.fuelType === "electricity" ? (
+						{userBasicInfo.car.fuelType === "electricity" ? (
 							<>
 								<Text style={styles.smallTitle}>Battery Size:</Text>
 								<TextInput
 									mode="outlined"
-									value={`${userBasicInfo.carBatterySize}`}
+									value={`${userBasicInfo.car.carBatterySize}`}
 									onChangeText={handleCarBatterySizeChange}
 									style={styles.input}
 								/>

@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 const express = require("express");
 const passport = require("passport");
-const User = require("../../../models/models/User");
+const { User } = require("../../../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const UserSerializer = require("../../../serializers/userSerializer");

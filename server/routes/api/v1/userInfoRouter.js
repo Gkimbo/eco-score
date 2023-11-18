@@ -1,10 +1,10 @@
 const express = require("express");
-const User = require("../../../models/models/User");
 const jwt = require("jsonwebtoken");
 const UserSerializer = require("../../../serializers/userSerializer");
 const getCarbonIntensity = require("../../../services/getLocationCarbonIntensity");
 const CarCalculation = require("../../../services/CarClass");
-const UserInformation = require("../../../models/models/UserInformation");
+const UserInfo = require("../../../services/UserInfoClass");
+const { User, UserInformation, UserCars } = require("../../../models");
 
 const userInfoRouter = express.Router();
 const secretKey = process.env.SESSION_SECRET;
@@ -12,7 +12,7 @@ const secretKey = process.env.SESSION_SECRET;
 userInfoRouter.post("/", async (req, res) => {
 	const { token } = req.body.user;
 	const {
-		location,
+		zipcode,
 		homeOwnership,
 		milesDriven,
 		milesDrivenUnit,
@@ -20,32 +20,41 @@ userInfoRouter.post("/", async (req, res) => {
 		transportation,
 		daysCommute,
 		hasCar,
-		fuelType,
-		carBatterySize,
 	} = req.body;
+	const { model, make, year, fuelType, carBatterySize } = req.body.car;
+
 	try {
 		const decodedToken = jwt.verify(token, secretKey);
 		const userId = decodedToken.userId;
-		const user = await User.findOne({ where: { id: userId } });
-		if (!user) {
-			return res.status(404).json({ error: "User not found" });
-		}
-		const serializedUser = UserSerializer.serializeOne(user);
-
-		// Add user's information to the UserInformation table
-		await UserInformation.create({
-			userId: userId,
-			location: location,
-			homeOwnership: homeOwnership,
-			milesDriven: milesDriven,
-			commute: commute,
-			transportation: transportation,
-			daysCommute: daysCommute,
-			hasCar: hasCar,
+		const user = await User.findOne({
+			where: { id: userId },
 		});
 
-		return res.status(200).json(serializedUser);
+		if (!user) {
+			const userInfo = await UserInfo.addUserInfoToDB({
+				userId,
+				zipcode,
+				homeOwnership,
+				milesDriven,
+				milesDrivenUnit,
+				commute,
+				transportation,
+				daysCommute,
+				hasCar,
+				make,
+				model,
+				year,
+				fuelType,
+				carBatterySize,
+			});
+			return res.status(201).json({ user });
+		} else {
+			return res
+				.status(208)
+				.json({ message: "user information already exists" });
+		}
 	} catch (error) {
+		console.log(error);
 		return res.status(401).json({ error: "Invalid or expired token" });
 	}
 });

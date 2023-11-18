@@ -15,17 +15,21 @@ interface ILoginInput {
 
 interface UserBasicInfo {
 	user: user;
-	location: string;
+	zipcode: string;
 	homeOwnership: string;
-	car: { make: string; model: string };
+	car: {
+		make: string;
+		model: string;
+		year: string;
+		fuelType: string;
+		carBatterySize: string;
+	};
 	milesDriven: string;
 	milesDrivenUnit: string;
 	commute: boolean;
 	transportation: string;
 	daysCommute: string;
 	hasCar: boolean;
-	fuelType: string;
-	carBatterySize: string;
 }
 
 class FetchData {

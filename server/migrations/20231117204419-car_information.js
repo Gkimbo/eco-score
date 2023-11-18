@@ -1,10 +1,9 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
-
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
-		await queryInterface.createTable("UserInformation", {
+		await queryInterface.createTable("UserCars", {
 			id: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
@@ -19,39 +18,25 @@ module.exports = {
 					key: "id", // column in the table
 				},
 			},
-			zipcode: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				unique: true,
-			},
-			homeOwnership: {
-				type: Sequelize.STRING,
-				allowNull: false,
-				unique: true,
-			},
-			milesDriven: {
+			make: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			milesDrivenUnit: {
+			model: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			commute: {
+			year: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			transportation: {
+			fuelType: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			daysCommute: {
+			carBatterySize: {
 				type: Sequelize.STRING,
 				allowNull: true,
-			},
-			hasCar: {
-				type: Sequelize.STRING,
-				allowNull: false,
 			},
 			createdAt: {
 				type: Sequelize.DATE,
@@ -67,6 +52,6 @@ module.exports = {
 	},
 
 	down: async (queryInterface, Sequelize) => {
-		await queryInterface.dropTable("UserInformation");
+		await queryInterface.dropTable("UserCars");
 	},
 };
