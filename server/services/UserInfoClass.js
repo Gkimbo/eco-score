@@ -11,41 +11,47 @@ class UserInfo {
 		transportation,
 		daysCommute,
 		hasCar,
-		make,
-		model,
-		year,
-		fuelType,
-		carBatterySize,
 	}) {
 		try {
 			const newUserInfo = await UserInformation.create({
 				userId: userId,
 				zipcode: zipcode,
 				homeOwnership: homeOwnership,
-				milesDriven: "400",
+				milesDriven: milesDriven,
 				commute: commute,
 				transportation: transportation,
 				daysCommute: daysCommute,
 				hasCar: hasCar,
 				milesDrivenUnit: milesDrivenUnit,
 			});
-			if (fuelType !== "electricity") {
-				carBatterySize = null;
-			}
 
-			await UserCars.create({
-				userId: userId,
-				make: make,
-				model: model,
-				year: year,
-				fuelType: fuelType,
-				carBatterySize: carBatterySize,
-			});
 			return newUserInfo;
 		} catch (error) {
 			console.error("Error adding user info: ", error);
 			throw error;
 		}
+	}
+
+	static async addCarToDB({
+		userId,
+		make,
+		model,
+		year,
+		fuelType,
+		carBatterySize,
+	}) {
+		if (fuelType !== "electricity") {
+			carBatterySize = null;
+		}
+
+		await UserCars.create({
+			userId: userId,
+			make: make,
+			model: model,
+			year: year,
+			fuelType: fuelType,
+			carBatterySize: carBatterySize,
+		});
 	}
 
 	static async updateUserInfo(id, data) {

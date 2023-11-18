@@ -41,11 +41,6 @@ userInfoRouter.post("/", async (req, res) => {
 				transportation,
 				daysCommute,
 				hasCar,
-				make,
-				model,
-				year,
-				fuelType,
-				carBatterySize,
 			});
 			return res.status(201).json({ user });
 		} else {
