@@ -9,7 +9,7 @@ const { User, UserInformation, UserCars } = require("../../../models");
 const userInfoRouter = express.Router();
 const secretKey = process.env.SESSION_SECRET;
 
-userInfoRouter.post("/", async (req, res) => {
+userInfoRouter.post("/basic", async (req, res) => {
 	const { token } = req.body.user;
 	const {
 		zipcode,
@@ -21,6 +21,34 @@ userInfoRouter.post("/", async (req, res) => {
 		daysCommute,
 		hasCar,
 	} = req.body;
+
+	try {
+		const decodedToken = jwt.verify(token, secretKey);
+		const userId = decodedToken.userId;
+		const user = await User.findOne({
+			where: { id: userId },
+		});
+
+		const userInfo = await UserInfo.addUserInfoToDB({
+			userId,
+			zipcode,
+			homeOwnership,
+			milesDriven,
+			milesDrivenUnit,
+			commute,
+			transportation,
+			daysCommute,
+			hasCar,
+		});
+		return res.status(201).json({ user });
+	} catch (error) {
+		console.log(error);
+		return res.status(401).json({ error: "Invalid or expired token" });
+	}
+});
+
+userInfoRouter.post("/car", async (req, res) => {
+	const { token } = req.body.user;
 	const { model, make, year, fuelType, carBatterySize } = req.body.car;
 
 	try {
@@ -30,24 +58,16 @@ userInfoRouter.post("/", async (req, res) => {
 			where: { id: userId },
 		});
 
-		if (!user) {
-			const userInfo = await UserInfo.addUserInfoToDB({
-				userId,
-				zipcode,
-				homeOwnership,
-				milesDriven,
-				milesDrivenUnit,
-				commute,
-				transportation,
-				daysCommute,
-				hasCar,
-			});
-			return res.status(201).json({ user });
-		} else {
-			return res
-				.status(208)
-				.json({ message: "user information already exists" });
-		}
+		const userInfo = await UserInfo.addCarToDB({
+			userId,
+			model,
+			make,
+			year,
+			fuelType,
+			carBatterySize,
+		});
+
+		return res.status(201).json({ user });
 	} catch (error) {
 		console.log(error);
 		return res.status(401).json({ error: "Invalid or expired token" });

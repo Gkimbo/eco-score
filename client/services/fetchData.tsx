@@ -17,6 +17,16 @@ interface UserBasicInfo {
 	user: user;
 	zipcode: string;
 	homeOwnership: string;
+	milesDriven: string;
+	milesDrivenUnit: string;
+	commute: boolean;
+	transportation: string;
+	daysCommute: string;
+	hasCar: boolean;
+}
+
+interface UserCarInfo {
+	user: user;
 	car: {
 		make: string;
 		model: string;
@@ -24,12 +34,6 @@ interface UserBasicInfo {
 		fuelType: string;
 		carBatterySize: string;
 	};
-	milesDriven: string;
-	milesDrivenUnit: string;
-	commute: boolean;
-	transportation: string;
-	daysCommute: string;
-	hasCar: boolean;
 }
 
 class FetchData {
@@ -105,7 +109,27 @@ class FetchData {
 
 	static async addBasicInfo(data: UserBasicInfo) {
 		try {
-			const response = await fetch(baseURL + "/api/v1/user-info", {
+			const response = await fetch(baseURL + "/api/v1/user-info/basic", {
+				method: "post",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				const error = new Error(`${response.status}(${response.statusText})`);
+				throw error;
+			}
+			const responseData = await response.json();
+			return responseData;
+		} catch (err) {
+			return err;
+		}
+	}
+
+	static async addCarInfo(data: UserCarInfo) {
+		try {
+			const response = await fetch(baseURL + "/api/v1/user-info/car", {
 				method: "post",
 				body: JSON.stringify(data),
 				headers: {

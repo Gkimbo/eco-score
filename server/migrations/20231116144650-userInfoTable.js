@@ -22,12 +22,10 @@ module.exports = {
 			zipcode: {
 				type: Sequelize.STRING,
 				allowNull: false,
-				unique: true,
 			},
 			homeOwnership: {
 				type: Sequelize.STRING,
 				allowNull: false,
-				unique: true,
 			},
 			milesDriven: {
 				type: Sequelize.STRING,

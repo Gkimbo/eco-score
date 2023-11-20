@@ -7,6 +7,7 @@ import LandingPage from "./components/LandingPage";
 import SignIn from "./components/userAuthentication/SignIn";
 import SignUp from "./components/userAuthentication/SignUp";
 import UserBasicInfoForm from "./components/calculationForms/UserBasicInfoForm";
+import UserCarInfoForm from "./components/calculationForms/UserCarInfoForm";
 import BottomBar from "./components/navBar/BottomBar";
 
 import appStyles from "./services/styles/AppStyle";
@@ -60,6 +61,7 @@ const Home = () => {
 									element={<HomePage state={state} dispatch={dispatch} />}
 								/>
 								<Route path="/basic-form" element={<UserBasicInfoForm />} />
+								<Route path="/car-form" element={<UserCarInfoForm />} />
 							</>
 						) : (
 							<Route
