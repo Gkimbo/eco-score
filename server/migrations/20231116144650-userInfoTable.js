@@ -17,6 +17,7 @@ module.exports = {
 				references: {
 					model: "Users", // name of the table
 					key: "id", // column in the table
+					onDelete: "CASCADE", // cascade deletes
 				},
 			},
 			zipcode: {
