@@ -1,8 +1,42 @@
 import { Dimensions, StyleSheet } from "react-native";
 const { width } = Dimensions.get("window");
+const colors = ["red", "orange", "grey", "green"];
 
 const homePageStyles = StyleSheet.create({
 	container: {
+		flex: 1,
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	leftContainer: {
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center",
+		marginRight: 20,
+	},
+	rightContainer: {
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center",
+		marginLeft: 20,
+	},
+	leftAndCenterContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	centerAndRightContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+	},
+	iconWithNumber: {
+		alignItems: "center",
+		marginBottom: 10,
+		borderRadius: 100,
+		backgroundColor: "lightgreen",
+		width: 40,
+	},
+	centerContainer: {
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
@@ -28,7 +62,6 @@ const homePageStyles = StyleSheet.create({
 		borderRadius: 100,
 		backgroundColor: "green",
 	},
-
 	carbonText: {
 		fontSize: 48,
 		color: "white",
@@ -52,7 +85,6 @@ const homePageStyles = StyleSheet.create({
 		marginRight: 15,
 		marginLeft: 15,
 	},
-
 	logoutButton: {
 		backgroundColor: "red",
 		padding: 10,

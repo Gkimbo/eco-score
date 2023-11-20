@@ -21,9 +21,9 @@ const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [state, dispatch] = useReducer(reducer, {
 		carbon: 0,
-		greeting: "Your Score!",
 		currentUser: null,
 		cars: null,
+		userInformation: null,
 	});
 
 	const fetchCurrentUser = async () => {
