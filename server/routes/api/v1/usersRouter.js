@@ -1,5 +1,5 @@
 const express = require("express");
-const User = require("../../../models/models/User");
+const { User } = require("../../../models");
 const jwt = require("jsonwebtoken");
 const UserSerializer = require("../../../serializers/userSerializer");
 const secretKey = process.env.SESSION_SECRET;

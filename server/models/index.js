@@ -7,8 +7,6 @@ const process = require("process");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
-const User = require("./models/User");
-const UserInformation = require("./models/UserInformation");
 const db = {};
 
 let sequelize;
@@ -23,6 +21,8 @@ if (config.use_env_variable) {
 	);
 }
 
+// Require all models
+const models = {};
 fs.readdirSync(__dirname)
 	.filter((file) => {
 		return (
@@ -37,19 +37,17 @@ fs.readdirSync(__dirname)
 			sequelize,
 			Sequelize.DataTypes
 		);
-		db[model.name] = model;
+		models[model.name] = model;
 	});
 
-User.hasMany(UserInformation, { foreignKey: "userId" });
-UserInformation.belongsTo(User, { foreignKey: "userId" });
-
-Object.keys(db).forEach((modelName) => {
-	if (db[modelName].associate) {
-		db[modelName].associate(db);
+// Associate models
+Object.keys(models).forEach((modelName) => {
+	if (models[modelName].associate) {
+		models[modelName].associate(models);
 	}
 });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+module.exports = models;

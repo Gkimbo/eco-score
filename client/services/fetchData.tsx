@@ -15,17 +15,25 @@ interface ILoginInput {
 
 interface UserBasicInfo {
 	user: user;
-	location: string;
+	zipcode: string;
 	homeOwnership: string;
-	car: { make: string; model: string };
 	milesDriven: string;
 	milesDrivenUnit: string;
 	commute: boolean;
 	transportation: string;
 	daysCommute: string;
 	hasCar: boolean;
-	fuelType: string;
-	carBatterySize: string;
+}
+
+interface UserCarInfo {
+	user: user;
+	car: {
+		make: string;
+		model: string;
+		year: string;
+		fuelType: string;
+		carBatterySize: string;
+	};
 }
 
 class FetchData {
@@ -101,7 +109,27 @@ class FetchData {
 
 	static async addBasicInfo(data: UserBasicInfo) {
 		try {
-			const response = await fetch(baseURL + "/api/v1/user-info", {
+			const response = await fetch(baseURL + "/api/v1/user-info/basic", {
+				method: "post",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				const error = new Error(`${response.status}(${response.statusText})`);
+				throw error;
+			}
+			const responseData = await response.json();
+			return responseData;
+		} catch (err) {
+			return err;
+		}
+	}
+
+	static async addCarInfo(data: UserCarInfo) {
+		try {
+			const response = await fetch(baseURL + "/api/v1/user-info/car", {
 				method: "post",
 				body: JSON.stringify(data),
 				headers: {

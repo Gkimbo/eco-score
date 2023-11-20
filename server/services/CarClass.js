@@ -4,7 +4,7 @@ const cheerio = require("cheerio");
 const carApiKey = process.env.API_NINJA_API_KEY;
 
 class CarCalculation {
-	static async getCarInformation(model, fuelType, year) {
+	static async getUserCars(model, fuelType, year) {
 		try {
 			const response = await axios.get(
 				`https://api.api-ninjas.com/v1/cars?limit=50&model=${model}&fuel_type=${fuelType}&year=${year}`,
