@@ -8,7 +8,7 @@ import SignIn from "./components/userAuthentication/SignIn";
 import SignUp from "./components/userAuthentication/SignUp";
 import UserBasicInfoForm from "./components/calculationForms/UserBasicInfoForm";
 import UserCarInfoForm from "./components/calculationForms/UserCarInfoForm";
-import BottomBar from "./components/navBar/BottomBar";
+import TopBar from "./components/navBar/TopBar";
 
 import appStyles from "./services/styles/AppStyle";
 import homePageStyles from "./services/styles/HomePageStyle";
@@ -80,8 +80,8 @@ const Home = () => {
 						/>
 					</Routes>
 					{state.currentUser ? (
-						<View style={homePageStyles.bottomBarContainer}>
-							<BottomBar dispatch={dispatch} />
+						<View style={homePageStyles.topBarContainer}>
+							<TopBar dispatch={dispatch} />
 						</View>
 					) : null}
 				</SafeAreaView>

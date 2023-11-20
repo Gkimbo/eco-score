@@ -71,20 +71,21 @@ const homePageStyles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: "center",
 	},
-	bottomBarContainer: {
+	topBarContainer: {
 		position: "absolute",
-		bottom: 0,
+		top: 0,
 		left: 0,
 		right: 0,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 		padding: 10,
-		borderRadius: 30,
+		borderRadius: 5,
 		backgroundColor: "lightgray",
-		marginRight: 15,
-		marginLeft: 15,
+		marginRight: 1,
+		marginLeft: 1,
 	},
+
 	logoutButton: {
 		backgroundColor: "red",
 		padding: 10,

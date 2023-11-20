@@ -6,7 +6,9 @@ const widthScreen = height * 0.3;
 
 const UserFormStyles = StyleSheet.create({
 	container: {
-		padding: 16,
+		marginTop: 85,
+		marginLeft: 15,
+		marginRight: 15,
 	},
 	title: {
 		fontSize: 18,

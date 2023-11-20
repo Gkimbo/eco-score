@@ -1,4 +1,3 @@
-import { View, StyleSheet } from "react-native";
 import React from "react";
 
 import SignOutButton from "./SignoutButton";
@@ -10,7 +9,7 @@ export interface IAppProps {
 	dispatch: any;
 }
 
-const BottomBar: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
+const TopBar: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 	return (
 		<>
 			<HomeButton />
@@ -21,4 +20,4 @@ const BottomBar: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 	);
 };
 
-export default BottomBar;
+export default TopBar;

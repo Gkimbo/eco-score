@@ -5,7 +5,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
-import pickerSelectStyles from "../../services/styles/pickerSelectStyles";
+import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
 
 type UserCarInfoForm = {
 	user: any;
