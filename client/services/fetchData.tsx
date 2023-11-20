@@ -37,9 +37,13 @@ interface UserCarInfo {
 }
 
 class FetchData {
-	static async get(url: string) {
+	static async get(url: string, user: user) {
 		try {
-			const response = await fetch(baseURL + url);
+			const response = await fetch(baseURL + url, {
+				headers: {
+					authorization: `${user.token}`,
+				},
+			});
 			if (!response.ok) {
 				throw new Error("No data received");
 			}

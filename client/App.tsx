@@ -23,6 +23,7 @@ const Home = () => {
 		carbon: 0,
 		greeting: "Your Score!",
 		currentUser: null,
+		cars: null,
 	});
 
 	const fetchCurrentUser = async () => {

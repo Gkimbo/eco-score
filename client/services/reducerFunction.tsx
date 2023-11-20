@@ -20,6 +20,16 @@ const reducer = (state: any, action: any) => {
 				...state,
 				currentUser: action.payload,
 			};
+		case "USER_CAR":
+			return {
+				...state,
+				cars: action.payload,
+			};
+		case "USER_INFO":
+			return {
+				...state,
+				userInformation: action.payload,
+			};
 		default:
 			throw new Error();
 	}
