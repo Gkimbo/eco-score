@@ -1,7 +1,6 @@
 class UserInfoSerializer {
 	static serializeArray(info) {
 		const allowedAttributes = [
-			"zipcode",
 			"homeOwnership",
 			"milesDriven",
 			"milesDrivenUnit",

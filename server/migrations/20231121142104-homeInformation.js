@@ -1,10 +1,9 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
-
 module.exports = {
 	up: async (queryInterface, Sequelize) => {
-		await queryInterface.createTable("UserInformation", {
+		await queryInterface.createTable("UserHomes", {
 			id: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
@@ -17,36 +16,51 @@ module.exports = {
 				references: {
 					model: "Users", // name of the table
 					key: "id", // column in the table
-					onDelete: "CASCADE", // cascade deletes
 				},
 			},
-			homeOwnership: {
+			zipcode: {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
-			milesDriven: {
+			yearBuilt: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			milesDrivenUnit: {
+			heatSource: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			commute: {
+			airConditioning: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			transportation: {
+			airConditioningSource: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			daysCommute: {
+			squareFeet: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			hasCar: {
+			electricitySource: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			electricityUsage: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			recycling: {
 				type: Sequelize.STRING,
 				allowNull: false,
+			},
+			compost: {
+				type: Sequelize.STRING,
+				allowNull: false,
+			},
+			ovenType: {
+				type: Sequelize.STRING,
+				allowNull: true,
 			},
 			createdAt: {
 				type: Sequelize.DATE,
@@ -62,6 +76,6 @@ module.exports = {
 	},
 
 	down: async (queryInterface, Sequelize) => {
-		await queryInterface.dropTable("UserInformation");
+		await queryInterface.dropTable("UserHomes");
 	},
 };

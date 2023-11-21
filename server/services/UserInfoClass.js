@@ -1,9 +1,8 @@
-const { User, UserCars, UserInformation } = require("../models");
+const { User, UserCars, UserInformation, UserHomes } = require("../models");
 
 class UserInfo {
 	static async addUserInfoToDB({
 		userId,
-		zipcode,
 		homeOwnership,
 		milesDriven,
 		milesDrivenUnit,
@@ -15,7 +14,6 @@ class UserInfo {
 		try {
 			const newUserInfo = await UserInformation.create({
 				userId: userId,
-				zipcode: zipcode,
 				homeOwnership: homeOwnership,
 				milesDriven: milesDriven,
 				commute: commute,
@@ -54,6 +52,35 @@ class UserInfo {
 		});
 	}
 
+	static async addHomeToDB({
+		userId,
+		zipcode,
+		yearBuilt,
+		heatSource,
+		airConditioning,
+		airConditioningSource,
+		squareFeet,
+		electricitySource,
+		electricityUsage,
+		recycling,
+		compost,
+		ovenType,
+	}) {
+		await UserHomes.create({
+			userId: userId,
+			zipcode: zipcode,
+			yearBuilt: yearBuilt,
+			heatSource: heatSource,
+			airConditioning: airConditioning,
+			airConditioningSource: airConditioningSource,
+			squareFeet: squareFeet,
+			electricitySource: electricitySource,
+			electricityUsage: electricityUsage,
+			recycling: recycling,
+			compost: compost,
+			ovenType: ovenType,
+		});
+	}
 	static async updateUserInfo(id, data) {
 		try {
 			const updatedUserInfo = await UserInformation.update(data, {

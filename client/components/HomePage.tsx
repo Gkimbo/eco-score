@@ -22,6 +22,10 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 				type: "USER_INFO",
 				payload: response.user.info,
 			});
+			dispatch({
+				type: "USER_HOME",
+				payload: response.user.homes,
+			});
 		});
 	}, []);
 

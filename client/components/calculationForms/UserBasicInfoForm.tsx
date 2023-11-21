@@ -39,7 +39,6 @@ const UserBasicInfoForm = () => {
 		daysCommute: "",
 		hasCar: false,
 	});
-	console.log(userBasicInfo);
 
 	const handleLocationChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({ ...prevState, zipcode: text }));

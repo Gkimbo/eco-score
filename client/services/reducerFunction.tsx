@@ -30,6 +30,11 @@ const reducer = (state: any, action: any) => {
 				...state,
 				userInformation: action.payload,
 			};
+		case "USER_HOME":
+			return {
+				...state,
+				homes: action.payload,
+			};
 		default:
 			throw new Error();
 	}

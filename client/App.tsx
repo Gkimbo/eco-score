@@ -8,6 +8,7 @@ import SignIn from "./components/userAuthentication/SignIn";
 import SignUp from "./components/userAuthentication/SignUp";
 import UserBasicInfoForm from "./components/calculationForms/UserBasicInfoForm";
 import UserCarInfoForm from "./components/calculationForms/UserCarInfoForm";
+import UserHomeInfoForm from "./components/calculationForms/UserHomeInfoForm";
 import TopBar from "./components/navBar/TopBar";
 
 import appStyles from "./services/styles/AppStyle";
@@ -24,6 +25,7 @@ const Home = () => {
 		currentUser: null,
 		cars: null,
 		userInformation: null,
+		homes: null,
 	});
 
 	const fetchCurrentUser = async () => {
@@ -63,6 +65,7 @@ const Home = () => {
 								/>
 								<Route path="/basic-form" element={<UserBasicInfoForm />} />
 								<Route path="/car-form" element={<UserCarInfoForm />} />
+								<Route path="/home-form" element={<UserHomeInfoForm />} />
 							</>
 						) : (
 							<Route
