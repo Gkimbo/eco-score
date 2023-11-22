@@ -22,16 +22,17 @@ const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [state, dispatch] = useReducer(reducer, {
 		carbon: 0,
-		currentUser: null,
+		currentUser: { token: null },
 		cars: null,
 		userInformation: null,
 		homes: null,
 	});
+	console.log(state);
 
 	const fetchCurrentUser = async () => {
 		try {
 			const token = await getCurrentUser();
-			dispatch({ type: "CURRENT_USER", payload: { token } });
+			dispatch({ type: "CURRENT_USER", payload: token });
 		} catch (err) {
 			dispatch({ type: "CURRENT_USER", payload: null });
 		}
@@ -57,7 +58,7 @@ const Home = () => {
 			<NativeRouter>
 				<SafeAreaView style={{ ...appStyles.container, paddingBottom: 60 }}>
 					<Routes>
-						{state.currentUser ? (
+						{state.currentUser.token ? (
 							<>
 								<Route
 									path="/"
@@ -82,7 +83,7 @@ const Home = () => {
 							element={<SignUp state={state} dispatch={dispatch} />}
 						/>
 					</Routes>
-					{state.currentUser ? (
+					{state.currentUser.token ? (
 						<View style={homePageStyles.topBarContainer}>
 							<TopBar dispatch={dispatch} />
 						</View>

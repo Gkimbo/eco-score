@@ -18,7 +18,7 @@ const reducer = (state: any, action: any) => {
 		case "CURRENT_USER":
 			return {
 				...state,
-				currentUser: action.payload,
+				currentUser: { token: action.payload },
 			};
 		case "USER_CAR":
 			return {

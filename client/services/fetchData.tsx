@@ -58,7 +58,7 @@ class FetchData {
 		try {
 			const response = await fetch(baseURL + url, {
 				headers: {
-					Authorization: `Bearer ${user.token}`,
+					Authorization: `Bearer ${user}`,
 				},
 			});
 			if (!response.ok) {

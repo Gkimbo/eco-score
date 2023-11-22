@@ -52,7 +52,7 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 				setErrors([response]);
 			}
 			if (response.user) {
-				dispatch({ type: "CURRENT_USER", payload: response.user });
+				dispatch({ type: "CURRENT_USER", payload: response.token });
 				login(response.token);
 				setRedirect(true);
 			}
