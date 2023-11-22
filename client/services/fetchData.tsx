@@ -36,10 +36,31 @@ interface UserCarInfo {
 	};
 }
 
+interface UserHomeInfo {
+	user: user;
+	home: {
+		zipcode: string;
+		yearBuilt: string;
+		heatSource: string;
+		airConditioning: boolean;
+		airConditioningSource: string;
+		squareFeet: string;
+		electricitySource: string;
+		electricityUsage: string;
+		recycling: boolean;
+		compost: boolean;
+		ovenType: string;
+	};
+}
+
 class FetchData {
-	static async get(url: string) {
+	static async get(url: string, user: user) {
 		try {
-			const response = await fetch(baseURL + url);
+			const response = await fetch(baseURL + url, {
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			});
 			if (!response.ok) {
 				throw new Error("No data received");
 			}
@@ -130,6 +151,26 @@ class FetchData {
 	static async addCarInfo(data: UserCarInfo) {
 		try {
 			const response = await fetch(baseURL + "/api/v1/user-info/car", {
+				method: "post",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				const error = new Error(`${response.status}(${response.statusText})`);
+				throw error;
+			}
+			const responseData = await response.json();
+			return responseData;
+		} catch (err) {
+			return err;
+		}
+	}
+
+	static async addHomeInfo(data: UserHomeInfo) {
+		try {
+			const response = await fetch(baseURL + "/api/v1/user-info/home", {
 				method: "post",
 				body: JSON.stringify(data),
 				headers: {

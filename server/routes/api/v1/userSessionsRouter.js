@@ -34,10 +34,8 @@ sessionRouter.post("/login", async (req, res) => {
 						console.error(err);
 						res.status(500).json({ message: "Internal server error" });
 					} else {
-						const serializedUser = UserSerializer.serializeOne(user);
-						const token = jwt.sign({ userId: user.id }, secretKey, {
-							expiresIn: "8h",
-						});
+						const serializedUser = UserSerializer.login(user);
+						const token = jwt.sign({ userId: user.id }, secretKey);
 						return res.status(201).json({ user: serializedUser, token: token });
 					}
 				});
@@ -56,9 +54,7 @@ sessionRouter.post("/login", async (req, res) => {
 sessionRouter.get("/current", authenticateToken, async (req, res) => {
 	try {
 		const user = await User.findOne({ where: { id: req.userId } });
-		const token = jwt.sign({ userId: user.id }, secretKey, {
-			expiresIn: "1h",
-		});
+		const token = jwt.sign({ userId: user.id }, secretKey);
 		res.status(200).json({ user, token });
 	} catch (error) {
 		console.error(error);
