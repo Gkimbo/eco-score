@@ -78,7 +78,7 @@ const UserCarInfoForm = () => {
 		const value = text.replaceAll(/ kWh| Wh| kh| kW|kWh/g, "");
 		const regex = /^\d*(\.\d*)?(\s*)?$/;
 		if (!regex.test(value)) {
-			setError("Battery size can oly be a number!");
+			setError("Battery size can only be a number!");
 			return;
 		}
 		if (value === "") {

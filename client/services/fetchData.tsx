@@ -42,7 +42,7 @@ interface UserHomeInfo {
 		zipcode: string;
 		yearBuilt: string;
 		heatSource: string;
-		airConditioning: boolean;
+		airConditioning: string;
 		airConditioningSource: string;
 		squareFeet: string;
 		electricitySource: string;
