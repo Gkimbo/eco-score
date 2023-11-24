@@ -13,20 +13,23 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 		event.preventDefault();
 		dispatch({ type: "CARBON", payload: 1 });
 	};
-	console.log(state);
 
 	useEffect(() => {
-		FetchData.get("/api/v1/user-info", state.currentUser).then((response) => {
-			dispatch({ type: "USER_CAR", payload: response.user.cars });
-			dispatch({
-				type: "USER_INFO",
-				payload: response.user.info,
-			});
-			dispatch({
-				type: "USER_HOME",
-				payload: response.user.homes,
-			});
-		});
+		if (state.currentUser.token) {
+			FetchData.get("/api/v1/user-info", state.currentUser.token).then(
+				(response) => {
+					dispatch({ type: "USER_CAR", payload: response.user.cars });
+					dispatch({
+						type: "USER_INFO",
+						payload: response.user.info,
+					});
+					dispatch({
+						type: "USER_HOME",
+						payload: response.user.homes,
+					});
+				}
+			);
+		}
 	}, []);
 
 	return (

@@ -113,6 +113,7 @@ userInfoRouter.post("/home", async (req, res) => {
 		recycling,
 		compost,
 		ovenType,
+		electricityUnit,
 	} = req.body.home;
 
 	try {
@@ -135,6 +136,7 @@ userInfoRouter.post("/home", async (req, res) => {
 			recycling,
 			compost,
 			ovenType,
+			electricityUnit,
 		});
 
 		return res.status(201).json({ user });

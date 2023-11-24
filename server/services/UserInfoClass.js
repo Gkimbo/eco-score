@@ -65,6 +65,7 @@ class UserInfo {
 		recycling,
 		compost,
 		ovenType,
+		electricityUnit,
 	}) {
 		await UserHomes.create({
 			userId: userId,
@@ -79,6 +80,7 @@ class UserInfo {
 			recycling: recycling,
 			compost: compost,
 			ovenType: ovenType,
+			electricityUnit: electricityUnit,
 		});
 	}
 	static async updateUserInfo(id, data) {

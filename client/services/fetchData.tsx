@@ -42,14 +42,15 @@ interface UserHomeInfo {
 		zipcode: string;
 		yearBuilt: string;
 		heatSource: string;
-		airConditioning: boolean;
+		airConditioning: string;
 		airConditioningSource: string;
 		squareFeet: string;
 		electricitySource: string;
 		electricityUsage: string;
-		recycling: boolean;
-		compost: boolean;
+		recycling: string;
+		compost: string;
 		ovenType: string;
+		electricityUnit: string;
 	};
 }
 
@@ -58,7 +59,7 @@ class FetchData {
 		try {
 			const response = await fetch(baseURL + url, {
 				headers: {
-					Authorization: `Bearer ${user.token}`,
+					Authorization: `Bearer ${user}`,
 				},
 			});
 			if (!response.ok) {
