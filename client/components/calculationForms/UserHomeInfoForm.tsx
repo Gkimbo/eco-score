@@ -18,9 +18,10 @@ type UserHomeInfoForm = {
 		squareFeet: string;
 		electricitySource: string;
 		electricityUsage: string;
-		recycling: boolean;
-		compost: boolean;
+		recycling: string;
+		compost: string;
 		ovenType: string;
+		electricityUnit: string;
 	};
 };
 
@@ -37,9 +38,10 @@ const UserHomeInfoForm = () => {
 			squareFeet: "",
 			electricitySource: "",
 			electricityUsage: "",
-			recycling: false,
-			compost: false,
+			recycling: "false",
+			compost: "false",
 			ovenType: "",
+			electricityUnit: "",
 		},
 	});
 	const [error, setError] = useState<string | null>(null);
@@ -108,6 +110,37 @@ const UserHomeInfoForm = () => {
 		}));
 	};
 
+	const handleElectricitySource = (text: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				electricitySource: text,
+			},
+		}));
+	};
+
+	const handleElectricityUsage = (text: string) => {
+		const value = text.replaceAll(/ kWh| Wh| kh| kW|kWh/g, "");
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(value)) {
+			setError("Usage must be a number");
+			return;
+		}
+		if (value === "") {
+			setError("Usage cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				electricityUsage: `${value} kWh`,
+			},
+		}));
+	};
+
 	const handleSquareFeetChange = (text: string) => {
 		const value = text.replaceAll(
 			/ Square Feet| Suare Feet| Sqare Feet| Squre Feet| Squae Feet| Squar Feet| SquareFeet| Square eet| Square Fet| Square Fee|Square Feet/g,
@@ -128,6 +161,45 @@ const UserHomeInfoForm = () => {
 			home: {
 				...prevState.home,
 				squareFeet: `${value} Square Feet`,
+			},
+		}));
+	};
+
+	const handleElectricityUnitChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				electricityUnit: unit,
+			},
+		}));
+	};
+
+	const handleRecycleChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				recycling: unit,
+			},
+		}));
+	};
+
+	const handleCompostChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				compost: unit,
+			},
+		}));
+	};
+	const handleOvenChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				ovenType: unit,
 			},
 		}));
 	};
@@ -194,6 +266,17 @@ const UserHomeInfoForm = () => {
 							{ label: "Fire Place", value: "fire place" },
 						]}
 					/>
+					<Text style={UserFormStyles.smallTitle}>
+						What kind of Oven do you use?
+					</Text>
+					<RadioButton.Group
+						onValueChange={handleOvenChange}
+						value={userHomeInfo.home.ovenType}
+					>
+						<RadioButton.Item label="Gas" value="gas" />
+						<RadioButton.Item label="Electric" value="electric" />
+						<RadioButton.Item label="Wood Fire" value="wood" />
+					</RadioButton.Group>
 					<Text style={UserFormStyles.smallTitle}>AirConditioning:</Text>
 					<RadioButton.Group
 						onValueChange={handleACChange}
@@ -224,6 +307,54 @@ const UserHomeInfoForm = () => {
 							/>
 						</>
 					) : null}
+					<Text style={UserFormStyles.smallTitle}>Electricity Source:</Text>
+					<RNPickerSelect
+						value={userHomeInfo.home.electricitySource}
+						onValueChange={handleElectricitySource}
+						style={pickerSelectStyles}
+						items={[
+							{ label: "Grid", value: "grid" },
+							{ label: "Solar", value: "solar" },
+							{ label: "Wind", value: "wind" },
+							{ label: "Hydro Electric", value: "hydro" },
+						]}
+					/>
+					<Text style={UserFormStyles.smallTitle}>
+						Electricity Usage per year:
+					</Text>
+					<TextInput
+						mode="outlined"
+						placeholder="10,094 kWh"
+						value={userHomeInfo.home.electricityUsage}
+						onChangeText={handleElectricityUsage}
+						style={UserFormStyles.input}
+					/>
+					<RadioButton.Group
+						onValueChange={handleElectricityUnitChange}
+						value={userHomeInfo.home.electricityUnit}
+					>
+						<RadioButton.Item label="Yearly" value="yearly" />
+						<RadioButton.Item label="Monthly" value="monthly" />
+						<RadioButton.Item label="Daily" value="daily" />
+					</RadioButton.Group>
+
+					<Text style={UserFormStyles.smallTitle}>Do you recycle?</Text>
+					<RadioButton.Group
+						onValueChange={handleRecycleChange}
+						value={userHomeInfo.home.recycling}
+					>
+						<RadioButton.Item label="Yes, I recycle" value="true" />
+						<RadioButton.Item label="No, I don't recycle" value="false" />
+					</RadioButton.Group>
+
+					<Text style={UserFormStyles.smallTitle}>Do you compost?</Text>
+					<RadioButton.Group
+						onValueChange={handleCompostChange}
+						value={userHomeInfo.home.compost}
+					>
+						<RadioButton.Item label="Yes, I compost" value="true" />
+						<RadioButton.Item label="No, I don't compost" value="false" />
+					</RadioButton.Group>
 				</View>
 				<Pressable onPress={handleSubmit}>
 					<Text style={UserFormStyles.button}>Submit</Text>

@@ -47,9 +47,10 @@ interface UserHomeInfo {
 		squareFeet: string;
 		electricitySource: string;
 		electricityUsage: string;
-		recycling: boolean;
-		compost: boolean;
+		recycling: string;
+		compost: string;
 		ovenType: string;
+		electricityUnit: string;
 	};
 }
 
