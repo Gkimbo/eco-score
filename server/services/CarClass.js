@@ -46,11 +46,6 @@ class CarCalculation {
 	}
 
 	static async takeInCars(user) {
-		const zipCode = user.homes[0].zipcode;
-		const latlng = await getCarbonIntensity.getLatLong(zipCode);
-		const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
-			latlng
-		);
 		const cars = await Promise.all(
 			user.cars.map(async (car) => {
 				const eachCar = await this.getUserCars(
@@ -60,6 +55,12 @@ class CarCalculation {
 				);
 				let selectedCar = eachCar[0];
 				if (selectedCar.fuel_type === "electricity") {
+					const zipCode = car.zipcode;
+					const latlng = await getCarbonIntensity.getLatLong(zipCode);
+					// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
+					// 	latlng
+					// );
+					const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
 					let carbonPerCharge = this.evChargedOnGrid(
 						carbonIntensity,
 						car.carBatterySize

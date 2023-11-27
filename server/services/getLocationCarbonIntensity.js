@@ -17,6 +17,7 @@ class getCarbonIntensity {
 				throw new Error("No results found for the given zip code");
 			}
 		} catch (error) {
+			console.log(error);
 			console.error("Error getting latitude and longitude:", error);
 			throw error;
 		}
@@ -36,8 +37,7 @@ class getCarbonIntensity {
 			);
 			return response.data;
 		} catch (error) {
-			console.error("Error fetching carbon intensity:", error);
-			throw error;
+			console.log(error);
 		}
 	}
 }

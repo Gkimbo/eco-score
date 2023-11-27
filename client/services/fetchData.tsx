@@ -33,6 +33,7 @@ interface UserCarInfo {
 		year: string;
 		fuelType: string;
 		carBatterySize: string;
+		zipCode: string;
 	};
 }
 

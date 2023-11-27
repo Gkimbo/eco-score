@@ -16,6 +16,7 @@ class UserInfo {
 				userId: userId,
 				homeOwnership: homeOwnership,
 				milesDriven: milesDriven,
+				milesDrivenUnit: milesDrivenUnit,
 				commute: commute,
 				transportation: transportation,
 				daysCommute: daysCommute,
@@ -37,9 +38,13 @@ class UserInfo {
 		year,
 		fuelType,
 		carBatterySize,
+		zipCode,
 	}) {
 		if (fuelType !== "electricity") {
 			carBatterySize = null;
+		}
+		if (!zipCode) {
+			zipCode = "Gas and Diesel cars don't need to charge";
 		}
 
 		await UserCars.create({
@@ -49,6 +54,7 @@ class UserInfo {
 			year: year,
 			fuelType: fuelType,
 			carBatterySize: carBatterySize,
+			zipcode: zipCode,
 		});
 	}
 

@@ -27,8 +27,12 @@ userInfoRouter.get("/", async (req, res) => {
 			],
 		});
 		const serializedUser = UserSerializer.serializeOne(user.dataValues);
-		const userWithCarCarbon = await CarCalculation.takeInCars(serializedUser);
-		return res.status(200).json({ user: userWithCarCarbon });
+		if (serializedUser.cars.length === 0) {
+			return res.status(200).json({ user: serializedUser });
+		} else {
+			const userWithCarCarbon = await CarCalculation.takeInCars(serializedUser);
+			return res.status(200).json({ user: userWithCarCarbon });
+		}
 	} catch (error) {
 		console.log(error);
 		return res.status(401).json({ error: "Invalid or expired token" });
@@ -38,7 +42,6 @@ userInfoRouter.get("/", async (req, res) => {
 userInfoRouter.post("/basic", async (req, res) => {
 	const { token } = req.body.user;
 	const {
-		zipcode,
 		homeOwnership,
 		milesDriven,
 		milesDrivenUnit,
@@ -74,7 +77,7 @@ userInfoRouter.post("/basic", async (req, res) => {
 
 userInfoRouter.post("/car", async (req, res) => {
 	const { token } = req.body.user;
-	let { model, make, year, fuelType, carBatterySize } = req.body.car;
+	let { model, make, year, fuelType, carBatterySize, zipCode } = req.body.car;
 	if (fuelType === "hybrid") {
 		fuelType = "gas";
 	}
@@ -95,6 +98,7 @@ userInfoRouter.post("/car", async (req, res) => {
 				year,
 				fuelType,
 				carBatterySize,
+				zipCode,
 			});
 			return res.status(201).json({ user });
 		}

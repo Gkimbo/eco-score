@@ -27,7 +27,7 @@ const Home = () => {
 		userInformation: null,
 		homes: null,
 	});
-	// console.log(state);
+	console.log(state);
 
 	const fetchCurrentUser = async () => {
 		try {

@@ -19,6 +19,7 @@ type UserCarInfoForm = {
 		year: string;
 		fuelType: string;
 		carBatterySize: string;
+		zipCode: string;
 	};
 };
 
@@ -32,6 +33,7 @@ const UserCarInfoForm = () => {
 			year: "",
 			fuelType: "gas",
 			carBatterySize: "68.6 kWh",
+			zipCode: "",
 		},
 	});
 	const [redirect, setRedirect] = useState<boolean>(false);
@@ -115,6 +117,16 @@ const UserCarInfoForm = () => {
 		}));
 	};
 
+	const handleZipCodeChange = (text: string) => {
+		setUserCarInfoForm((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				zipCode: text,
+			},
+		}));
+	};
+
 	const handleFuelTypeChange = (
 		text: "gas" | "diesel" | "hybrid" | "electricity"
 	) => {
@@ -150,6 +162,16 @@ const UserCarInfoForm = () => {
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
+		if (userCarInfo.car.fuelType === "electricity") {
+			if (!userCarInfo.car.zipCode) {
+				setError(
+					"Please type in the zipcode where you primarily charge your car"
+				);
+				return;
+			} else {
+				setError("");
+			}
+		}
 		FetchData.addCarInfo(userCarInfo).then((response) => {
 			if (response === "No car found") {
 				setError(response);
@@ -240,6 +262,7 @@ const UserCarInfoForm = () => {
 						onChangeText={handleCarYearChange}
 						style={UserFormStyles.input}
 					/>
+
 					<Text style={UserFormStyles.smallTitle}>Fuel Type:</Text>
 					<RNPickerSelect
 						value={userCarInfo.car.fuelType}
@@ -259,6 +282,15 @@ const UserCarInfoForm = () => {
 								mode="outlined"
 								value={`${userCarInfo.car.carBatterySize}`}
 								onChangeText={handleCarBatterySizeChange}
+								style={UserFormStyles.input}
+							/>
+							<Text style={UserFormStyles.smallTitle}>
+								Zipcode of cars primary charging location:
+							</Text>
+							<TextInput
+								mode="outlined"
+								value={`${userCarInfo.car.zipCode}`}
+								onChangeText={handleZipCodeChange}
 								style={UserFormStyles.input}
 							/>
 						</>

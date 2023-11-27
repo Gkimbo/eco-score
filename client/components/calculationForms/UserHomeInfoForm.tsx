@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { TextInput, RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
@@ -6,6 +6,7 @@ import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
+import { useNavigate } from "react-router-native";
 
 type UserHomeInfoForm = {
 	user: any;
@@ -45,6 +46,8 @@ const UserHomeInfoForm = () => {
 		},
 	});
 	const [error, setError] = useState<string | null>(null);
+	const [redirect, setRedirect] = useState<boolean>(false);
+	const navigate = useNavigate();
 	const handleZipCodeChange = (text: string) => {
 		setUserHomeInfoForm((prevState) => ({
 			...prevState,
@@ -206,9 +209,18 @@ const UserHomeInfoForm = () => {
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
 		FetchData.addHomeInfo(userHomeInfo).then((response) => {
+			setRedirect(true);
 			console.log(response);
 		});
 	};
+
+	useEffect(() => {
+		if (redirect) {
+			navigate("/");
+			setRedirect(false);
+		}
+	}, [redirect]);
+
 	return (
 		<ScrollView contentContainerStyle={UserFormStyles.container}>
 			<form onSubmit={handleSubmit}>
