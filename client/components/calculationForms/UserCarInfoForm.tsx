@@ -10,17 +10,11 @@ import Autocomplete from "react-native-autocomplete-input";
 import { carMakesUS } from "../../services/carArray";
 import { useNavigate } from "react-router-native";
 import carsData from "../../services/carModelArray";
+import { Car } from "../../services/types/carType";
 
 type UserCarInfoForm = {
 	user: any;
-	car: {
-		make: string;
-		model: string;
-		year: string;
-		fuelType: string;
-		carBatterySize: string;
-		zipCode: string;
-	};
+	car: Car;
 };
 
 const UserCarInfoForm = () => {
@@ -34,6 +28,8 @@ const UserCarInfoForm = () => {
 			fuelType: "gas",
 			carBatterySize: "68.6 kWh",
 			zipCode: "",
+			carbonPerMile: "",
+			carbonPerCharge: "",
 		},
 	});
 	const [redirect, setRedirect] = useState<boolean>(false);

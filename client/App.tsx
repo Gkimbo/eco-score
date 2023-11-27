@@ -23,11 +23,10 @@ const Home = () => {
 	const [state, dispatch] = useReducer(reducer, {
 		carbon: 0,
 		currentUser: { token: null },
-		cars: null,
+		cars: [],
 		userInformation: null,
-		homes: null,
+		homes: [],
 	});
-	console.log(state);
 
 	const fetchCurrentUser = async () => {
 		try {
