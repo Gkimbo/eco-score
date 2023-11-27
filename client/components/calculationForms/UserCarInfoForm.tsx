@@ -1,11 +1,15 @@
-import React, { useState, useContext } from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
+import React, { useState, useContext, useEffect } from "react";
+import { View, Text, ScrollView, Pressable, Platform } from "react-native";
 import { TextInput } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
+import Autocomplete from "react-native-autocomplete-input";
+import { carMakesUS } from "../../services/carArray";
+import { useNavigate } from "react-router-native";
+import carsData from "../../services/carModelArray";
 
 type UserCarInfoForm = {
 	user: any;
@@ -30,9 +34,20 @@ const UserCarInfoForm = () => {
 			carBatterySize: "68.6 kWh",
 		},
 	});
+	const [redirect, setRedirect] = useState<boolean>(false);
+	const [carMakes, setCarMakes] = useState<string[]>([]);
+	const [carModels, setCarModels] = useState<string[]>([]);
 	const [error, setError] = useState<string | null>(null);
+	const navigate = useNavigate();
 
 	const handleCarMakeChange = (text: string) => {
+		const carMakesData = carMakesUS;
+		const filteredCarMakes = carMakesData.filter((make) =>
+			make.toLowerCase().includes(text.toLowerCase())
+		);
+
+		setCarMakes(filteredCarMakes);
+		setError(null);
 		setUserCarInfoForm((prevState) => ({
 			...prevState,
 			car: {
@@ -42,7 +57,34 @@ const UserCarInfoForm = () => {
 		}));
 	};
 
+	const handleCarMakeSelect = (value: string) => {
+		setError(null);
+		setUserCarInfoForm((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				make: value,
+			},
+		}));
+		setCarMakes([]);
+	};
+
 	const handleCarModelChange = (text: string) => {
+		let carModelData;
+		const make = userCarInfo.car.make;
+		if (carsData[make as keyof typeof carsData]) {
+			carModelData = carsData[make as keyof typeof carsData];
+			setError(null);
+		} else {
+			setError(`The make ${make} does not exist in carsData`);
+			return;
+		}
+
+		const filteredCarModels = carModelData.filter((make) =>
+			make.toLowerCase().includes(text.toLowerCase())
+		);
+
+		setCarModels(filteredCarModels);
 		setUserCarInfoForm((prevState) => ({
 			...prevState,
 			car: {
@@ -50,6 +92,17 @@ const UserCarInfoForm = () => {
 				model: text,
 			},
 		}));
+	};
+
+	const handleCarModelSelect = (value: string) => {
+		setUserCarInfoForm((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				model: value,
+			},
+		}));
+		setCarModels([]);
 	};
 
 	const handleCarYearChange = (text: string) => {
@@ -98,9 +151,22 @@ const UserCarInfoForm = () => {
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
 		FetchData.addCarInfo(userCarInfo).then((response) => {
-			console.log(response);
+			if (response === "No car found") {
+				setError(response);
+			} else {
+				setError(null);
+				setRedirect(true);
+			}
 		});
 	};
+
+	useEffect(() => {
+		if (redirect) {
+			navigate("/");
+			setRedirect(false);
+		}
+	}, [redirect]);
+
 	return (
 		<ScrollView contentContainerStyle={UserFormStyles.container}>
 			<form onSubmit={handleSubmit}>
@@ -109,23 +175,63 @@ const UserCarInfoForm = () => {
 					<Text style={UserFormStyles.subtitle}>
 						What kind of car do you drive?
 					</Text>
-					<Text style={UserFormStyles.smallTitle}>Make:</Text>
+					<View
+						style={{
+							zIndex: 3,
+						}}
+					>
+						<Text style={UserFormStyles.smallTitle}>Make:</Text>
+						<Autocomplete
+							data={carMakes}
+							value={userCarInfo.car.make}
+							onChangeText={handleCarMakeChange}
+							flatListProps={{
+								renderItem: ({ item }) => (
+									<Pressable
+										style={{
+											padding: 10,
+											borderBottomWidth: 1,
+											borderBottomColor: "#ccc",
+										}}
+										onPress={() => handleCarMakeSelect(item)}
+									>
+										<Text style={{ fontSize: 16 }}>{item}</Text>
+									</Pressable>
+								),
+								keyExtractor: (_, index) => index.toString(),
+							}}
+						/>
+					</View>
+					{userCarInfo.car.make ? (
+						<View
+							style={{
+								zIndex: 2,
+							}}
+						>
+							<Text style={UserFormStyles.smallTitle}>Model:</Text>
+							<Autocomplete
+								data={carModels}
+								value={userCarInfo.car.model}
+								onChangeText={handleCarModelChange}
+								flatListProps={{
+									renderItem: ({ item }) => (
+										<Pressable
+											style={{
+												padding: 10,
+												borderBottomWidth: 1,
+												borderBottomColor: "#ccc",
+											}}
+											onPress={() => handleCarModelSelect(item)}
+										>
+											<Text style={{ fontSize: 16 }}>{item}</Text>
+										</Pressable>
+									),
+									keyExtractor: (_, index) => index.toString(),
+								}}
+							/>
+						</View>
+					) : null}
 
-					<TextInput
-						mode="outlined"
-						placeholder="Toyota..."
-						value={userCarInfo.car.make}
-						onChangeText={handleCarMakeChange}
-						style={UserFormStyles.input}
-					/>
-					<Text style={UserFormStyles.smallTitle}>Model:</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="Corolla..."
-						value={userCarInfo.car.model}
-						onChangeText={handleCarModelChange}
-						style={UserFormStyles.input}
-					/>
 					<Text style={UserFormStyles.smallTitle}>Year:</Text>
 					<TextInput
 						mode="outlined"
@@ -158,14 +264,21 @@ const UserCarInfoForm = () => {
 						</>
 					) : null}
 				</View>
-				<Pressable onPress={handleSubmit}>
-					<Text style={UserFormStyles.button}>Submit</Text>
-				</Pressable>
-				{error ? (
-					<View>
-						<Text style={UserFormStyles.error}>{error}</Text>
-					</View>
-				) : null}
+				<View
+					style={{
+						zIndex: 1,
+						elevation: Platform.OS === "android" ? 50 : 0,
+					}}
+				>
+					<Pressable onPress={handleSubmit}>
+						<Text style={UserFormStyles.button}>Submit</Text>
+					</Pressable>
+					{error ? (
+						<View>
+							<Text style={UserFormStyles.error}>{error}</Text>
+						</View>
+					) : null}
+				</View>
 			</form>
 		</ScrollView>
 	);

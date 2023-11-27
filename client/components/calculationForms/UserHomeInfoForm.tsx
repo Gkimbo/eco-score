@@ -45,7 +45,6 @@ const UserHomeInfoForm = () => {
 		},
 	});
 	const [error, setError] = useState<string | null>(null);
-	console.log(userHomeInfo);
 	const handleZipCodeChange = (text: string) => {
 		setUserHomeInfoForm((prevState) => ({
 			...prevState,

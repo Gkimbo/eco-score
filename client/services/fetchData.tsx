@@ -159,6 +159,10 @@ class FetchData {
 				},
 			});
 			if (!response.ok) {
+				if (response.status === 400) {
+					const responseData = await response.json();
+					return responseData;
+				}
 				const error = new Error(`${response.status}(${response.statusText})`);
 				throw error;
 			}

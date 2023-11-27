@@ -14,6 +14,7 @@ class CarSerializer {
 			}
 			return newCar;
 		});
+
 		return serializedCar;
 	}
 }
