@@ -14,7 +14,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 		event.preventDefault();
 		dispatch({ type: "CARBON", payload: 1 });
 	};
-
+	console.log(state);
 	useEffect(() => {
 		const totalCarbon = state.cars.reduce((total: any, car: any) => {
 			if (car.carbonPerTank) {

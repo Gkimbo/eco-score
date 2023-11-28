@@ -31,6 +31,7 @@ const UserCarInfoForm = () => {
 			zipCode: "",
 			carbonPerTank: "",
 			carbonPerCharge: "",
+			carbonToMakeBattery: "",
 		},
 	});
 	const [redirect, setRedirect] = useState<boolean>(false);
@@ -178,16 +179,33 @@ const UserCarInfoForm = () => {
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
+		if (!userCarInfo.car.make) {
+			setError("Your cars Make cannot be blank");
+			return;
+		}
+		if (!userCarInfo.car.model) {
+			setError("Your cars Model cannot be blank");
+			return;
+		}
+		if (!userCarInfo.car.year) {
+			setError("Your cars Year cannot be blank");
+			return;
+		}
+
 		if (userCarInfo.car.fuelType === "electricity") {
 			if (!userCarInfo.car.zipCode) {
 				setError(
 					"Please type in the zipcode where you primarily charge your car"
 				);
 				return;
-			} else {
-				setError("");
+			}
+		} else {
+			if (!userCarInfo.car.tank) {
+				setError("Please type in the tank size of your car");
+				return;
 			}
 		}
+		setError(null);
 		FetchData.addCarInfo(userCarInfo).then((response) => {
 			if (response === "No car found") {
 				setError(response);

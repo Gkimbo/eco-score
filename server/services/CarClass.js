@@ -45,6 +45,12 @@ class CarCalculation {
 		return co2PerCharge;
 	}
 
+	static evProductionOfBattery(batterySize) {
+		const battery = batterySize;
+		const batteryNum = parseInt(battery);
+		return 184 * batteryNum;
+	}
+
 	static async takeInCars(user) {
 		const cars = await Promise.all(
 			user.cars.map(async (car) => {
@@ -67,6 +73,10 @@ class CarCalculation {
 					);
 					let roundedNum = carbonPerCharge.toFixed(2);
 					car.carbonPerCharge = roundedNum;
+					const batteryProduction = this.evProductionOfBattery(
+						car.carBatterySize
+					).toFixed(2);
+					car.carbonToMakeBattery = batteryProduction;
 				} else if (selectedCar.fuel_type === "gas") {
 					const averageMpg =
 						(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;

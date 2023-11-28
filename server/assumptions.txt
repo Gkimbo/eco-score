@@ -1,7 +1,13 @@
 //car
+the estimated CO2 emissions for manufacturing an average gasoline-powered car is approximately 16,526 pounds of CO2.
+
 Pounds of CO2 emitted per gallon  - 19.6 lbs CO2/gallon
 
 Average miles traveled per year per vehicle - 11398 miles/year / 219 miles per week
+
+Average pounds of co2 produced per kWh of 184 lbs CO2/kwh
+​	
+ /kWh
 
 //natural gas home
 

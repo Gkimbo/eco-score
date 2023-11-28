@@ -8,6 +8,7 @@ export type Car = {
     zipCode: string;
     carbonPerTank: string;
     carbonPerCharge: string;
+    carbonToMakeBattery: string;
 } 
 
 export type Home = {
