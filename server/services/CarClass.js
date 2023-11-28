@@ -60,7 +60,6 @@ class CarCalculation {
 					car.year
 				);
 				let selectedCar = eachCar[0];
-				console.log(selectedCar);
 				if (selectedCar.fuel_type === "electricity") {
 					const zipCode = car.zipcode;
 					if (zipCode === "off grid") {

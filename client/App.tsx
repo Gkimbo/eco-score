@@ -55,7 +55,13 @@ const Home = () => {
 	return (
 		<AuthProvider>
 			<NativeRouter>
-				<SafeAreaView style={{ ...appStyles.container, paddingBottom: 60 }}>
+				<SafeAreaView
+					onLayout={(event) => {
+						const { height } = event.nativeEvent.layout;
+						console.log("SafeAreaView Height:", height);
+					}}
+					style={{ ...appStyles.container, paddingBottom: 60 }}
+				>
 					<Routes>
 						{state.currentUser.token ? (
 							<>

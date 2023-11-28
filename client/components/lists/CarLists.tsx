@@ -19,6 +19,7 @@ export type Car = {
 	carbonToMakeBattery: string;
 	carbonPerMile: string;
 };
+
 const CarList: React.FunctionComponent<IAppProps> = ({ state }) => {
 	const cars = state.cars;
 
@@ -28,7 +29,6 @@ const CarList: React.FunctionComponent<IAppProps> = ({ state }) => {
 				<View
 					key={item.id}
 					style={{
-						flex: 1,
 						justifyContent: "center",
 						borderWidth: 1,
 						borderRadius: 10,
@@ -36,6 +36,8 @@ const CarList: React.FunctionComponent<IAppProps> = ({ state }) => {
 						backgroundColor: "#fff",
 						margin: 10,
 						padding: 10,
+						height: "auto",
+						alignItems: "stretch",
 					}}
 				>
 					<Text

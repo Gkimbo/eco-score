@@ -4,7 +4,7 @@ const colors = ["red", "orange", "grey", "green"];
 
 const homePageStyles = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
