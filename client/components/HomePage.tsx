@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Text, Pressable, View } from "react-native";
 import homePageStyles from "../services/styles/HomePageStyle";
 import FetchData from "../services/fetchData";
+import CarList from "./lists/CarLists";
+import UserFormStyles from "../services/styles/UserInputFormStyle";
 
 export interface IAppProps {
 	state: any;
@@ -55,56 +57,81 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 	}, []);
 
 	return (
-		<View style={homePageStyles.container}>
-			<View style={homePageStyles.leftAndCenterContainer}>
-				<View style={homePageStyles.leftContainer}>
-					<View style={homePageStyles.iconWithNumber}>
-						<Text>🚗</Text>
-						<Text>{carCarbon || 0} tons</Text>
-					</View>
-					<View style={homePageStyles.iconWithNumber}>
-						<Text>🏠</Text>
-						<Text>{state.homeCount || 0}</Text>
-					</View>
-					<View style={homePageStyles.iconWithNumber}>
-						<Text>🏢</Text>
-						<Text>{state.workCount || 0}</Text>
-					</View>
-				</View>
-
-				<View style={homePageStyles.centerContainer}>
-					<Text style={homePageStyles.header}>Your Score!</Text>
-					<Pressable onPress={handlePress}>
-						<View style={homePageStyles.circleContainer}>
-							<View
-								style={[
-									homePageStyles.circle,
-									{ height: `${Math.min(state.carbon, 100)}%` },
-								]}
-							/>
-							<Text style={homePageStyles.carbonText}>{state.carbon}</Text>
+		<>
+			<View style={homePageStyles.container}>
+				<View style={homePageStyles.leftAndCenterContainer}>
+					<View style={homePageStyles.leftContainer}>
+						<View style={homePageStyles.iconWithNumber}>
+							<Text>🚗</Text>
+							<Text>{carCarbon || 0} tons</Text>
 						</View>
-					</Pressable>
-				</View>
-			</View>
+						<View style={homePageStyles.iconWithNumber}>
+							<Text>🏠</Text>
+							<Text>{state.homeCount || 0}</Text>
+						</View>
+						<View style={homePageStyles.iconWithNumber}>
+							<Text>🏢</Text>
+							<Text>{state.workCount || 0}</Text>
+						</View>
+					</View>
 
-			<View style={homePageStyles.centerAndRightContainer}>
-				<View style={homePageStyles.rightContainer}>
-					<View style={homePageStyles.iconWithNumber}>
-						<Text>🌳</Text>
-						<Text>{state.treesPlanted || 0}</Text>
+					<View style={homePageStyles.centerContainer}>
+						<Text style={homePageStyles.header}>Your Score!</Text>
+						<Pressable onPress={handlePress}>
+							<View style={homePageStyles.circleContainer}>
+								<View
+									style={[
+										homePageStyles.circle,
+										{ height: `${Math.min(state.carbon, 100)}%` },
+									]}
+								/>
+								<Text style={homePageStyles.carbonText}>{state.carbon}</Text>
+							</View>
+						</Pressable>
 					</View>
-					<View style={homePageStyles.iconWithNumber}>
-						<Text>☀️</Text>
-						<Text>{state.solarPanelsBuilt || 0}</Text>
-					</View>
-					<View style={homePageStyles.iconWithNumber}>
-						<Text>🌬️</Text>
-						<Text>{state.windTurbinesBuilt || 0}</Text>
+				</View>
+
+				<View style={homePageStyles.centerAndRightContainer}>
+					<View style={homePageStyles.rightContainer}>
+						<View style={homePageStyles.iconWithNumber}>
+							<Text>🌳</Text>
+							<Text>{state.treesPlanted || 0}</Text>
+						</View>
+						<View style={homePageStyles.iconWithNumber}>
+							<Text>☀️</Text>
+							<Text>{state.solarPanelsBuilt || 0}</Text>
+						</View>
+						<View style={homePageStyles.iconWithNumber}>
+							<Text>🌬️</Text>
+							<Text>{state.windTurbinesBuilt || 0}</Text>
+						</View>
 					</View>
 				</View>
 			</View>
-		</View>
+			<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					marginTop: 20,
+				}}
+			>
+				<Text style={UserFormStyles.title}>Your Cars</Text>
+				<CarList state={state} />
+				<Text
+					style={{
+						fontSize: 14,
+						color: "#777",
+						marginTop: 30,
+						marginBottom: 20,
+						textAlign: "center",
+					}}
+				>
+					Average amount of CO2 to produce a car: {16526 / 2000} Tons not
+					including high voltage battery
+				</Text>
+			</View>
+		</>
 	);
 };
 

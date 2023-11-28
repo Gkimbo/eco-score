@@ -60,6 +60,7 @@ class CarCalculation {
 					car.year
 				);
 				let selectedCar = eachCar[0];
+				console.log(selectedCar);
 				if (selectedCar.fuel_type === "electricity") {
 					const zipCode = car.zipcode;
 					if (zipCode === "off grid") {
@@ -75,6 +76,9 @@ class CarCalculation {
 							car.carBatterySize
 						);
 						let roundedNum = carbonPerCharge.toFixed(2);
+						const averageMpg =
+							(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
+						car.carbonPerMile = (carbonPerCharge / averageMpg).toFixed(2);
 						car.carbonPerCharge = roundedNum;
 					}
 					const batteryProduction = this.evProductionOfBattery(
@@ -87,6 +91,8 @@ class CarCalculation {
 					const tankSize = car.tank;
 					let carbonPerGal = this.co2PerGallonGas(averageMpg, tankSize);
 					let roundedNum = carbonPerGal.toFixed(2);
+					const co2PerMile = 22.44 / averageMpg;
+					car.carbonPerMile = co2PerMile.toFixed(2);
 					car.carbonPerTank = roundedNum;
 				} else {
 					const averageMpg =
@@ -94,6 +100,8 @@ class CarCalculation {
 					const tankSize = car.tank;
 					let carbonPerGal = this.co2PerGallonDiesel(averageMpg, tankSize);
 					let roundedNum = carbonPerGal.toFixed(2);
+					const co2PerMile = 22.44 / averageMpg;
+					car.carbonPerMile = co2PerMile.toFixed(2);
 					car.carbonPerTank = roundedNum;
 				}
 				return car;

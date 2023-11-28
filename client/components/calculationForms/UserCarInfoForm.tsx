@@ -33,6 +33,7 @@ const UserCarInfoForm = () => {
 			carbonPerTank: "",
 			carbonPerCharge: "",
 			carbonToMakeBattery: "",
+			carbonPerMile: "",
 		},
 	});
 	const [redirect, setRedirect] = useState<boolean>(false);

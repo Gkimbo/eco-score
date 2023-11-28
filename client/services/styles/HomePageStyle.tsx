@@ -8,6 +8,7 @@ const homePageStyles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
+		marginTop: 30,
 	},
 	leftContainer: {
 		flexDirection: "column",
