@@ -7,23 +7,11 @@ import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
 import { useNavigate } from "react-router-native";
+import { Home } from "../../services/types/carAndHomeType";
 
 type UserHomeInfoForm = {
 	user: any;
-	home: {
-		zipcode: string;
-		yearBuilt: string;
-		heatSource: string;
-		airConditioning: string;
-		airConditioningSource: string;
-		squareFeet: string;
-		electricitySource: string;
-		electricityUsage: string;
-		recycling: string;
-		compost: string;
-		ovenType: string;
-		electricityUnit: string;
-	};
+	home: Home;
 };
 
 const UserHomeInfoForm = () => {
@@ -123,13 +111,12 @@ const UserHomeInfoForm = () => {
 	};
 
 	const handleElectricityUsage = (text: string) => {
-		const value = text.replaceAll(/ kWh| Wh| kh| kW|kWh/g, "");
 		const regex = /^\d*(\.\d*)?(\s*)?$/;
-		if (!regex.test(value)) {
+		if (!regex.test(text)) {
 			setError("Usage must be a number");
 			return;
 		}
-		if (value === "") {
+		if (text === "") {
 			setError("Usage cannot be blank!");
 		} else {
 			setError(null);
@@ -138,7 +125,7 @@ const UserHomeInfoForm = () => {
 			...prevState,
 			home: {
 				...prevState.home,
-				electricityUsage: `${value} kWh`,
+				electricityUsage: text,
 			},
 		}));
 	};
@@ -331,15 +318,31 @@ const UserHomeInfoForm = () => {
 						]}
 					/>
 					<Text style={UserFormStyles.smallTitle}>
-						Electricity Usage per year:
+						{userHomeInfo.home.electricityUnit} Electricity Usage:
 					</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="10,094 kWh"
-						value={userHomeInfo.home.electricityUsage}
-						onChangeText={handleElectricityUsage}
-						style={UserFormStyles.input}
-					/>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							borderWidth: 1,
+							borderColor: "#000",
+							borderRadius: 5,
+							backgroundColor: "#fff",
+							padding: 5,
+						}}
+					>
+						<TextInput
+							placeholder="10,094"
+							value={userHomeInfo.home.electricityUsage}
+							onChangeText={handleElectricityUsage}
+							style={{
+								...UserFormStyles.input,
+								borderWidth: 0,
+								backgroundColor: "transparent",
+							}}
+						/>
+						<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+					</View>
 					<RadioButton.Group
 						onValueChange={handleElectricityUnitChange}
 						value={userHomeInfo.home.electricityUnit}

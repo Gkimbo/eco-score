@@ -32,7 +32,7 @@ const homePageStyles = StyleSheet.create({
 	iconWithNumber: {
 		alignItems: "center",
 		marginBottom: 10,
-		borderRadius: 100,
+		borderRadius: 10,
 		backgroundColor: "lightgreen",
 		width: 40,
 	},

@@ -15,13 +15,10 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 		dispatch({ type: "CARBON", payload: 1 });
 	};
 
-	console.log(carCarbon);
-	console.log(state.cars);
-
 	useEffect(() => {
 		const totalCarbon = state.cars.reduce((total: any, car: any) => {
-			if (car.carbonPerMile) {
-				return total + parseInt(car.carbonPerMile);
+			if (car.carbonPerTank) {
+				return total + parseInt(car.carbonPerTank);
 			} else {
 				return total + parseInt(car.carbonPerCharge);
 			}

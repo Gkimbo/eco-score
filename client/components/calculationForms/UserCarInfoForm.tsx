@@ -10,7 +10,7 @@ import Autocomplete from "react-native-autocomplete-input";
 import { carMakesUS } from "../../services/carArray";
 import { useNavigate } from "react-router-native";
 import carsData from "../../services/carModelArray";
-import { Car } from "../../services/types/carType";
+import { Car } from "../../services/types/carAndHomeType";
 
 type UserCarInfoForm = {
 	user: any;
@@ -26,9 +26,10 @@ const UserCarInfoForm = () => {
 			model: "",
 			year: "",
 			fuelType: "gas",
-			carBatterySize: "68.6 kWh",
+			carBatterySize: "",
+			tank: "",
 			zipCode: "",
-			carbonPerMile: "",
+			carbonPerTank: "",
 			carbonPerCharge: "",
 		},
 	});
@@ -136,13 +137,12 @@ const UserCarInfoForm = () => {
 	};
 
 	const handleCarBatterySizeChange = (text: string) => {
-		const value = text.replaceAll(/ kWh| Wh| kh| kW|kWh/g, "");
 		const regex = /^\d*(\.\d*)?(\s*)?$/;
-		if (!regex.test(value)) {
+		if (!regex.test(text)) {
 			setError("Battery size can only be a number!");
 			return;
 		}
-		if (value === "") {
+		if (text === "") {
 			setError("Battery size cannot be blank!");
 		} else {
 			setError(null);
@@ -151,7 +151,27 @@ const UserCarInfoForm = () => {
 			...prevState,
 			car: {
 				...prevState.car,
-				carBatterySize: `${value} kWh`,
+				carBatterySize: text,
+			},
+		}));
+	};
+
+	const handleTankSizeChange = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Tank size can only be a number!");
+			return;
+		}
+		if (text === "") {
+			setError("Tank size cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserCarInfoForm((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				tank: text,
 			},
 		}));
 	};
@@ -203,6 +223,12 @@ const UserCarInfoForm = () => {
 							data={carMakes}
 							value={userCarInfo.car.make}
 							onChangeText={handleCarMakeChange}
+							style={{
+								padding: 10,
+								borderBottomWidth: 1,
+								borderBottomColor: "#ccc",
+								borderRadius: 5,
+							}}
 							flatListProps={{
 								renderItem: ({ item }) => (
 									<Pressable
@@ -231,6 +257,12 @@ const UserCarInfoForm = () => {
 								data={carModels}
 								value={userCarInfo.car.model}
 								onChangeText={handleCarModelChange}
+								style={{
+									padding: 10,
+									borderBottomWidth: 1,
+									borderBottomColor: "#ccc",
+									borderRadius: 5,
+								}}
 								flatListProps={{
 									renderItem: ({ item }) => (
 										<Pressable
@@ -274,12 +306,30 @@ const UserCarInfoForm = () => {
 					{userCarInfo.car.fuelType === "electricity" ? (
 						<>
 							<Text style={UserFormStyles.smallTitle}>Battery Size:</Text>
-							<TextInput
-								mode="outlined"
-								value={`${userCarInfo.car.carBatterySize}`}
-								onChangeText={handleCarBatterySizeChange}
-								style={UserFormStyles.input}
-							/>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+								}}
+							>
+								<TextInput
+									value={`${userCarInfo.car.carBatterySize}`}
+									onChangeText={handleCarBatterySizeChange}
+									placeholder="68.6..."
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+							</View>
+
 							<Text style={UserFormStyles.smallTitle}>
 								Zipcode of cars primary charging location:
 							</Text>
@@ -290,7 +340,34 @@ const UserCarInfoForm = () => {
 								style={UserFormStyles.input}
 							/>
 						</>
-					) : null}
+					) : (
+						<>
+							<Text style={UserFormStyles.smallTitle}>Tank size:</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+								}}
+							>
+								<TextInput
+									placeholder="10..."
+									value={`${userCarInfo.car.tank}`}
+									onChangeText={handleTankSizeChange}
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>gal</Text>
+							</View>
+						</>
+					)}
 				</View>
 				<View
 					style={{

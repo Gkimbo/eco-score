@@ -7,6 +7,7 @@ class CarSerializer {
 			"fuelType",
 			"carBatterySize",
 			"zipcode",
+			"tank",
 		];
 		const serializedCar = carArray.map((car) => {
 			const newCar = {};

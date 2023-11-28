@@ -39,6 +39,7 @@ class UserInfo {
 		fuelType,
 		carBatterySize,
 		zipCode,
+		tank,
 	}) {
 		if (fuelType !== "electricity") {
 			carBatterySize = null;
@@ -55,6 +56,7 @@ class UserInfo {
 			fuelType: fuelType,
 			carBatterySize: carBatterySize,
 			zipcode: zipCode,
+			tank: tank,
 		});
 	}
 

@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},
+		tank: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
 		fuelType: {
 			type: DataTypes.STRING,
 			allowNull: true,
