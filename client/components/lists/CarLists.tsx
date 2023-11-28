@@ -1,9 +1,10 @@
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { Text, View, Pressable, Animated, Easing } from "react-native";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 
 export interface IAppProps {
 	state: any;
+	onDeleteCar: (carId: number) => void;
 }
 export type Car = {
 	id: number;
@@ -20,8 +21,30 @@ export type Car = {
 	carbonPerMile: string;
 };
 
-const CarList: React.FunctionComponent<IAppProps> = ({ state }) => {
+const CarList: React.FunctionComponent<IAppProps> = ({
+	state,
+	onDeleteCar,
+}) => {
 	const cars = state.cars;
+
+	const [deleteAnimation] = useState(new Animated.Value(0));
+
+	const handleDeletePress = (carId: number) => {
+		Animated.sequence([
+			Animated.timing(deleteAnimation, {
+				toValue: 1,
+				duration: 300,
+				easing: Easing.linear,
+				useNativeDriver: false,
+			}),
+			Animated.timing(deleteAnimation, {
+				toValue: 0,
+				duration: 300,
+				easing: Easing.linear,
+				useNativeDriver: false,
+			}),
+		]).start(() => onDeleteCar(carId));
+	};
 
 	return (
 		<View>
@@ -40,6 +63,52 @@ const CarList: React.FunctionComponent<IAppProps> = ({ state }) => {
 						alignItems: "stretch",
 					}}
 				>
+					{" "}
+					<Pressable
+						onPress={() => handleDeletePress(item.id)}
+						style={({ pressed }) => ({
+							position: "absolute",
+							top: 0, // Adjusted to be at the top edge
+							right: 0, // Adjusted to be at the right edge
+							zIndex: 2,
+							opacity: pressed ? 0.5 : 1,
+						})}
+					>
+						{({ pressed }) => (
+							<Animated.View
+								style={{
+									transform: [
+										{
+											rotate: deleteAnimation.interpolate({
+												inputRange: [0, 1],
+												outputRange: ["0deg", "180deg"],
+											}),
+										},
+									],
+								}}
+							>
+								<View
+									style={{
+										width: 30,
+										height: 30,
+										borderRadius: 15,
+										backgroundColor: pressed ? "darkred" : "red",
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<Text
+										style={{
+											color: "white",
+											fontWeight: "bold",
+										}}
+									>
+										{pressed ? "Delete Car" : "X"}
+									</Text>
+								</View>
+							</Animated.View>
+						)}
+					</Pressable>
 					<Text
 						style={{
 							fontSize: 16,

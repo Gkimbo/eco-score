@@ -17,6 +17,9 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 		dispatch({ type: "CARBON", payload: 1 });
 	};
 	console.log(state);
+	const onDeleteCar = (id: number) => {
+		console.log("pressed:", id);
+	};
 	useEffect(() => {
 		const averageCarbonToProduceAnyCar = 16526;
 		const totalCarbon = state.cars.reduce((total: any, car: any) => {
@@ -117,17 +120,20 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 				}}
 			>
 				<Text style={UserFormStyles.title}>Your Cars</Text>
-				<CarList state={state} />
+				<CarList state={state} onDeleteCar={onDeleteCar} />
 				<Text
 					style={{
 						fontSize: 14,
-						color: "#777",
+						color: "white",
 						marginTop: 30,
 						marginBottom: 20,
 						textAlign: "center",
+						marginRight: 5,
+						marginLeft: 5,
 					}}
 				>
-					Average amount of CO2 to produce a car: {16526 / 2000} Tons not
+					Average amount of CO2 to produce a car:{" "}
+					<Text style={{ color: "orange" }}>{16526 / 2000}</Text> Tons not
 					including high voltage battery
 				</Text>
 			</View>
