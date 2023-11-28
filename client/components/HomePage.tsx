@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, Pressable, View } from "react-native";
 import homePageStyles from "../services/styles/HomePageStyle";
 import FetchData from "../services/fetchData";
@@ -9,10 +9,26 @@ export interface IAppProps {
 }
 
 const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
+	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const handlePress = (event: any) => {
 		event.preventDefault();
 		dispatch({ type: "CARBON", payload: 1 });
 	};
+
+	console.log(carCarbon);
+	console.log(state.cars);
+
+	useEffect(() => {
+		const totalCarbon = state.cars.reduce((total: any, car: any) => {
+			if (car.carbonPerMile) {
+				return total + parseInt(car.carbonPerMile);
+			} else {
+				return total + parseInt(car.carbonPerCharge);
+			}
+			return total;
+		}, 0);
+		setCarCarbon(totalCarbon);
+	}, [state.cars]);
 
 	useEffect(() => {
 		if (state.currentUser.token) {
@@ -38,7 +54,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 				<View style={homePageStyles.leftContainer}>
 					<View style={homePageStyles.iconWithNumber}>
 						<Text>🚗</Text>
-						<Text>{state.userCars || 0}</Text>
+						<Text>{carCarbon || 0}</Text>
 					</View>
 					<View style={homePageStyles.iconWithNumber}>
 						<Text>🏠</Text>
