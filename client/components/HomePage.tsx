@@ -16,15 +16,24 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 	};
 	console.log(state);
 	useEffect(() => {
+		const averageCarbonToProduceAnyCar = 16526;
 		const totalCarbon = state.cars.reduce((total: any, car: any) => {
 			if (car.carbonPerTank) {
-				return total + parseInt(car.carbonPerTank);
+				return (
+					total + parseInt(car.carbonPerTank) + averageCarbonToProduceAnyCar
+				);
 			} else {
-				return total + parseInt(car.carbonPerCharge);
+				return (
+					total +
+					parseInt(car.carbonPerCharge) +
+					parseInt(car.carbonToMakeBattery) +
+					averageCarbonToProduceAnyCar
+				);
 			}
-			return total;
 		}, 0);
-		setCarCarbon(totalCarbon);
+		const tonsOfCarbon = totalCarbon / 2000;
+		let roundedNumber: number = Number(tonsOfCarbon.toFixed(2));
+		setCarCarbon(roundedNumber);
 	}, [state.cars]);
 
 	useEffect(() => {
@@ -51,7 +60,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 				<View style={homePageStyles.leftContainer}>
 					<View style={homePageStyles.iconWithNumber}>
 						<Text>🚗</Text>
-						<Text>{carCarbon || 0}</Text>
+						<Text>{carCarbon || 0} tons</Text>
 					</View>
 					<View style={homePageStyles.iconWithNumber}>
 						<Text>🏠</Text>

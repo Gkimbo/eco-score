@@ -62,17 +62,21 @@ class CarCalculation {
 				let selectedCar = eachCar[0];
 				if (selectedCar.fuel_type === "electricity") {
 					const zipCode = car.zipcode;
-					const latlng = await getCarbonIntensity.getLatLong(zipCode);
-					// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
-					// 	latlng
-					// );
-					const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
-					let carbonPerCharge = this.evChargedOnGrid(
-						carbonIntensity,
-						car.carBatterySize
-					);
-					let roundedNum = carbonPerCharge.toFixed(2);
-					car.carbonPerCharge = roundedNum;
+					if (zipCode === "off grid") {
+						car.carbonPerCharge = 0;
+					} else {
+						const latlng = await getCarbonIntensity.getLatLong(zipCode);
+						// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
+						// 	latlng
+						// );
+						const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
+						let carbonPerCharge = this.evChargedOnGrid(
+							carbonIntensity,
+							car.carBatterySize
+						);
+						let roundedNum = carbonPerCharge.toFixed(2);
+						car.carbonPerCharge = roundedNum;
+					}
 					const batteryProduction = this.evProductionOfBattery(
 						car.carBatterySize
 					).toFixed(2);

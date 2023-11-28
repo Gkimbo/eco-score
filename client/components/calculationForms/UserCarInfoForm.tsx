@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { View, Text, ScrollView, Pressable, Platform } from "react-native";
-import { TextInput } from "react-native-paper";
+import { TextInput, RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
@@ -19,6 +19,7 @@ type UserCarInfoForm = {
 
 const UserCarInfoForm = () => {
 	const { user } = useContext(AuthContext);
+	const [chargeOnGrid, setChargeOnGrid] = useState<string>("yes");
 	const [userCarInfo, setUserCarInfoForm] = useState<UserCarInfoForm>({
 		user: user,
 		car: {
@@ -137,6 +138,10 @@ const UserCarInfoForm = () => {
 		}));
 	};
 
+	const handleChargeMeansChange = (text: string) => {
+		setChargeOnGrid(text);
+	};
+
 	const handleCarBatterySizeChange = (text: string) => {
 		const regex = /^\d*(\.\d*)?(\s*)?$/;
 		if (!regex.test(text)) {
@@ -192,13 +197,15 @@ const UserCarInfoForm = () => {
 			return;
 		}
 
-		if (userCarInfo.car.fuelType === "electricity") {
+		if (userCarInfo.car.fuelType === "electricity" && chargeOnGrid === "yes") {
 			if (!userCarInfo.car.zipCode) {
 				setError(
 					"Please type in the zipcode where you primarily charge your car"
 				);
 				return;
 			}
+		} else if (userCarInfo.car.fuelType === "electricity") {
+			userCarInfo.car.zipCode = "off grid";
 		} else {
 			if (!userCarInfo.car.tank) {
 				setError("Please type in the tank size of your car");
@@ -349,6 +356,32 @@ const UserCarInfoForm = () => {
 							</View>
 
 							<Text style={UserFormStyles.smallTitle}>
+								Do you mainly charge your car on the grid?
+							</Text>
+							<View style={{ flexDirection: "row", justifyContent: "center" }}>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleChargeMeansChange}
+										value={chargeOnGrid}
+									>
+										<RadioButton.Item label="Yes" value="yes" />
+									</RadioButton.Group>
+								</View>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleChargeMeansChange}
+										value={chargeOnGrid}
+									>
+										<RadioButton.Item label="No" value="no" />
+									</RadioButton.Group>
+								</View>
+							</View>
+						</>
+					) : null}
+					{userCarInfo.car.fuelType === "electricity" &&
+					chargeOnGrid === "yes" ? (
+						<>
+							<Text style={UserFormStyles.smallTitle}>
 								Zipcode of cars primary charging location:
 							</Text>
 							<TextInput
@@ -358,7 +391,8 @@ const UserCarInfoForm = () => {
 								style={UserFormStyles.input}
 							/>
 						</>
-					) : (
+					) : null}
+					{userCarInfo.car.fuelType !== "electricity" ? (
 						<>
 							<Text style={UserFormStyles.smallTitle}>Tank size:</Text>
 							<View
@@ -385,7 +419,7 @@ const UserCarInfoForm = () => {
 								<Text style={{ paddingLeft: 10, color: "#000" }}>gal</Text>
 							</View>
 						</>
-					)}
+					) : null}
 				</View>
 				<View
 					style={{
