@@ -25,10 +25,13 @@ const homePageStyles = StyleSheet.create({
 	leftAndCenterContainer: {
 		flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "space-between", // Adjust this property to distribute space
 	},
+
 	centerAndRightContainer: {
 		flexDirection: "row",
 		alignItems: "center",
+		justifyContent: "space-between", // Adjust this property to distribute space
 	},
 	iconWithNumber: {
 		alignItems: "center",

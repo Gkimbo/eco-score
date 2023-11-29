@@ -65,6 +65,7 @@ class CarCalculation {
 					const zipCode = car.zipcode;
 					if (zipCode === "off grid") {
 						car.carbonPerCharge = 0;
+						car.carbonPerMile = 0;
 					} else {
 						const latlng = await getCarbonIntensity.getLatLong(zipCode);
 						// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(

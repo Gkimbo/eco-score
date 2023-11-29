@@ -110,6 +110,21 @@ userInfoRouter.post("/car", async (req, res) => {
 						tank,
 					});
 					return res.status(201).json({ user });
+				} else if (
+					validate[0].fuel_type === "electricity" &&
+					zipCode === "off grid"
+				) {
+					const userInfo = await UserInfo.addCarToDB({
+						userId,
+						model,
+						make,
+						year,
+						fuelType,
+						carBatterySize,
+						zipCode,
+						tank,
+					});
+					return res.status(201).json({ user });
 				} else {
 					return res.status(400).json("Cannot find zipcode");
 				}
