@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Text, View, Pressable, Animated, Easing } from "react-native";
-import UserFormStyles from "../../services/styles/UserInputFormStyle";
 
 export interface IAppProps {
 	state: any;
@@ -28,22 +27,39 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 	const cars = state.cars;
 
 	const [deleteAnimation] = useState(new Animated.Value(0));
+	const [deleteConfirmation, setDeleteConfirmation] = useState<any>({});
+
+	const handleNoPress = (carId: number) => {
+		setDeleteConfirmation((prevConfirmations: any) => ({
+			[carId]: !prevConfirmations[carId],
+		}));
+	};
 
 	const handleDeletePress = (carId: number) => {
-		Animated.sequence([
-			Animated.timing(deleteAnimation, {
-				toValue: 1,
-				duration: 300,
-				easing: Easing.linear,
-				useNativeDriver: false,
-			}),
+		setDeleteConfirmation((prevConfirmations: any) => ({
+			[carId]: !prevConfirmations[carId],
+		}));
+		if (deleteConfirmation[carId]) {
 			Animated.timing(deleteAnimation, {
 				toValue: 0,
 				duration: 300,
 				easing: Easing.linear,
 				useNativeDriver: false,
-			}),
-		]).start(() => onDeleteCar(carId));
+			}).start(() => {
+				onDeleteCar(carId);
+				setDeleteConfirmation((prevConfirmations: any) => ({
+					...prevConfirmations,
+					[carId]: false,
+				}));
+			});
+		} else {
+			Animated.timing(deleteAnimation, {
+				toValue: 1,
+				duration: 300,
+				easing: Easing.linear,
+				useNativeDriver: false,
+			}).start();
+		}
 	};
 
 	return (
@@ -64,35 +80,28 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 					}}
 				>
 					{" "}
-					<Pressable
-						onPress={() => handleDeletePress(item.id)}
-						style={({ pressed }) => ({
-							position: "absolute",
-							top: 0, // Adjusted to be at the top edge
-							right: 0, // Adjusted to be at the right edge
-							zIndex: 2,
-							opacity: pressed ? 0.5 : 1,
-						})}
-					>
-						{({ pressed }) => (
-							<Animated.View
-								style={{
-									transform: [
-										{
-											rotate: deleteAnimation.interpolate({
-												inputRange: [0, 1],
-												outputRange: ["0deg", "180deg"],
-											}),
-										},
-									],
-								}}
-							>
-								<View
+					<View style={{ flexDirection: "row", alignItems: "center" }}>
+						<Pressable
+							onPress={() => handleDeletePress(item.id)}
+							accessible={true}
+							accessibilityLabel="Delete Button"
+						>
+							{({ pressed }) => (
+								<Animated.View
 									style={{
-										width: 30,
-										height: 30,
-										borderRadius: 15,
-										backgroundColor: pressed ? "darkred" : "red",
+										borderRadius: 20,
+										marginRight: 10,
+										width: deleteConfirmation[item.id] ? 65 : pressed ? 40 : 30,
+										height: deleteConfirmation[item.id]
+											? 25
+											: pressed
+											? 40
+											: 30,
+										backgroundColor: deleteConfirmation[item.id]
+											? "red"
+											: pressed
+											? "red"
+											: "#d65d5d",
 										justifyContent: "center",
 										alignItems: "center",
 									}}
@@ -101,14 +110,44 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 										style={{
 											color: "white",
 											fontWeight: "bold",
+											fontSize: deleteConfirmation[item.id] ? 10 : 14,
 										}}
 									>
-										{pressed ? "Delete Car" : "X"}
+										{deleteConfirmation[item.id] ? "Delete Car" : "X"}
+									</Text>
+								</Animated.View>
+							)}
+						</Pressable>
+
+						{deleteConfirmation[item.id] && (
+							<Pressable
+								onPress={() => handleNoPress(item.id)}
+								accessible={true}
+								accessibilityLabel="No Button"
+							>
+								<View
+									style={{
+										borderRadius: 20,
+										width: 65,
+										height: 25,
+										backgroundColor: "green",
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<Text
+										style={{
+											color: "white",
+											fontWeight: "bold",
+											fontSize: 10,
+										}}
+									>
+										Keep Car
 									</Text>
 								</View>
-							</Animated.View>
+							</Pressable>
 						)}
-					</Pressable>
+					</View>
 					<Text
 						style={{
 							fontSize: 16,
@@ -117,6 +156,15 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 						}}
 					>
 						{item.make} - {item.model}
+					</Text>
+					<Text
+						style={{
+							fontSize: 10,
+							color: "#333",
+							textAlign: "center",
+						}}
+					>
+						{item.year}
 					</Text>
 					<Text
 						style={{
