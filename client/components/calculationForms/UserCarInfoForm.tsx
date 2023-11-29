@@ -421,6 +421,34 @@ const UserCarInfoForm = () => {
 							</View>
 						</>
 					) : null}
+					{userCarInfo.car.fuelType === "hybrid" && (
+						<>
+							<Text style={UserFormStyles.smallTitle}>Battery Size:</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+								}}
+							>
+								<TextInput
+									value={`${userCarInfo.car.carBatterySize}`}
+									onChangeText={handleCarBatterySizeChange}
+									placeholder="68.6..."
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+							</View>
+						</>
+					)}
 				</View>
 				<View
 					style={{

@@ -80,9 +80,6 @@ userInfoRouter.post("/car", async (req, res) => {
 	const { token } = req.body.user;
 	let { model, make, year, fuelType, carBatterySize, zipCode, tank } =
 		req.body.car;
-	if (fuelType === "hybrid") {
-		fuelType = "gas";
-	}
 	try {
 		const decodedToken = jwt.verify(token, secretKey);
 		const userId = decodedToken.userId;

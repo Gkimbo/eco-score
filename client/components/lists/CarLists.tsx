@@ -197,6 +197,59 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 							).toFixed(2)} tons of CO2)`}
 						</Text>
 					)}
+					{item.fuelType === "hybrid" ? (
+						<>
+							<Text
+								style={{
+									borderWidth: 1,
+									borderRadius: 10,
+									borderColor: "#ddd",
+									backgroundColor: "#fff",
+									margin: 5,
+									padding: 5,
+								}}
+							>
+								{`CO2 produced for 100,000 miles: (${(
+									(Number(item.carbonPerMile) * 100000) /
+									2000
+								).toFixed(2)} tons of CO2)`}
+							</Text>
+							<Text
+								style={{
+									borderWidth: 1,
+									borderRadius: 10,
+									borderColor: "#ddd",
+									backgroundColor: "#fff",
+									margin: 5,
+									padding: 5,
+								}}
+							>
+								{`CO2 produced manufacturing battery: (${(
+									Number(item.carbonToMakeBattery) / 2000
+								).toFixed(2)} tons of CO2)`}
+							</Text>
+							<View
+								style={{
+									borderWidth: 1,
+									borderRadius: 10,
+									borderColor: "#ddd",
+									backgroundColor: "#fff",
+									margin: 5,
+									padding: 5,
+								}}
+							>
+								<Text>Total CO2 after 100,000 miles:</Text>
+								<Text>
+									{`(${(
+										(Number(item.carbonPerMile) * 100000 +
+											Number(item.carbonToMakeBattery)) /
+											2000 +
+										8.263
+									).toFixed(2)} tons of CO2)`}
+								</Text>
+							</View>
+						</>
+					) : null}
 					{item.fuelType === "gas" || item.fuelType === "diesel" ? (
 						<>
 							<Text

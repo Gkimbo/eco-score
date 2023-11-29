@@ -55,11 +55,12 @@ class CarCalculation {
 	static async takeInCars(user) {
 		const cars = await Promise.all(
 			user.cars.map(async (car) => {
-				const eachCar = await this.getUserCars(
-					car.model,
-					car.fuelType,
-					car.year
-				);
+				let eachCar;
+				if (car.fuelType === "hybrid") {
+					eachCar = await this.getUserCars(car.model, "gas", car.year);
+				} else {
+					eachCar = await this.getUserCars(car.model, car.fuelType, car.year);
+				}
 				let selectedCar = eachCar[0];
 				if (selectedCar.fuel_type === "electricity") {
 					const zipCode = car.zipcode;
@@ -86,7 +87,17 @@ class CarCalculation {
 						car.carBatterySize
 					).toFixed(2);
 					car.carbonToMakeBattery = batteryProduction;
-				} else if (selectedCar.fuel_type === "gas") {
+				} else if (
+					selectedCar.fuel_type === "gas" ||
+					selectedCar.fuel_type === "hybrid"
+				) {
+					if (car.fuelType === "hybrid") {
+						const batteryProduction = this.evProductionOfBattery(
+							car.carBatterySize
+						).toFixed(2);
+						car.carbonToMakeBattery = batteryProduction;
+						console.log(car);
+					}
 					const averageMpg =
 						(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
 					const tankSize = car.tank;
@@ -115,6 +126,9 @@ class CarCalculation {
 	}
 
 	static async checkCarExists(model, fuelType, year) {
+		if (fuelType === "hybrid") {
+			fuelType = "gas";
+		}
 		try {
 			const response = await axios.get(
 				`https://api.api-ninjas.com/v1/cars?limit=50&model=${model}&fuel_type=${fuelType}&year=${year}`,
