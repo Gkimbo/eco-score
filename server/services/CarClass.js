@@ -25,24 +25,30 @@ class CarCalculation {
 
 	static co2PerGallonGas(mpg, tankSize) {
 		const co2PerMile = 19.6 / mpg;
-		// const rangeMiles = mpg * tankSize;
-		return co2PerMile;
+		const rangeMiles = mpg * tankSize;
+		return rangeMiles * co2PerMile;
 	}
 
 	static co2PerGallonDiesel(mpg, tankSize) {
 		const co2PerMile = 22.44 / mpg;
-		// const rangeMiles = mpg * tankSize;
-		return co2PerMile;
+		const rangeMiles = mpg * tankSize;
+		return rangeMiles * co2PerMile;
 	}
 
 	static evChargedOnGrid(locationCarbonIntensity, batterySize) {
-		const battery = batterySize.replaceAll(/ kWh/g, "");
+		const battery = batterySize;
 		const batteryNum = parseInt(battery);
 		const gramsToPoundsConversionFactor = 1 / 453.592;
 		const carbonIntensityPounds =
 			locationCarbonIntensity.carbonIntensity * gramsToPoundsConversionFactor;
 		const co2PerCharge = carbonIntensityPounds * batteryNum;
 		return co2PerCharge;
+	}
+
+	static evProductionOfBattery(batterySize) {
+		const battery = batterySize;
+		const batteryNum = parseInt(battery);
+		return 184 * batteryNum;
 	}
 
 	static async takeInCars(user) {
@@ -56,29 +62,46 @@ class CarCalculation {
 				let selectedCar = eachCar[0];
 				if (selectedCar.fuel_type === "electricity") {
 					const zipCode = car.zipcode;
-					const latlng = await getCarbonIntensity.getLatLong(zipCode);
-					// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
-					// 	latlng
-					// );
-					const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
-					let carbonPerCharge = this.evChargedOnGrid(
-						carbonIntensity,
+					if (zipCode === "off grid") {
+						car.carbonPerCharge = 0;
+					} else {
+						const latlng = await getCarbonIntensity.getLatLong(zipCode);
+						// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
+						// 	latlng
+						// );
+						const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
+						let carbonPerCharge = this.evChargedOnGrid(
+							carbonIntensity,
+							car.carBatterySize
+						);
+						let roundedNum = carbonPerCharge.toFixed(2);
+						const averageMpg =
+							(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
+						car.carbonPerMile = (carbonPerCharge / averageMpg).toFixed(2);
+						car.carbonPerCharge = roundedNum;
+					}
+					const batteryProduction = this.evProductionOfBattery(
 						car.carBatterySize
-					);
-					let roundedNum = carbonPerCharge.toFixed(2);
-					car.carbonPerCharge = roundedNum;
+					).toFixed(2);
+					car.carbonToMakeBattery = batteryProduction;
 				} else if (selectedCar.fuel_type === "gas") {
 					const averageMpg =
 						(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
-					let carbonPerGal = this.co2PerGallonGas(averageMpg);
+					const tankSize = car.tank;
+					let carbonPerGal = this.co2PerGallonGas(averageMpg, tankSize);
 					let roundedNum = carbonPerGal.toFixed(2);
-					car.carbonPerMile = roundedNum;
+					const co2PerMile = 22.44 / averageMpg;
+					car.carbonPerMile = co2PerMile.toFixed(2);
+					car.carbonPerTank = roundedNum;
 				} else {
 					const averageMpg =
 						(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
-					let carbonPerGal = this.co2PerGallonDiesel(averageMpg);
+					const tankSize = car.tank;
+					let carbonPerGal = this.co2PerGallonDiesel(averageMpg, tankSize);
 					let roundedNum = carbonPerGal.toFixed(2);
-					car.carbonPerMile = roundedNum;
+					const co2PerMile = 22.44 / averageMpg;
+					car.carbonPerMile = co2PerMile.toFixed(2);
+					car.carbonPerTank = roundedNum;
 				}
 				return car;
 			})

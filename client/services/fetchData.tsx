@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import type { user } from "./types/userType";
+import { Car, Home } from "./types/carAndHomeType";
 const baseURL = "http://localhost:3000";
 
 interface IFormInput {
@@ -19,40 +20,20 @@ interface UserBasicInfo {
 	homeOwnership: string;
 	milesDriven: string;
 	milesDrivenUnit: string;
-	commute: boolean;
+	commute: string;
 	transportation: string;
 	daysCommute: string;
-	hasCar: boolean;
+	hasCar: string;
 }
 
 interface UserCarInfo {
 	user: user;
-	car: {
-		make: string;
-		model: string;
-		year: string;
-		fuelType: string;
-		carBatterySize: string;
-		zipCode: string;
-	};
+	car: Car;
 }
 
 interface UserHomeInfo {
 	user: user;
-	home: {
-		zipcode: string;
-		yearBuilt: string;
-		heatSource: string;
-		airConditioning: string;
-		airConditioningSource: string;
-		squareFeet: string;
-		electricitySource: string;
-		electricityUsage: string;
-		recycling: string;
-		compost: string;
-		ovenType: string;
-		electricityUnit: string;
-	};
+	home: Home;
 }
 
 class FetchData {

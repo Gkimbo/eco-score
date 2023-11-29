@@ -21,7 +21,7 @@ const EditCarButton: React.FunctionComponent<IAppProps> = () => {
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
-			<Text style={styles.buttonText}>Edit Car info</Text>
+			<Text style={styles.buttonText}>Add Car</Text>
 		</Pressable>
 	);
 };

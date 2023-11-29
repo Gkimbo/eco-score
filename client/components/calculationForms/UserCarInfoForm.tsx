@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { View, Text, ScrollView, Pressable, Platform } from "react-native";
-import { TextInput } from "react-native-paper";
+import { TextInput, RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
@@ -10,7 +10,7 @@ import Autocomplete from "react-native-autocomplete-input";
 import { carMakesUS } from "../../services/carArray";
 import { useNavigate } from "react-router-native";
 import carsData from "../../services/carModelArray";
-import { Car } from "../../services/types/carType";
+import { Car } from "../../services/types/carAndHomeType";
 
 type UserCarInfoForm = {
 	user: any;
@@ -19,6 +19,7 @@ type UserCarInfoForm = {
 
 const UserCarInfoForm = () => {
 	const { user } = useContext(AuthContext);
+	const [chargeOnGrid, setChargeOnGrid] = useState<string>("yes");
 	const [userCarInfo, setUserCarInfoForm] = useState<UserCarInfoForm>({
 		user: user,
 		car: {
@@ -26,10 +27,13 @@ const UserCarInfoForm = () => {
 			model: "",
 			year: "",
 			fuelType: "gas",
-			carBatterySize: "68.6 kWh",
+			carBatterySize: "",
+			tank: "",
 			zipCode: "",
-			carbonPerMile: "",
+			carbonPerTank: "",
 			carbonPerCharge: "",
+			carbonToMakeBattery: "",
+			carbonPerMile: "",
 		},
 	});
 	const [redirect, setRedirect] = useState<boolean>(false);
@@ -135,14 +139,17 @@ const UserCarInfoForm = () => {
 		}));
 	};
 
+	const handleChargeMeansChange = (text: string) => {
+		setChargeOnGrid(text);
+	};
+
 	const handleCarBatterySizeChange = (text: string) => {
-		const value = text.replaceAll(/ kWh| Wh| kh| kW|kWh/g, "");
 		const regex = /^\d*(\.\d*)?(\s*)?$/;
-		if (!regex.test(value)) {
+		if (!regex.test(text)) {
 			setError("Battery size can only be a number!");
 			return;
 		}
-		if (value === "") {
+		if (text === "") {
 			setError("Battery size cannot be blank!");
 		} else {
 			setError(null);
@@ -151,23 +158,62 @@ const UserCarInfoForm = () => {
 			...prevState,
 			car: {
 				...prevState.car,
-				carBatterySize: `${value} kWh`,
+				carBatterySize: text,
+			},
+		}));
+	};
+
+	const handleTankSizeChange = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Tank size can only be a number!");
+			return;
+		}
+		if (text === "") {
+			setError("Tank size cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserCarInfoForm((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				tank: text,
 			},
 		}));
 	};
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
-		if (userCarInfo.car.fuelType === "electricity") {
+		if (!userCarInfo.car.make) {
+			setError("Your cars Make cannot be blank");
+			return;
+		}
+		if (!userCarInfo.car.model) {
+			setError("Your cars Model cannot be blank");
+			return;
+		}
+		if (!userCarInfo.car.year) {
+			setError("Your cars Year cannot be blank");
+			return;
+		}
+
+		if (userCarInfo.car.fuelType === "electricity" && chargeOnGrid === "yes") {
 			if (!userCarInfo.car.zipCode) {
 				setError(
 					"Please type in the zipcode where you primarily charge your car"
 				);
 				return;
-			} else {
-				setError("");
+			}
+		} else if (userCarInfo.car.fuelType === "electricity") {
+			userCarInfo.car.zipCode = "off grid";
+		} else {
+			if (!userCarInfo.car.tank) {
+				setError("Please type in the tank size of your car");
+				return;
 			}
 		}
+		setError(null);
 		FetchData.addCarInfo(userCarInfo).then((response) => {
 			if (response === "No car found") {
 				setError(response);
@@ -203,6 +249,12 @@ const UserCarInfoForm = () => {
 							data={carMakes}
 							value={userCarInfo.car.make}
 							onChangeText={handleCarMakeChange}
+							style={{
+								padding: 10,
+								borderBottomWidth: 1,
+								borderBottomColor: "#ccc",
+								borderRadius: 5,
+							}}
 							flatListProps={{
 								renderItem: ({ item }) => (
 									<Pressable
@@ -231,6 +283,12 @@ const UserCarInfoForm = () => {
 								data={carModels}
 								value={userCarInfo.car.model}
 								onChangeText={handleCarModelChange}
+								style={{
+									padding: 10,
+									borderBottomWidth: 1,
+									borderBottomColor: "#ccc",
+									borderRadius: 5,
+								}}
 								flatListProps={{
 									renderItem: ({ item }) => (
 										<Pressable
@@ -274,12 +332,56 @@ const UserCarInfoForm = () => {
 					{userCarInfo.car.fuelType === "electricity" ? (
 						<>
 							<Text style={UserFormStyles.smallTitle}>Battery Size:</Text>
-							<TextInput
-								mode="outlined"
-								value={`${userCarInfo.car.carBatterySize}`}
-								onChangeText={handleCarBatterySizeChange}
-								style={UserFormStyles.input}
-							/>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+								}}
+							>
+								<TextInput
+									value={`${userCarInfo.car.carBatterySize}`}
+									onChangeText={handleCarBatterySizeChange}
+									placeholder="68.6..."
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+							</View>
+
+							<Text style={UserFormStyles.smallTitle}>
+								Do you mainly charge your car on the grid?
+							</Text>
+							<View style={{ flexDirection: "row", justifyContent: "center" }}>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleChargeMeansChange}
+										value={chargeOnGrid}
+									>
+										<RadioButton.Item label="Yes" value="yes" />
+									</RadioButton.Group>
+								</View>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleChargeMeansChange}
+										value={chargeOnGrid}
+									>
+										<RadioButton.Item label="No" value="no" />
+									</RadioButton.Group>
+								</View>
+							</View>
+						</>
+					) : null}
+					{userCarInfo.car.fuelType === "electricity" &&
+					chargeOnGrid === "yes" ? (
+						<>
 							<Text style={UserFormStyles.smallTitle}>
 								Zipcode of cars primary charging location:
 							</Text>
@@ -289,6 +391,34 @@ const UserCarInfoForm = () => {
 								onChangeText={handleZipCodeChange}
 								style={UserFormStyles.input}
 							/>
+						</>
+					) : null}
+					{userCarInfo.car.fuelType !== "electricity" ? (
+						<>
+							<Text style={UserFormStyles.smallTitle}>Tank size:</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+								}}
+							>
+								<TextInput
+									placeholder="10..."
+									value={`${userCarInfo.car.tank}`}
+									onChangeText={handleTankSizeChange}
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>gal</Text>
+							</View>
 						</>
 					) : null}
 				</View>

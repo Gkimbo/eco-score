@@ -4,10 +4,11 @@ const colors = ["red", "orange", "grey", "green"];
 
 const homePageStyles = StyleSheet.create({
 	container: {
-		flex: 1,
+		// flex: 1,
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
+		marginTop: 30,
 	},
 	leftContainer: {
 		flexDirection: "column",
@@ -32,7 +33,7 @@ const homePageStyles = StyleSheet.create({
 	iconWithNumber: {
 		alignItems: "center",
 		marginBottom: 10,
-		borderRadius: 100,
+		borderRadius: 10,
 		backgroundColor: "lightgreen",
 		width: 40,
 	},

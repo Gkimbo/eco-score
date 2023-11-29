@@ -77,7 +77,8 @@ userInfoRouter.post("/basic", async (req, res) => {
 
 userInfoRouter.post("/car", async (req, res) => {
 	const { token } = req.body.user;
-	let { model, make, year, fuelType, carBatterySize, zipCode } = req.body.car;
+	let { model, make, year, fuelType, carBatterySize, zipCode, tank } =
+		req.body.car;
 	if (fuelType === "hybrid") {
 		fuelType = "gas";
 	}
@@ -99,6 +100,7 @@ userInfoRouter.post("/car", async (req, res) => {
 				fuelType,
 				carBatterySize,
 				zipCode,
+				tank,
 			});
 			return res.status(201).json({ user });
 		}

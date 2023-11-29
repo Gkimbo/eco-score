@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { View, Text, ScrollView, Switch, Pressable } from "react-native";
-import { TextInput } from "react-native-paper";
+import { TextInput, RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
 import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
@@ -13,7 +13,7 @@ type UserBasicInfo = {
 	homeOwnership: "rent" | "own";
 	milesDriven: string;
 	milesDrivenUnit: "yearly" | "monthly" | "daily";
-	commute: boolean;
+	commute: string;
 	transportation:
 		| "drive own car"
 		| "train"
@@ -23,7 +23,7 @@ type UserBasicInfo = {
 		| "electric scooter"
 		| "ride share";
 	daysCommute: string;
-	hasCar: boolean;
+	hasCar: string;
 };
 
 const UserBasicInfoForm = () => {
@@ -34,10 +34,10 @@ const UserBasicInfoForm = () => {
 		homeOwnership: "rent",
 		milesDriven: "",
 		milesDrivenUnit: "yearly",
-		commute: false,
+		commute: "no",
 		transportation: "drive own car",
 		daysCommute: "",
-		hasCar: false,
+		hasCar: "no",
 	});
 
 	const handleLocationChange = (text: string) => {
@@ -61,17 +61,17 @@ const UserBasicInfoForm = () => {
 		setUserBasicInfo((prevState) => ({ ...prevState, milesDrivenUnit: unit }));
 	};
 
-	const handleCommuteChange = () => {
+	const handleCommuteChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({
 			...prevState,
-			commute: !prevState.commute,
+			commute: text,
 		}));
 	};
 
-	const handleHasCarChange = () => {
+	const handleHasCarChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({
 			...prevState,
-			hasCar: !prevState.hasCar,
+			hasCar: text,
 		}));
 	};
 
@@ -126,43 +126,87 @@ const UserBasicInfoForm = () => {
 					/>
 					<View style={UserFormStyles.commuteContainer}>
 						<Text style={UserFormStyles.subtitle}>Do you have a car?</Text>
-						<Switch
-							value={userBasicInfo.hasCar}
-							onValueChange={handleHasCarChange}
-						/>
+						<View style={{ flexDirection: "row", justifyContent: "center" }}>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleHasCarChange}
+									value={userBasicInfo.hasCar}
+								>
+									<RadioButton.Item label="Yes" value="yes" />
+								</RadioButton.Group>
+							</View>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleHasCarChange}
+									value={userBasicInfo.hasCar}
+								>
+									<RadioButton.Item label="No" value="no" />
+								</RadioButton.Group>
+							</View>
+						</View>
 					</View>
 					<View>
 						<Text style={UserFormStyles.subtitle}>
 							How many miles do you drive?
 						</Text>
-						<View style={UserFormStyles.milesContainer}>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "center",
+								alignItems: "center",
+								borderWidth: 1,
+								borderColor: "#000",
+								borderRadius: 5,
+								backgroundColor: "#fff",
+								padding: 5,
+							}}
+						>
 							<TextInput
-								mode="outlined"
 								value={userBasicInfo.milesDriven}
 								onChangeText={handleMilesDrivenChange}
-								style={UserFormStyles.unitInput}
+								style={{
+									...UserFormStyles.input,
+									borderWidth: 0,
+									backgroundColor: "transparent",
+								}}
 							/>
-							<RNPickerSelect
-								value={userBasicInfo.milesDrivenUnit}
-								onValueChange={handleMilesDrivenUnitChange}
-								style={pickerSelectStyles}
-								items={[
-									{ label: "Yearly", value: "yearly" },
-									{ label: "Monthly", value: "monthly" },
-									{ label: "Daily", value: "daily" },
-								]}
-							/>
+							<View style={{ marginTop: 10 }}>
+								<RNPickerSelect
+									value={userBasicInfo.milesDrivenUnit}
+									onValueChange={handleMilesDrivenUnitChange}
+									style={pickerSelectStyles}
+									items={[
+										{ label: "Yearly", value: "yearly" },
+										{ label: "Monthly", value: "monthly" },
+										{ label: "Daily", value: "daily" },
+									]}
+								/>
+							</View>
 						</View>
 					</View>
 
 					<View style={UserFormStyles.commuteContainer}>
 						<Text style={UserFormStyles.subtitle}>Do you commute to work?</Text>
-						<Switch
-							value={userBasicInfo.commute}
-							onValueChange={handleCommuteChange}
-						/>
+						<View style={{ flexDirection: "row", justifyContent: "center" }}>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleCommuteChange}
+									value={userBasicInfo.commute}
+								>
+									<RadioButton.Item label="Yes" value="yes" />
+								</RadioButton.Group>
+							</View>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleCommuteChange}
+									value={userBasicInfo.commute}
+								>
+									<RadioButton.Item label="No" value="no" />
+								</RadioButton.Group>
+							</View>
+						</View>
 
-						{userBasicInfo.commute && (
+						{userBasicInfo.commute === "yes" && (
 							<>
 								<Text style={UserFormStyles.subtitle}>
 									How many days a week do you commute?

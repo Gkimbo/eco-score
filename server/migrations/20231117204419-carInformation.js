@@ -30,6 +30,10 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
+			tank: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
 			fuelType: {
 				type: Sequelize.STRING,
 				allowNull: true,
