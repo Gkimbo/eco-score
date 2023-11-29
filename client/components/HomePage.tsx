@@ -4,6 +4,7 @@ import homePageStyles from "../services/styles/HomePageStyle";
 import FetchData from "../services/fetchData";
 import CarList from "./lists/CarLists";
 import UserFormStyles from "../services/styles/UserInputFormStyle";
+import DeleteData from "../services/DeleteData";
 
 export interface IAppProps {
 	state: any;
@@ -17,8 +18,15 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 		dispatch({ type: "CARBON", payload: 1 });
 	};
 	console.log(state);
-	const onDeleteCar = (id: number) => {
-		console.log("pressed:", id);
+	const onDeleteCar = async (id: number) => {
+		try {
+			const deleteCar = await DeleteData.deleteCar(id);
+			if (deleteCar) {
+				dispatch({ type: "DELETE_CAR", payload: id });
+			}
+		} catch (error) {
+			console.error("Error deleting car:", error);
+		}
 	};
 	useEffect(() => {
 		const averageCarbonToProduceAnyCar = 16526;

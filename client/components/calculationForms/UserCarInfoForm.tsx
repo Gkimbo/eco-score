@@ -215,7 +215,7 @@ const UserCarInfoForm = () => {
 		}
 		setError(null);
 		FetchData.addCarInfo(userCarInfo).then((response) => {
-			if (response === "No car found") {
+			if (response === "No car found" || response === "Cannot find zipcode") {
 				setError(response);
 			} else {
 				setError(null);

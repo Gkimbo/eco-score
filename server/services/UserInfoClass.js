@@ -114,6 +114,18 @@ class UserInfo {
 			throw error;
 		}
 	}
+
+	static async deleteCarInfo(id) {
+		try {
+			const deletedCarInfo = await UserCars.destroy({
+				where: { id: id },
+			});
+			return deletedCarInfo;
+		} catch (error) {
+			console.error("Error deleting car info: ", error);
+			throw error;
+		}
+	}
 }
 
 module.exports = UserInfo;

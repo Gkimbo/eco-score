@@ -1,6 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 const getCarbonIntensity = require("./getLocationCarbonIntensity");
+const getPhotos = require("./getPhotos");
 
 const carApiKey = process.env.API_NINJA_API_KEY;
 
@@ -103,6 +104,8 @@ class CarCalculation {
 					car.carbonPerMile = co2PerMile.toFixed(2);
 					car.carbonPerTank = roundedNum;
 				}
+				// const photo = await getPhotos(car.model, car.year);
+				// console.log(photo);
 				return car;
 			})
 		);

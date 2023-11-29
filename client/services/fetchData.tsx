@@ -174,6 +174,8 @@ class FetchData {
 			return err;
 		}
 	}
+
+	static async deleteCar(id: number, user: user) {}
 }
 
 export default FetchData;
