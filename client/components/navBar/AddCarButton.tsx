@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Text, Pressable } from "react-native";
+import { Text, Pressable, ViewStyle, TextStyle } from "react-native";
 import { useNavigate } from "react-router-native";
 
-export interface IAppProps {}
+export interface IAppProps {
+	setIsDrawerOpen: any;
+}
 
-const EditCarButton: React.FunctionComponent<IAppProps> = () => {
+const EditCarButton: React.FunctionComponent<IAppProps> = ({
+	setIsDrawerOpen,
+}) => {
 	const [redirect, setRedirect] = useState<boolean>(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (redirect) {
+			setIsDrawerOpen(false);
 			navigate("/car-form");
 			setRedirect(false);
 		}
@@ -26,15 +31,23 @@ const EditCarButton: React.FunctionComponent<IAppProps> = () => {
 	);
 };
 
-const styles = {
+interface Styles {
+	button: ViewStyle;
+	buttonText: TextStyle; // Separate TextStyle for text styles
+}
+
+const styles: Styles = {
 	button: {
-		backgroundColor: "blue",
+		backgroundColor: "grey",
 		padding: 10,
 		borderRadius: 50,
+		margin: 10,
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	buttonText: {
-		color: "white",
-		fontSize: 10,
+		color: "black",
+		fontSize: 15,
 	},
 };
 

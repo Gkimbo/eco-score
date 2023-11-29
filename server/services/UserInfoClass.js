@@ -41,7 +41,6 @@ class UserInfo {
 		zipCode,
 		tank,
 	}) {
-		console.log(fuelType);
 		if (fuelType !== "electricity" && fuelType !== "hybrid") {
 			carBatterySize = null;
 		}

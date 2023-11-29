@@ -6,7 +6,7 @@ export interface IAppProps {
 	setIsDrawerOpen: any;
 }
 
-const AddBasicsButton: React.FunctionComponent<IAppProps> = ({
+const AddHomeButton: React.FunctionComponent<IAppProps> = ({
 	setIsDrawerOpen,
 }) => {
 	const [redirect, setRedirect] = useState<boolean>(false);
@@ -15,7 +15,7 @@ const AddBasicsButton: React.FunctionComponent<IAppProps> = ({
 	useEffect(() => {
 		if (redirect) {
 			setIsDrawerOpen(false);
-			navigate("/basic-form");
+			navigate("/home-form");
 			setRedirect(false);
 		}
 	}, [redirect]);
@@ -26,7 +26,7 @@ const AddBasicsButton: React.FunctionComponent<IAppProps> = ({
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
-			<Text style={styles.buttonText}>Add Basic info</Text>
+			<Text style={styles.buttonText}>Add Home</Text>
 		</Pressable>
 	);
 };
@@ -51,4 +51,4 @@ const styles: Styles = {
 	},
 };
 
-export default AddBasicsButton;
+export default AddHomeButton;

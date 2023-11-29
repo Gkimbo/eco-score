@@ -96,7 +96,6 @@ class CarCalculation {
 							car.carBatterySize
 						).toFixed(2);
 						car.carbonToMakeBattery = batteryProduction;
-						console.log(car);
 					}
 					const averageMpg =
 						(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;

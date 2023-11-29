@@ -197,7 +197,6 @@ const UserHomeInfoForm = () => {
 		event.preventDefault();
 		FetchData.addHomeInfo(userHomeInfo).then((response) => {
 			setRedirect(true);
-			console.log(response);
 		});
 	};
 

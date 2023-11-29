@@ -17,7 +17,6 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 		event.preventDefault();
 		dispatch({ type: "CARBON", payload: 1 });
 	};
-	console.log(state);
 	const onDeleteCar = async (id: number) => {
 		try {
 			const deleteCar = await DeleteData.deleteCar(id);

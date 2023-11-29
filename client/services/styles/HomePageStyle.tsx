@@ -8,7 +8,7 @@ const homePageStyles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 30,
+		marginTop: 90,
 	},
 	leftContainer: {
 		flexDirection: "column",
@@ -83,11 +83,9 @@ const homePageStyles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		padding: 10,
-		borderRadius: 5,
-		backgroundColor: "lightgray",
 		marginRight: 1,
 		marginLeft: 1,
+		marginBottom: "10%",
 	},
 
 	logoutButton: {
