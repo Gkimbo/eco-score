@@ -15,14 +15,6 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},
-		heatSource: {
-			type: DataTypes.STRING,
-			allowNull: true,
-		},
-		airConditioning: {
-			type: DataTypes.STRING,
-			allowNull: true,
-		},
 		squareFeet: {
 			type: DataTypes.STRING,
 			allowNull: true,
@@ -43,11 +35,35 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		ovenType: {
+		yearBuilt: {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},
-		yearBuilt: {
+		gasUnit: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		gasUsage: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		oilUsage: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		oilUnit: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		oilVolume: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		oil: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		gas: {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},

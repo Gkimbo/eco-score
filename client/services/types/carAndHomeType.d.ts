@@ -15,14 +15,17 @@ export type Car = {
 export type Home = {
     zipcode: string;
     yearBuilt: string;
-    heatSource: string;
-    airConditioning: string;
-    airConditioningSource: string;
     squareFeet: string;
     electricitySource: string;
     electricityUsage: string;
     recycling: string;
     compost: string;
-    ovenType: string;
     electricityUnit: string;
+    gasUnit: string;
+	gasUsage: string;
+	oilUsage: string;
+	oilUnit: string;
+    oilVolume: string;
+    oil:string;
+    gas: string;
 };

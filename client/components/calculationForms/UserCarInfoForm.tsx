@@ -118,6 +118,18 @@ const UserCarInfoForm = () => {
 	};
 
 	const handleZipCodeChange = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Zipcode can only be a number!");
+			return;
+		}
+		if (text === "") {
+			setError("Zipcode cannot be blank!");
+		} else if (text.length !== 5) {
+			setError("A zipcode needs 5 numbers");
+		} else {
+			setError(null);
+		}
 		setUserCarInfoForm((prevState) => ({
 			...prevState,
 			car: {

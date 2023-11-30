@@ -161,39 +161,48 @@ userInfoRouter.post("/home", async (req, res) => {
 	const {
 		zipcode,
 		yearBuilt,
-		heatSource,
-		airConditioning,
-		airConditioningSource,
 		squareFeet,
 		electricitySource,
 		electricityUsage,
+		gasUsage,
+		oilUsage,
+		gasUnit,
+		oilUnit,
+		oilVolume,
 		recycling,
 		compost,
-		ovenType,
 		electricityUnit,
+		gas,
+		oil,
 	} = req.body.home;
-
+	console.log(req.body);
 	try {
 		const decodedToken = jwt.verify(token, secretKey);
 		const userId = decodedToken.userId;
 		const user = await User.findOne({
 			where: { id: userId },
 		});
-
+		const checkZipcode = await getCarbonIntensity.checkZipcodeExists(zipcode);
+		if (!checkZipcode) {
+			return res.status(400).json("Cannot find zipcode");
+		}
 		const userInfo = await UserInfo.addHomeToDB({
 			userId,
 			zipcode,
 			yearBuilt,
-			heatSource,
-			airConditioning,
-			airConditioningSource,
 			squareFeet,
 			electricitySource,
 			electricityUsage,
+			gasUsage,
+			oilUsage,
+			gasUnit,
+			oilUnit,
+			oilVolume,
 			recycling,
 			compost,
-			ovenType,
 			electricityUnit,
+			gas,
+			oil,
 		});
 
 		return res.status(201).json({ user });

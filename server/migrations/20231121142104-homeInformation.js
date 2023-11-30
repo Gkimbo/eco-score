@@ -26,18 +26,6 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
-			heatSource: {
-				type: Sequelize.STRING,
-				allowNull: true,
-			},
-			airConditioning: {
-				type: Sequelize.STRING,
-				allowNull: true,
-			},
-			airConditioningSource: {
-				type: Sequelize.STRING,
-				allowNull: true,
-			},
 			squareFeet: {
 				type: Sequelize.STRING,
 				allowNull: true,
@@ -58,7 +46,31 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
-			ovenType: {
+			gasUnit: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			gasUsage: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			oilUsage: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			oilUnit: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			oilVolume: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			oil: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			gas: {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
