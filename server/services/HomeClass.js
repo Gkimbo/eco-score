@@ -27,36 +27,38 @@ class HomeClass {
 		}
 	}
 
-	static evProductionOfBatteryBank(batteryBankSize) {
-		const battery = batteryBankSize;
-		const batteryNum = parseInt(battery);
+	static co2ManufacturingSolarPanels(numOfPanels, totalKwH) {}
+
+	static productionOfBatteryBank(batteryBankSize) {
+		const batteryNum = parseInt(batteryBankSize);
 		return 184 * batteryNum;
 	}
 
 	static async takeInHomes(user) {
 		const homes = await Promise.all(
 			user.homes.map(async (home) => {
-				let totalCarbon = 0;
-				if (home.electricitySource === "grid") {
-					let electricityUsage;
-					if (home.electricityUnit === "yearly") {
-						electricityUsage = Number(home.electricityUsage);
-					} else {
-						electricityUsage = Number(home.electricityUsage) * 12;
-					}
-					const latlng = await getCarbonIntensity.getLatLong(home.zipcode);
-					// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
-					// 	latlng
-					// );
-					const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
-					let carbonForAnnualPower = this.powerOnGrid(
-						carbonIntensity,
-						electricityUsage
-					);
-					totalCarbon += carbonForAnnualPower;
-					let roundedNum = carbonForAnnualPower.toFixed(2);
-					home.carbonForAnnualPower = roundedNum;
+				let totalAnnualCarbon = 0;
+				let totalStaticCarbon = 0;
+
+				let electricityUsage;
+				if (home.electricityUnit === "yearly") {
+					electricityUsage = Number(home.electricityUsage);
+				} else {
+					electricityUsage = Number(home.electricityUsage) * 12;
 				}
+				const latlng = await getCarbonIntensity.getLatLong(home.zipcode);
+				// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
+				// 	latlng
+				// );
+				const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
+				let carbonForAnnualPower = this.powerOnGrid(
+					carbonIntensity,
+					electricityUsage
+				);
+				totalAnnualCarbon += carbonForAnnualPower;
+				let roundedNum = carbonForAnnualPower.toFixed(2);
+				home.carbonForAnnualPower = roundedNum;
+
 				if (home.gas === "yes") {
 					let gasUsage;
 					if (home.gasUnit === "yearly") {
@@ -65,7 +67,7 @@ class HomeClass {
 						gasUsage = Number(home.gasUsage) * 12;
 					}
 					const carbonFromGas = this.co2FromNaturalGas(gasUsage);
-					totalCarbon += carbonFromGas;
+					totalAnnualCarbon += carbonFromGas;
 					const roundedNum = carbonFromGas.toFixed(2);
 					home.carbonFromAnnualGas = roundedNum;
 				} else {
@@ -83,13 +85,26 @@ class HomeClass {
 						oilUsage,
 						home.oilVolume
 					);
-					totalCarbon += carbonFromOil;
+					totalAnnualCarbon += carbonFromOil;
 					const roundedNum = carbonFromOil.toFixed(2);
 					home.carbonFromAnnualOil = roundedNum;
 				} else {
 					home.carbonFromAnnualOil = null;
 				}
-				home.totalCarbon = totalCarbon.toFixed(2);
+
+				if (home.batteryBackup === "yes") {
+					const batterySize = Number(home.batteryBankSize);
+					const carbonFromBatteryBackup =
+						this.productionOfBatteryBank(batterySize);
+					totalStaticCarbon += carbonFromBatteryBackup;
+					const roundedNum = carbonFromBatteryBackup.toFixed(2);
+					home.carbonFromBatteryBank = roundedNum;
+				} else {
+					home.carbonFromBatteryBank = null;
+				}
+
+				home.totalAnnualCarbon = totalAnnualCarbon.toFixed(2);
+				home.totalStaticCarbon = totalStaticCarbon.toFixed(2);
 				return home;
 			})
 		);

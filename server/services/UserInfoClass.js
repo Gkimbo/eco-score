@@ -77,6 +77,8 @@ class UserInfo {
 		electricityUnit,
 		gas,
 		oil,
+		batteryBankSize,
+		batteryBackup,
 	}) {
 		await UserHomes.create({
 			userId,
@@ -95,6 +97,8 @@ class UserInfo {
 			electricityUnit,
 			gas,
 			oil,
+			batteryBankSize,
+			batteryBackup,
 		});
 	}
 	static async updateUserInfo(id, data) {
@@ -127,6 +131,18 @@ class UserInfo {
 				where: { id: id },
 			});
 			return deletedCarInfo;
+		} catch (error) {
+			console.error("Error deleting car info: ", error);
+			throw error;
+		}
+	}
+
+	static async deleteHomeInfo(id) {
+		try {
+			const deletedHomeInfo = await UserHomes.destroy({
+				where: { id: id },
+			});
+			return deletedHomeInfo;
 		} catch (error) {
 			console.error("Error deleting car info: ", error);
 			throw error;

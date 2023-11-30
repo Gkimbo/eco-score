@@ -28,4 +28,6 @@ export type Home = {
     oilVolume: string;
     oil:string;
     gas: string;
+    batteryBackup: string;
+    batteryBankSize: string;
 };

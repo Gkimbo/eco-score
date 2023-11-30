@@ -71,6 +71,14 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},
+		batteryBackup: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		batteryBankSize: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
 		createdAt: {
 			type: DataTypes.DATE,
 			allowNull: false,

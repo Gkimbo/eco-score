@@ -17,8 +17,10 @@ Pounds of CO2 emitted per gallon  - 19.6 lbs CO2/gallon
 Average miles traveled per year per vehicle - 11398 miles/year / 219 miles per week
 
 Average pounds of co2 produced per kWh of 184 lbs CO2/kwh
-​	
- /kWh
+
+// solar panels
+the carbon footprint for manufacturing a solar panel was estimated 
+to be approximately 0.044 to 0.088 pounds of CO2 equivalent per kilowatt-hour of electricity produced over the panel's lifetime
 
 //natural gas home
 

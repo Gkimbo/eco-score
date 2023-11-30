@@ -34,6 +34,8 @@ const UserHomeInfoForm = () => {
 			electricityUnit: "yearly",
 			gas: "no",
 			oil: "no",
+			batteryBackup: "no",
+			batteryBankSize: "",
 		},
 	});
 	const [error, setError] = useState<string | null>(null);
@@ -136,6 +138,26 @@ const UserHomeInfoForm = () => {
 		}));
 	};
 
+	const handleBatteryBankSize = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Size of your battery bank must be a number");
+			return;
+		}
+		if (text === "") {
+			setError("Size of your battery bank cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				batteryBankSize: text,
+			},
+		}));
+	};
+
 	const handleUsesGasChange = (unit: string) => {
 		setUserHomeInfoForm((prevState) => ({
 			...prevState,
@@ -234,6 +256,16 @@ const UserHomeInfoForm = () => {
 			},
 		}));
 	};
+
+	const handleUsesBatteryBankChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				batteryBackup: unit,
+			},
+		}));
+	};
 	const handleRecycleChange = (unit: string) => {
 		setUserHomeInfoForm((prevState) => ({
 			...prevState,
@@ -258,6 +290,9 @@ const UserHomeInfoForm = () => {
 		event.preventDefault();
 		if (!userHomeInfo.home.zipcode) {
 			setError("Please type in your homes zipcode");
+			return;
+		} else if (!userHomeInfo.home.yearBuilt) {
+			setError("Type in the year your home was built");
 			return;
 		} else if (!userHomeInfo.home.squareFeet) {
 			setError("Type in your homes estimated Square Footage");
@@ -355,11 +390,19 @@ const UserHomeInfoForm = () => {
 							]}
 						/>
 					</View>
-					<Text style={UserFormStyles.smallTitle}>
-						{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
-							userHomeInfo.home.electricityUnit.slice(1)}{" "}
-						Electricity Usage:
-					</Text>
+					{userHomeInfo.home.electricitySource !== "grid" ? (
+						<Text style={UserFormStyles.smallTitle}>
+							{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
+								userHomeInfo.home.electricityUnit.slice(1)}{" "}
+							Electricity Usage from the grid:
+						</Text>
+					) : (
+						<Text style={UserFormStyles.smallTitle}>
+							{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
+								userHomeInfo.home.electricityUnit.slice(1)}{" "}
+							Electricity Usage:
+						</Text>
+					)}
 					<View
 						style={{
 							flexDirection: "row",
@@ -373,7 +416,7 @@ const UserHomeInfoForm = () => {
 						}}
 					>
 						<TextInput
-							placeholder="10,094"
+							placeholder="10,094..."
 							value={userHomeInfo.home.electricityUsage}
 							onChangeText={handleElectricityUsage}
 							style={{
@@ -408,6 +451,56 @@ const UserHomeInfoForm = () => {
 						</View>
 					</View>
 					<Text style={UserFormStyles.smallTitle}>
+						Do you use have a Battery backup or off grid battery bank?
+					</Text>
+					<View style={UserFormStyles.radioButtonContainer}>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesBatteryBankChange}
+								value={userHomeInfo.home.batteryBackup}
+							>
+								<RadioButton.Item label="Yes" value="yes" />
+							</RadioButton.Group>
+						</View>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesBatteryBankChange}
+								value={userHomeInfo.home.batteryBackup}
+							>
+								<RadioButton.Item label="No" value="no" />
+							</RadioButton.Group>
+						</View>
+					</View>
+					{userHomeInfo.home.batteryBackup === "yes" ? (
+						<>
+							<Text style={UserFormStyles.smallTitle}>Battery Bank size:</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+									marginBottom: 20,
+								}}
+							>
+								<TextInput
+									placeholder="24..."
+									value={userHomeInfo.home.batteryBankSize}
+									onChangeText={handleBatteryBankSize}
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+							</View>
+						</>
+					) : null}
+					<Text style={UserFormStyles.smallTitle}>
 						Do you use Gas in this home?
 					</Text>
 					<View style={UserFormStyles.radioButtonContainer}>
@@ -419,7 +512,6 @@ const UserHomeInfoForm = () => {
 								<RadioButton.Item label="Yes" value="yes" />
 							</RadioButton.Group>
 						</View>
-
 						<View>
 							<RadioButton.Group
 								onValueChange={handleUsesGasChange}

@@ -17,6 +17,8 @@ class HomeSerializer {
 			"electricityUnit",
 			"gas",
 			"oil",
+			"batteryBankSize",
+			"batteryBackup",
 		];
 		const serializedHome = homeArray.map((home) => {
 			const newHome = {};

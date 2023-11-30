@@ -29,14 +29,11 @@ userInfoRouter.get("/", async (req, res) => {
 			],
 		});
 		let serializedUser = UserSerializer.serializeOne(user.dataValues);
-		let userWithCarbon;
 		if (serializedUser.cars.length !== 0) {
-			userWithCarbon = await CarCalculation.takeInCars(serializedUser);
-			serializedUser = userWithCarbon;
+			await CarCalculation.takeInCars(serializedUser);
 		}
 		if (serializedUser.homes.length !== 0) {
-			const homes = await HomeClass.takeInHomes(serializedUser);
-			console.log("END RESULT: ", homes);
+			await HomeClass.takeInHomes(serializedUser);
 		}
 		return res.status(200).json({ user: serializedUser });
 	} catch (error) {
@@ -179,6 +176,8 @@ userInfoRouter.post("/home", async (req, res) => {
 		electricityUnit,
 		gas,
 		oil,
+		batteryBankSize,
+		batteryBackup,
 	} = req.body.home;
 	try {
 		const decodedToken = jwt.verify(token, secretKey);
@@ -207,9 +206,22 @@ userInfoRouter.post("/home", async (req, res) => {
 			electricityUnit,
 			gas,
 			oil,
+			batteryBankSize,
+			batteryBackup,
 		});
 
 		return res.status(201).json({ user });
+	} catch (error) {
+		console.log(error);
+		return res.status(401).json({ error: "Invalid or expired token" });
+	}
+});
+
+userInfoRouter.delete("/home", async (req, res) => {
+	const id = req.body.id;
+	try {
+		const deleteHome = await UserInfo.deleteHomeInfo(id);
+		return res.status(201).json({ message: "home deleted" });
 	} catch (error) {
 		console.log(error);
 		return res.status(401).json({ error: "Invalid or expired token" });
