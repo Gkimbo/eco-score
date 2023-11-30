@@ -38,6 +38,10 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
+			electricityUnit: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
 			recycling: {
 				type: Sequelize.STRING,
 				allowNull: false,

@@ -24,6 +24,8 @@ Average pounds of co2 produced per kWh of 184 lbs CO2/kwh
 
 Average monthly consumption of natural gas - 5500 cubic feet of natural gas/household
 
+a common estimate is that burning one therm of natural gas releases approximately 11.7 pounds (or about 5.31 kilograms) of CO2 into the atmosphere.
+
 //electricity
 Average monthly electricity consumption per household - 943 kWh/month/household
 
@@ -33,7 +35,10 @@ Average annual CO2e emissions from electricity per household - 14020 lbs CO2e/ho
 
 Average monthly consumption of fuel oil per household - 46 gallons of fuel oil/month
 
-Fuel oil emission factor (pounds of CO2/gallon fuel oil) - 22.61 lbs CO2/gallon of fuel oil
+Fuel oil emission factor (pounds of CO2/gallon fuel oil) - 
+22.61 lbs CO2/gallon of fuel oil
+5.98 lbs CO 2/liter.
+
 
 //propane
 

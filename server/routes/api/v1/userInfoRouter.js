@@ -10,6 +10,7 @@ const {
 } = require("../../../models");
 const CarCalculation = require("../../../services/CarClass");
 const getCarbonIntensity = require("../../../services/getLocationCarbonIntensity");
+const HomeClass = require("../../../services/HomeClass");
 
 const userInfoRouter = express.Router();
 const secretKey = process.env.SESSION_SECRET;
@@ -27,13 +28,17 @@ userInfoRouter.get("/", async (req, res) => {
 				{ model: UserHomes, as: "userHomes" },
 			],
 		});
-		const serializedUser = UserSerializer.serializeOne(user.dataValues);
-		if (serializedUser.cars.length === 0) {
-			return res.status(200).json({ user: serializedUser });
-		} else {
-			const userWithCarCarbon = await CarCalculation.takeInCars(serializedUser);
-			return res.status(200).json({ user: userWithCarCarbon });
+		let serializedUser = UserSerializer.serializeOne(user.dataValues);
+		let userWithCarbon;
+		if (serializedUser.cars.length !== 0) {
+			userWithCarbon = await CarCalculation.takeInCars(serializedUser);
+			serializedUser = userWithCarbon;
 		}
+		if (serializedUser.homes.length !== 0) {
+			const homes = await HomeClass.takeInHomes(serializedUser);
+			console.log("END RESULT: ", homes);
+		}
+		return res.status(200).json({ user: serializedUser });
 	} catch (error) {
 		console.log(error);
 		return res.status(401).json({ error: "Invalid or expired token" });
@@ -175,7 +180,6 @@ userInfoRouter.post("/home", async (req, res) => {
 		gas,
 		oil,
 	} = req.body.home;
-	console.log(req.body);
 	try {
 		const decodedToken = jwt.verify(token, secretKey);
 		const userId = decodedToken.userId;

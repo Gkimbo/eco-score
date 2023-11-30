@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},
+		electricityUnit: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
 		recycling: {
 			type: DataTypes.STRING,
 			allowNull: false,
