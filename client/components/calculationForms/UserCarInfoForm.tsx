@@ -34,6 +34,8 @@ const UserCarInfoForm = () => {
 			carbonPerCharge: "",
 			carbonToMakeBattery: "",
 			carbonPerMile: "",
+			mileage: "",
+			mileageUnit: "daily",
 		},
 	});
 	const [redirect, setRedirect] = useState<boolean>(false);
@@ -171,6 +173,36 @@ const UserCarInfoForm = () => {
 			car: {
 				...prevState.car,
 				carBatterySize: text,
+			},
+		}));
+	};
+
+	const handleMileageUnitChange = (text: string) => {
+		setUserCarInfoForm((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				mileageUnit: text,
+			},
+		}));
+	};
+
+	const handleMileageChange = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Milage can only be a number!");
+			return;
+		}
+		if (text === "") {
+			setError("Mileage cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserCarInfoForm((prevState) => ({
+			...prevState,
+			car: {
+				...prevState.car,
+				mileage: text,
 			},
 		}));
 	};
@@ -328,6 +360,65 @@ const UserCarInfoForm = () => {
 						onChangeText={handleCarYearChange}
 						style={UserFormStyles.input}
 					/>
+
+					<Text style={UserFormStyles.smallTitle}>
+						How many Miles do you drive on average {userCarInfo.car.mileageUnit}
+						?
+					</Text>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							borderWidth: 1,
+							borderColor: "#000",
+							borderRadius: 5,
+							backgroundColor: "#fff",
+							padding: 5,
+							marginBottom: 20,
+						}}
+					>
+						<TextInput
+							placeholder="100"
+							value={userCarInfo.car.mileage}
+							onChangeText={handleMileageChange}
+							style={{
+								...UserFormStyles.input,
+								borderWidth: 0,
+								backgroundColor: "transparent",
+							}}
+						/>
+						<Text style={{ paddingLeft: 10, color: "#000" }}>
+							{userCarInfo.car.mileageUnit} miles
+						</Text>
+					</View>
+
+					<View style={UserFormStyles.radioButtonContainer}>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleMileageUnitChange}
+								value={userCarInfo.car.mileageUnit}
+							>
+								<RadioButton.Item label="Yearly" value="yearly" />
+							</RadioButton.Group>
+						</View>
+
+						<View>
+							<RadioButton.Group
+								onValueChange={handleMileageUnitChange}
+								value={userCarInfo.car.mileageUnit}
+							>
+								<RadioButton.Item label="Monthly" value="monthly" />
+							</RadioButton.Group>
+						</View>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleMileageUnitChange}
+								value={userCarInfo.car.mileageUnit}
+							>
+								<RadioButton.Item label="Daily" value="daily" />
+							</RadioButton.Group>
+						</View>
+					</View>
 
 					<Text style={UserFormStyles.smallTitle}>Fuel Type:</Text>
 					<RNPickerSelect

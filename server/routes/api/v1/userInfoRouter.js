@@ -80,8 +80,17 @@ userInfoRouter.post("/basic", async (req, res) => {
 
 userInfoRouter.post("/car", async (req, res) => {
 	const { token } = req.body.user;
-	let { model, make, year, fuelType, carBatterySize, zipCode, tank } =
-		req.body.car;
+	let {
+		model,
+		make,
+		year,
+		fuelType,
+		carBatterySize,
+		zipCode,
+		tank,
+		mileage,
+		mileageUnit,
+	} = req.body.car;
 	try {
 		const decodedToken = jwt.verify(token, secretKey);
 		const userId = decodedToken.userId;
@@ -107,6 +116,8 @@ userInfoRouter.post("/car", async (req, res) => {
 						carBatterySize,
 						zipCode,
 						tank,
+						mileage,
+						mileageUnit,
 					});
 					return res.status(201).json({ user });
 				} else if (
@@ -122,6 +133,8 @@ userInfoRouter.post("/car", async (req, res) => {
 						carBatterySize,
 						zipCode,
 						tank,
+						mileage,
+						mileageUnit,
 					});
 					return res.status(201).json({ user });
 				} else {
@@ -137,6 +150,8 @@ userInfoRouter.post("/car", async (req, res) => {
 					carBatterySize,
 					zipCode,
 					tank,
+					mileage,
+					mileageUnit,
 				});
 				return res.status(201).json({ user });
 			}

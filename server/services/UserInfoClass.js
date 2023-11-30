@@ -40,6 +40,8 @@ class UserInfo {
 		carBatterySize,
 		zipCode,
 		tank,
+		mileage,
+		mileageUnit,
 	}) {
 		if (fuelType !== "electricity" && fuelType !== "hybrid") {
 			carBatterySize = null;
@@ -49,14 +51,16 @@ class UserInfo {
 		}
 
 		await UserCars.create({
-			userId: userId,
-			make: make,
-			model: model,
-			year: year,
-			fuelType: fuelType,
-			carBatterySize: carBatterySize,
+			userId,
+			make,
+			model,
+			year,
+			fuelType,
+			carBatterySize,
 			zipcode: zipCode,
-			tank: tank,
+			tank,
+			mileage,
+			mileageUnit,
 		});
 	}
 

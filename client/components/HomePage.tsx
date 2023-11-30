@@ -46,18 +46,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 	useEffect(() => {
 		const averageCarbonToProduceAnyCar = 16526;
 		const totalCarbon = state.cars.reduce((total: any, car: any) => {
-			if (car.carbonPerTank) {
-				return (
-					total + parseInt(car.carbonPerTank) + averageCarbonToProduceAnyCar
-				);
-			} else {
-				return (
-					total +
-					parseInt(car.carbonPerCharge) +
-					parseInt(car.carbonToMakeBattery) +
-					averageCarbonToProduceAnyCar
-				);
-			}
+			return total + car.annualCarbonFromDriving;
 		}, 0);
 		const tonsOfCarCarbon = totalCarbon / 2000;
 		let roundedCarNumber: number = Number(tonsOfCarCarbon.toFixed(2));
@@ -158,7 +147,13 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 					marginTop: 20,
 				}}
 			>
-				<Text style={UserFormStyles.title}>Your Cars</Text>
+				<Text style={UserFormStyles.title}>
+					{state.cars.length === 0
+						? ""
+						: state.cars.length === 1
+						? "Your Car"
+						: "Your Cars"}
+				</Text>
 				<CarList state={state} onDeleteCar={onDeleteCar} />
 				<Text
 					style={{
@@ -175,7 +170,13 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 					<Text style={{ color: "orange" }}>{16526 / 2000}</Text> Tons not
 					including high voltage battery
 				</Text>
-				<Text style={UserFormStyles.title}>Your Homes</Text>
+				<Text style={UserFormStyles.title}>
+					{state.homes.length === 0
+						? ""
+						: state.homes.length === 1
+						? "Your Home"
+						: "Your Homes"}
+				</Text>
 				<HomeList state={state} onDeleteHome={onDeleteHome} />
 			</View>
 		</>

@@ -39,6 +39,14 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},
+		mileageUnit: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		mileage: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
 		createdAt: {
 			type: DataTypes.DATE,
 			allowNull: false,

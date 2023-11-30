@@ -187,7 +187,8 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 							padding: 5,
 						}}
 					>
-						CO2 produced per Year: {item.totalAnnualCarbon} lbs of CO2
+						Total CO2 produced per Year: (
+						{(Number(item.totalAnnualCarbon) / 2000).toFixed(2)} tons of CO2)
 					</Text>
 					<Text
 						style={{
@@ -199,8 +200,8 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 							padding: 5,
 						}}
 					>
-						CO2 produced from electricity usage: {item.carbonForAnnualPower} lbs
-						of CO2
+						CO2 produced from electricity usage: (
+						{(Number(item.carbonForAnnualPower) / 2000).toFixed(2)} tons) of CO2
 					</Text>
 
 					{item.batteryBackup === "yes" && (
@@ -214,8 +215,9 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 								padding: 5,
 							}}
 						>
-							CO2 produced manufacturing batteries in your system:{" "}
-							{item.carbonFromBatteryBank} lbs of CO2
+							CO2 produced manufacturing batteries in your system: (
+							{(Number(item.carbonFromBatteryBank) / 2000).toFixed(2)} tons of
+							CO2)
 						</Text>
 					)}
 					{item.gas === "yes" && (
@@ -229,8 +231,9 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 								padding: 5,
 							}}
 						>
-							CO2 produced from Natural Gas in your home:
-							{item.carbonFromAnnualGas} lbs of CO2
+							CO2 produced from Natural Gas in your home: (
+							{(Number(item.carbonFromAnnualGas) / 2000).toFixed(2)} tons of
+							CO2)
 						</Text>
 					)}
 					{item.oil === "yes" && (
@@ -244,8 +247,8 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 								padding: 5,
 							}}
 						>
-							CO2 produced from oil heat in your home:
-							{item.carbonFromAnnualOil} lbs of CO2
+							CO2 produced from oil heat in your home: (
+							{(Number(item.carbonFromAnnualOil) / 2000).toFixed(2)} lbs of CO2)
 						</Text>
 					)}
 				</View>

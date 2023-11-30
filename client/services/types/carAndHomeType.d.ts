@@ -10,6 +10,8 @@ export type Car = {
     carbonPerCharge: string;
     carbonToMakeBattery: string;
     carbonPerMile:string;
+    mileage: string;
+	mileageUnit: string;
 } 
 
 export type Home = {
