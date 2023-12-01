@@ -1,17 +1,24 @@
 class HomeSerializer {
 	static serializeArray(homeArray) {
 		const allowedAttributes = [
+			"id",
 			"zipcode",
 			"yearBuilt",
-			"heatSource",
-			"airConditioning",
-			"airConditioningSource",
 			"squareFeet",
 			"electricitySource",
 			"electricityUsage",
+			"gasUsage",
+			"oilUsage",
+			"gasUnit",
+			"oilUnit",
+			"oilVolume",
 			"recycling",
 			"compost",
-			"ovenType",
+			"electricityUnit",
+			"gas",
+			"oil",
+			"batteryBankSize",
+			"batteryBackup",
 		];
 		const serializedHome = homeArray.map((home) => {
 			const newHome = {};

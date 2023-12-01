@@ -64,6 +64,18 @@ const UserFormStyles = StyleSheet.create({
 		marginBottom: 4,
 		textAlign: "center",
 	},
+	radioButtonContainer: {
+		flexDirection: "row",
+		justifyContent: "center",
+		borderWidth: 1,
+		borderColor: "#000",
+		borderRadius: 5,
+		marginBottom: 20,
+		backgroundColor: "#fff",
+	},
+	pickerContainer: {
+		marginBottom: 20,
+	},
 });
 
 export default UserFormStyles;

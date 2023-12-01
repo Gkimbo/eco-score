@@ -46,6 +46,14 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: true,
 			},
+			mileage: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
+			mileageUnit: {
+				type: Sequelize.STRING,
+				allowNull: true,
+			},
 			createdAt: {
 				type: Sequelize.DATE,
 				allowNull: false,

@@ -165,6 +165,10 @@ class FetchData {
 				},
 			});
 			if (!response.ok) {
+				if (response.status === 400) {
+					const responseData = await response.json();
+					return responseData;
+				}
 				const error = new Error(`${response.status}(${response.statusText})`);
 				throw error;
 			}
@@ -174,6 +178,8 @@ class FetchData {
 			return err;
 		}
 	}
+
+	static async deleteCar(id: number, user: user) {}
 }
 
 export default FetchData;

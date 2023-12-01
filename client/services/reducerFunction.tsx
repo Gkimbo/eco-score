@@ -35,6 +35,16 @@ const reducer = (state: any, action: any) => {
 				...state,
 				homes: action.payload,
 			};
+		case "DELETE_CAR":
+			return {
+				...state,
+				cars: state.cars.filter((car: any) => car.id !== action.payload),
+			};
+		case "DELETE_HOME":
+			return {
+				...state,
+				homes: state.homes.filter((home: any) => home.id !== action.payload),
+			};
 		default:
 			throw new Error();
 	}

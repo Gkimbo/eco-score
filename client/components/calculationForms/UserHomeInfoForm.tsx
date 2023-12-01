@@ -21,22 +21,40 @@ const UserHomeInfoForm = () => {
 		home: {
 			zipcode: "",
 			yearBuilt: "",
-			heatSource: "",
-			airConditioning: "false",
-			airConditioningSource: "",
 			squareFeet: "",
 			electricitySource: "",
 			electricityUsage: "",
+			gasUsage: "",
+			oilUsage: "",
+			gasUnit: "yearly",
+			oilUnit: "yearly",
+			oilVolume: "gallons",
 			recycling: "false",
 			compost: "false",
-			ovenType: "",
-			electricityUnit: "",
+			electricityUnit: "yearly",
+			gas: "no",
+			oil: "no",
+			batteryBackup: "no",
+			batteryBankSize: "",
 		},
 	});
 	const [error, setError] = useState<string | null>(null);
 	const [redirect, setRedirect] = useState<boolean>(false);
 	const navigate = useNavigate();
+
 	const handleZipCodeChange = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Zipcode can only be a number!");
+			return;
+		}
+		if (text === "") {
+			setError("Zipcode cannot be blank!");
+		} else if (text.length !== 5) {
+			setError("A zipcode needs 5 numbers");
+		} else {
+			setError(null);
+		}
 		setUserHomeInfoForm((prevState) => ({
 			...prevState,
 			home: {
@@ -52,9 +70,10 @@ const UserHomeInfoForm = () => {
 			setError("Has to be a year!");
 			return;
 		}
-		if (text.length > 4) {
+		if (text.length !== 4) {
 			setError("Has to be a year!");
-			return;
+		} else {
+			setError(null);
 		}
 		if (text === "") {
 			setError("Year Built cannot be blank!");
@@ -70,42 +89,31 @@ const UserHomeInfoForm = () => {
 		}));
 	};
 
-	const handleHeatSourceChange = (text: string) => {
-		setUserHomeInfoForm((prevState) => ({
-			...prevState,
-			home: {
-				...prevState.home,
-				heatSource: text,
-			},
-		}));
-	};
-
-	const handleACChange = (text: string) => {
-		setUserHomeInfoForm((prevState) => ({
-			...prevState,
-			home: {
-				...prevState.home,
-				airConditioning: text,
-			},
-		}));
-	};
-
-	const handleACSource = (text: string) => {
-		setUserHomeInfoForm((prevState) => ({
-			...prevState,
-			home: {
-				...prevState.home,
-				airConditioningSource: text,
-			},
-		}));
-	};
-
 	const handleElectricitySource = (text: string) => {
 		setUserHomeInfoForm((prevState) => ({
 			...prevState,
 			home: {
 				...prevState.home,
 				electricitySource: text,
+			},
+		}));
+	};
+	const handleSquareFeetChange = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Square footage can only be a number!");
+			return;
+		}
+		if (text === "") {
+			setError("Square Footage cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				squareFeet: text,
 			},
 		}));
 	};
@@ -130,18 +138,14 @@ const UserHomeInfoForm = () => {
 		}));
 	};
 
-	const handleSquareFeetChange = (text: string) => {
-		const value = text.replaceAll(
-			/ Square Feet| Suare Feet| Sqare Feet| Squre Feet| Squae Feet| Squar Feet| SquareFeet| Square eet| Square Fet| Square Fee|Square Feet/g,
-			""
-		);
+	const handleBatteryBankSize = (text: string) => {
 		const regex = /^\d*(\.\d*)?(\s*)?$/;
-		if (!regex.test(value)) {
-			setError("Square footage can only be a number!");
+		if (!regex.test(text)) {
+			setError("Size of your battery bank must be a number");
 			return;
 		}
-		if (value === "") {
-			setError("Square Footage cannot be blank!");
+		if (text === "") {
+			setError("Size of your battery bank cannot be blank!");
 		} else {
 			setError(null);
 		}
@@ -149,7 +153,96 @@ const UserHomeInfoForm = () => {
 			...prevState,
 			home: {
 				...prevState.home,
-				squareFeet: `${value} Square Feet`,
+				batteryBankSize: text,
+			},
+		}));
+	};
+
+	const handleUsesGasChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				gas: unit,
+			},
+		}));
+	};
+	const handleUsesOilChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				oil: unit,
+			},
+		}));
+	};
+
+	const handleGasUnitChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				gasUnit: unit,
+			},
+		}));
+	};
+
+	const handleGasUsage = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Usage must be a number");
+			return;
+		}
+		if (text === "") {
+			setError("Usage cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				gasUsage: text,
+			},
+		}));
+	};
+
+	const handleOilUsage = (text: string) => {
+		const regex = /^\d*(\.\d*)?(\s*)?$/;
+		if (!regex.test(text)) {
+			setError("Usage must be a number");
+			return;
+		}
+		if (text === "") {
+			setError("Usage cannot be blank!");
+		} else {
+			setError(null);
+		}
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				oilUsage: text,
+			},
+		}));
+	};
+
+	const handleOilUnitChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				oilUnit: unit,
+			},
+		}));
+	};
+
+	const handleOilVolumeChange = (text: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				oilVolume: text,
 			},
 		}));
 	};
@@ -164,6 +257,15 @@ const UserHomeInfoForm = () => {
 		}));
 	};
 
+	const handleUsesBatteryBankChange = (unit: string) => {
+		setUserHomeInfoForm((prevState) => ({
+			...prevState,
+			home: {
+				...prevState.home,
+				batteryBackup: unit,
+			},
+		}));
+	};
 	const handleRecycleChange = (unit: string) => {
 		setUserHomeInfoForm((prevState) => ({
 			...prevState,
@@ -183,21 +285,39 @@ const UserHomeInfoForm = () => {
 			},
 		}));
 	};
-	const handleOvenChange = (unit: string) => {
-		setUserHomeInfoForm((prevState) => ({
-			...prevState,
-			home: {
-				...prevState.home,
-				ovenType: unit,
-			},
-		}));
-	};
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
+		if (!userHomeInfo.home.zipcode) {
+			setError("Please type in your homes zipcode");
+			return;
+		} else if (!userHomeInfo.home.yearBuilt) {
+			setError("Type in the year your home was built");
+			return;
+		} else if (!userHomeInfo.home.squareFeet) {
+			setError("Type in your homes estimated Square Footage");
+			return;
+		} else if (!userHomeInfo.home.electricitySource) {
+			setError("You need to select the source of your homes electricity");
+			return;
+		} else if (!userHomeInfo.home.electricityUsage) {
+			setError("Type in your estimated electricity usage");
+			return;
+		} else if (userHomeInfo.home.gas === "yes" && !userHomeInfo.home.gasUsage) {
+			setError("Type in your estimated gas usage");
+			return;
+		} else if (userHomeInfo.home.oil === "yes" && !userHomeInfo.home.oilUsage) {
+			setError("Type in your estimated oil usage");
+			return;
+		}
+		setError(null);
 		FetchData.addHomeInfo(userHomeInfo).then((response) => {
-			setRedirect(true);
-			console.log(response);
+			if (response === "Cannot find zipcode") {
+				setError(response);
+			} else {
+				setError(null);
+				setRedirect(true);
+			}
 		});
 	};
 
@@ -223,103 +343,6 @@ const UserHomeInfoForm = () => {
 						style={UserFormStyles.input}
 					/>
 					<Text style={UserFormStyles.smallTitle}>Square Feet:</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="2300 Square Feet"
-						value={userHomeInfo.home.squareFeet}
-						onChangeText={handleSquareFeetChange}
-						style={UserFormStyles.input}
-					/>
-					<Text style={UserFormStyles.smallTitle}>Year Built:</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="1772..."
-						value={userHomeInfo.home.yearBuilt}
-						onChangeText={handleYearBuiltChange}
-						style={UserFormStyles.input}
-					/>
-					<Text style={UserFormStyles.smallTitle}>Heat Source:</Text>
-					<RNPickerSelect
-						value={userHomeInfo.home.heatSource}
-						onValueChange={handleHeatSourceChange}
-						style={pickerSelectStyles}
-						items={[
-							{ label: "oil", value: "oil" },
-							{ label: "Forced Hot Air", value: "forced hot air" },
-							{ label: "Heat Pump", value: "heat pump" },
-							{ label: "Electric baseboard", value: "electric baseboard" },
-							{
-								label: "Electric space heater",
-								value: "electric space heater",
-							},
-							{
-								label: "Electric boiler - baseboard",
-								value: "electric boiler",
-							},
-							{ label: "Boiler - Baseboard", value: "boiler" },
-							{ label: "Boiler - Radiator", value: "radiator" },
-							{ label: "Wood Stove", value: "wood stove" },
-							{ label: "Pellet Stove", value: "pellet stove" },
-							{ label: "Corn Stove", value: "corn stove" },
-							{ label: "Fire Place", value: "fire place" },
-						]}
-					/>
-					<Text style={UserFormStyles.smallTitle}>
-						What kind of Oven do you use?
-					</Text>
-					<RadioButton.Group
-						onValueChange={handleOvenChange}
-						value={userHomeInfo.home.ovenType}
-					>
-						<RadioButton.Item label="Gas" value="gas" />
-						<RadioButton.Item label="Electric" value="electric" />
-						<RadioButton.Item label="Wood Fire" value="wood" />
-					</RadioButton.Group>
-					<Text style={UserFormStyles.smallTitle}>AirConditioning:</Text>
-					<RadioButton.Group
-						onValueChange={handleACChange}
-						value={userHomeInfo.home.airConditioning}
-					>
-						<RadioButton.Item label="I have an Air Conditioner" value="true" />
-						<RadioButton.Item
-							label="I don't have an Air Conditioner"
-							value="false"
-						/>
-					</RadioButton.Group>
-
-					{userHomeInfo.home.airConditioning === "true" ? (
-						<>
-							<Text style={UserFormStyles.smallTitle}>
-								Air Conditioning Source:
-							</Text>
-							<RNPickerSelect
-								value={userHomeInfo.home.airConditioningSource}
-								onValueChange={handleACSource}
-								style={pickerSelectStyles}
-								items={[
-									{ label: "Central AC", value: "central" },
-									{ label: "Window Units", value: "window" },
-									{ label: "Portable", value: "portable" },
-									{ label: "Heat Pump", value: "heat pump" },
-								]}
-							/>
-						</>
-					) : null}
-					<Text style={UserFormStyles.smallTitle}>Electricity Source:</Text>
-					<RNPickerSelect
-						value={userHomeInfo.home.electricitySource}
-						onValueChange={handleElectricitySource}
-						style={pickerSelectStyles}
-						items={[
-							{ label: "Grid", value: "grid" },
-							{ label: "Solar", value: "solar" },
-							{ label: "Wind", value: "wind" },
-							{ label: "Hydro Electric", value: "hydro" },
-						]}
-					/>
-					<Text style={UserFormStyles.smallTitle}>
-						{userHomeInfo.home.electricityUnit} Electricity Usage:
-					</Text>
 					<View
 						style={{
 							flexDirection: "row",
@@ -329,10 +352,71 @@ const UserHomeInfoForm = () => {
 							borderRadius: 5,
 							backgroundColor: "#fff",
 							padding: 5,
+							marginBottom: 20,
 						}}
 					>
 						<TextInput
-							placeholder="10,094"
+							value={`${userHomeInfo.home.squareFeet}`}
+							onChangeText={handleSquareFeetChange}
+							placeholder="1500..."
+							style={{
+								...UserFormStyles.input,
+								borderWidth: 0,
+								backgroundColor: "transparent",
+							}}
+						/>
+						<Text style={{ paddingLeft: 10, color: "#000" }}>Square Feet</Text>
+					</View>
+
+					<Text style={UserFormStyles.smallTitle}>Year Built:</Text>
+					<TextInput
+						mode="outlined"
+						placeholder="1772..."
+						value={userHomeInfo.home.yearBuilt}
+						onChangeText={handleYearBuiltChange}
+						style={UserFormStyles.input}
+					/>
+					<View style={UserFormStyles.pickerContainer}>
+						<Text style={UserFormStyles.smallTitle}>Electricity Source:</Text>
+						<RNPickerSelect
+							value={userHomeInfo.home.electricitySource}
+							onValueChange={handleElectricitySource}
+							style={pickerSelectStyles}
+							items={[
+								{ label: "Grid", value: "grid" },
+								{ label: "Solar", value: "solar" },
+								{ label: "Wind", value: "wind" },
+								{ label: "Hydro Electric", value: "hydro" },
+							]}
+						/>
+					</View>
+					{userHomeInfo.home.electricitySource !== "grid" ? (
+						<Text style={UserFormStyles.smallTitle}>
+							{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
+								userHomeInfo.home.electricityUnit.slice(1)}{" "}
+							Electricity Usage from the grid:
+						</Text>
+					) : (
+						<Text style={UserFormStyles.smallTitle}>
+							{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
+								userHomeInfo.home.electricityUnit.slice(1)}{" "}
+							Electricity Usage:
+						</Text>
+					)}
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							borderWidth: 1,
+							borderColor: "#000",
+							borderRadius: 5,
+							backgroundColor: "#fff",
+							padding: 5,
+							marginBottom: 20,
+						}}
+					>
+						<TextInput
+							placeholder="10,094..."
 							value={userHomeInfo.home.electricityUsage}
 							onChangeText={handleElectricityUsage}
 							style={{
@@ -343,32 +427,325 @@ const UserHomeInfoForm = () => {
 						/>
 						<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
 					</View>
-					<RadioButton.Group
-						onValueChange={handleElectricityUnitChange}
-						value={userHomeInfo.home.electricityUnit}
-					>
-						<RadioButton.Item label="Yearly" value="yearly" />
-						<RadioButton.Item label="Monthly" value="monthly" />
-						<RadioButton.Item label="Daily" value="daily" />
-					</RadioButton.Group>
+					<Text style={UserFormStyles.smallTitle}>
+						Electricity usage time period:
+					</Text>
+
+					<View style={UserFormStyles.radioButtonContainer}>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleElectricityUnitChange}
+								value={userHomeInfo.home.electricityUnit}
+							>
+								<RadioButton.Item label="Yearly" value="yearly" />
+							</RadioButton.Group>
+						</View>
+
+						<View>
+							<RadioButton.Group
+								onValueChange={handleElectricityUnitChange}
+								value={userHomeInfo.home.electricityUnit}
+							>
+								<RadioButton.Item label="Monthly" value="monthly" />
+							</RadioButton.Group>
+						</View>
+					</View>
+					<Text style={UserFormStyles.smallTitle}>
+						Do you use have a Battery backup or off grid battery bank?
+					</Text>
+					<View style={UserFormStyles.radioButtonContainer}>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesBatteryBankChange}
+								value={userHomeInfo.home.batteryBackup}
+							>
+								<RadioButton.Item label="Yes" value="yes" />
+							</RadioButton.Group>
+						</View>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesBatteryBankChange}
+								value={userHomeInfo.home.batteryBackup}
+							>
+								<RadioButton.Item label="No" value="no" />
+							</RadioButton.Group>
+						</View>
+					</View>
+					{userHomeInfo.home.batteryBackup === "yes" ? (
+						<>
+							<Text style={UserFormStyles.smallTitle}>Battery Bank size:</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+									marginBottom: 20,
+								}}
+							>
+								<TextInput
+									placeholder="24..."
+									value={userHomeInfo.home.batteryBankSize}
+									onChangeText={handleBatteryBankSize}
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+							</View>
+						</>
+					) : null}
+					<Text style={UserFormStyles.smallTitle}>
+						Do you use Gas in this home?
+					</Text>
+					<View style={UserFormStyles.radioButtonContainer}>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesGasChange}
+								value={userHomeInfo.home.gas}
+							>
+								<RadioButton.Item label="Yes" value="yes" />
+							</RadioButton.Group>
+						</View>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesGasChange}
+								value={userHomeInfo.home.gas}
+							>
+								<RadioButton.Item label="No" value="no" />
+							</RadioButton.Group>
+						</View>
+					</View>
+					{userHomeInfo.home.gas === "yes" ? (
+						<>
+							<Text style={UserFormStyles.smallTitle}>
+								{userHomeInfo.home.gasUnit.charAt(0).toUpperCase() +
+									userHomeInfo.home.gasUnit.slice(1)}{" "}
+								Gas Usage:
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+									marginBottom: 20,
+								}}
+							>
+								<TextInput
+									placeholder="1440..."
+									value={userHomeInfo.home.gasUsage}
+									onChangeText={handleGasUsage}
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>therms</Text>
+							</View>
+
+							<Text style={UserFormStyles.smallTitle}>
+								Gas usage time period:
+							</Text>
+							<View style={UserFormStyles.radioButtonContainer}>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleGasUnitChange}
+										value={userHomeInfo.home.gasUnit}
+									>
+										<RadioButton.Item label="Yearly" value="yearly" />
+									</RadioButton.Group>
+								</View>
+
+								<View>
+									<RadioButton.Group
+										onValueChange={handleGasUnitChange}
+										value={userHomeInfo.home.gasUnit}
+									>
+										<RadioButton.Item label="Monthly" value="monthly" />
+									</RadioButton.Group>
+								</View>
+							</View>
+						</>
+					) : null}
+					<Text style={UserFormStyles.smallTitle}>
+						Do you use Oil in this home?
+					</Text>
+					<View style={UserFormStyles.radioButtonContainer}>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesOilChange}
+								value={userHomeInfo.home.oil}
+							>
+								<RadioButton.Item label="Yes" value="yes" />
+							</RadioButton.Group>
+						</View>
+
+						<View>
+							<RadioButton.Group
+								onValueChange={handleUsesOilChange}
+								value={userHomeInfo.home.oil}
+							>
+								<RadioButton.Item label="No" value="no" />
+							</RadioButton.Group>
+						</View>
+					</View>
+					{userHomeInfo.home.oil === "yes" ? (
+						<>
+							<Text style={UserFormStyles.smallTitle}>
+								{userHomeInfo.home.oilUnit.charAt(0).toUpperCase() +
+									userHomeInfo.home.oilUnit.slice(1)}{" "}
+								Oil Usage:
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: "#fff",
+									padding: 5,
+									marginBottom: 20,
+								}}
+							>
+								<TextInput
+									placeholder={
+										userHomeInfo.home.oilVolume === "gallons"
+											? "700..."
+											: "2649..."
+									}
+									value={userHomeInfo.home.oilUsage}
+									onChangeText={handleOilUsage}
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
+								/>
+								<Text style={{ paddingLeft: 10, color: "#000" }}>
+									{userHomeInfo.home.oilVolume.charAt(0).toUpperCase() +
+										userHomeInfo.home.oilVolume.slice(1)}
+								</Text>
+							</View>
+							<Text style={UserFormStyles.smallTitle}>
+								Oil unit of measurement:
+							</Text>
+							<View style={UserFormStyles.radioButtonContainer}>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleOilVolumeChange}
+										value={userHomeInfo.home.oilVolume}
+									>
+										<RadioButton.Item label="Gallons" value="gallons" />
+									</RadioButton.Group>
+								</View>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleOilVolumeChange}
+										value={userHomeInfo.home.oilVolume}
+									>
+										<RadioButton.Item label="Liters" value="liters" />
+									</RadioButton.Group>
+								</View>
+							</View>
+							<Text style={UserFormStyles.smallTitle}>
+								Oil usage time period:
+							</Text>
+
+							<View style={UserFormStyles.radioButtonContainer}>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleOilUnitChange}
+										value={userHomeInfo.home.oilUnit}
+									>
+										<RadioButton.Item label="Yearly" value="yearly" />
+									</RadioButton.Group>
+								</View>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleOilUnitChange}
+										value={userHomeInfo.home.oilUnit}
+									>
+										<RadioButton.Item label="Monthly" value="monthly" />
+									</RadioButton.Group>
+								</View>
+							</View>
+						</>
+					) : null}
 
 					<Text style={UserFormStyles.smallTitle}>Do you recycle?</Text>
-					<RadioButton.Group
-						onValueChange={handleRecycleChange}
-						value={userHomeInfo.home.recycling}
+					<View
+						style={{
+							flexDirection: "column",
+							justifyContent: "center",
+							borderWidth: 1,
+							borderColor: "#000",
+							borderRadius: 5,
+							marginBottom: 20,
+							paddingLeft: 50,
+							paddingRight: 50,
+							backgroundColor: "#fff",
+						}}
 					>
-						<RadioButton.Item label="Yes, I recycle" value="true" />
-						<RadioButton.Item label="No, I don't recycle" value="false" />
-					</RadioButton.Group>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleRecycleChange}
+								value={userHomeInfo.home.recycling}
+							>
+								<RadioButton.Item label="Yes, I recycle" value="true" />
+							</RadioButton.Group>
+						</View>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleRecycleChange}
+								value={userHomeInfo.home.recycling}
+							>
+								<RadioButton.Item label="No, I don't recycle" value="false" />
+							</RadioButton.Group>
+						</View>
+					</View>
 
 					<Text style={UserFormStyles.smallTitle}>Do you compost?</Text>
-					<RadioButton.Group
-						onValueChange={handleCompostChange}
-						value={userHomeInfo.home.compost}
+					<View
+						style={{
+							flexDirection: "column",
+							justifyContent: "center",
+							borderWidth: 1,
+							borderColor: "#000",
+							borderRadius: 5,
+							marginBottom: 20,
+							paddingLeft: 50,
+							paddingRight: 50,
+							backgroundColor: "#fff",
+						}}
 					>
-						<RadioButton.Item label="Yes, I compost" value="true" />
-						<RadioButton.Item label="No, I don't compost" value="false" />
-					</RadioButton.Group>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleCompostChange}
+								value={userHomeInfo.home.compost}
+							>
+								<RadioButton.Item label="Yes, I compost" value="true" />
+							</RadioButton.Group>
+						</View>
+						<View>
+							<RadioButton.Group
+								onValueChange={handleCompostChange}
+								value={userHomeInfo.home.compost}
+							>
+								<RadioButton.Item label="No, I don't compost" value="false" />
+							</RadioButton.Group>
+						</View>
+					</View>
 				</View>
 				<Pressable onPress={handleSubmit}>
 					<Text style={UserFormStyles.button}>Submit</Text>

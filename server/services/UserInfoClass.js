@@ -40,8 +40,10 @@ class UserInfo {
 		carBatterySize,
 		zipCode,
 		tank,
+		mileage,
+		mileageUnit,
 	}) {
-		if (fuelType !== "electricity") {
+		if (fuelType !== "electricity" && fuelType !== "hybrid") {
 			carBatterySize = null;
 		}
 		if (!zipCode) {
@@ -49,14 +51,16 @@ class UserInfo {
 		}
 
 		await UserCars.create({
-			userId: userId,
-			make: make,
-			model: model,
-			year: year,
-			fuelType: fuelType,
-			carBatterySize: carBatterySize,
+			userId,
+			make,
+			model,
+			year,
+			fuelType,
+			carBatterySize,
 			zipcode: zipCode,
-			tank: tank,
+			tank,
+			mileage,
+			mileageUnit,
 		});
 	}
 
@@ -64,31 +68,41 @@ class UserInfo {
 		userId,
 		zipcode,
 		yearBuilt,
-		heatSource,
-		airConditioning,
-		airConditioningSource,
 		squareFeet,
 		electricitySource,
 		electricityUsage,
+		gasUsage,
+		oilUsage,
+		gasUnit,
+		oilUnit,
+		oilVolume,
 		recycling,
 		compost,
-		ovenType,
 		electricityUnit,
+		gas,
+		oil,
+		batteryBankSize,
+		batteryBackup,
 	}) {
 		await UserHomes.create({
-			userId: userId,
-			zipcode: zipcode,
-			yearBuilt: yearBuilt,
-			heatSource: heatSource,
-			airConditioning: airConditioning,
-			airConditioningSource: airConditioningSource,
-			squareFeet: squareFeet,
-			electricitySource: electricitySource,
-			electricityUsage: electricityUsage,
-			recycling: recycling,
-			compost: compost,
-			ovenType: ovenType,
-			electricityUnit: electricityUnit,
+			userId,
+			zipcode,
+			yearBuilt,
+			squareFeet,
+			electricitySource,
+			electricityUsage,
+			gasUsage,
+			oilUsage,
+			gasUnit,
+			oilUnit,
+			oilVolume,
+			recycling,
+			compost,
+			electricityUnit,
+			gas,
+			oil,
+			batteryBankSize,
+			batteryBackup,
 		});
 	}
 	static async updateUserInfo(id, data) {
@@ -111,6 +125,30 @@ class UserInfo {
 			return deletedUserInfo;
 		} catch (error) {
 			console.error("Error deleting user info: ", error);
+			throw error;
+		}
+	}
+
+	static async deleteCarInfo(id) {
+		try {
+			const deletedCarInfo = await UserCars.destroy({
+				where: { id: id },
+			});
+			return deletedCarInfo;
+		} catch (error) {
+			console.error("Error deleting car info: ", error);
+			throw error;
+		}
+	}
+
+	static async deleteHomeInfo(id) {
+		try {
+			const deletedHomeInfo = await UserHomes.destroy({
+				where: { id: id },
+			});
+			return deletedHomeInfo;
+		} catch (error) {
+			console.error("Error deleting car info: ", error);
 			throw error;
 		}
 	}
