@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { Text, View, Pressable, Animated, Easing } from "react-native";
+import {
+	Text,
+	View,
+	Pressable,
+	Animated,
+	Easing,
+	StyleSheet,
+} from "react-native";
 
 export interface IAppProps {
 	state: any;
 	onDeleteHome: (homeId: number) => void;
+	isBlurred: boolean;
 }
 export type Home = {
 	id: number;
@@ -35,6 +43,7 @@ export type Home = {
 const HomeList: React.FunctionComponent<IAppProps> = ({
 	state,
 	onDeleteHome,
+	isBlurred,
 }) => {
 	const homes = state.homes;
 
@@ -84,7 +93,7 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 						borderWidth: 1,
 						borderRadius: 10,
 						borderColor: "#ddd",
-						backgroundColor: "#fff",
+						backgroundColor: isBlurred ? "rgba(0, 0, 0, 0.5)" : "#fff",
 						margin: 10,
 						padding: 10,
 						height: "auto",
@@ -256,5 +265,11 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	blurredContainer: {
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+	},
+});
 
 export default HomeList;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import homePageStyles from "../services/styles/HomePageStyle";
 import FetchData from "../services/fetchData";
 import CarList from "./lists/CarLists";
@@ -20,6 +20,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 }) => {
 	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const [homeCarbon, setHomeCarbon] = useState<number>(0);
+	const [isBlurred, setIsBlurred] = useState<boolean>(false);
 
 	let totalCarbon = carCarbon + homeCarbon;
 
@@ -85,13 +86,12 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 		}
 	}, []);
 
+	useEffect(() => {
+		setIsBlurred(isDrawerOpen);
+	}, [isDrawerOpen]);
+
 	return (
-		// <BlurView
-		// 	style={{ flex: 1, ...(isDrawerOpen && { blurRadius: 10 }) }}
-		// 	blurType="dark"
-		// 	reducedTransparencyFallbackColor="white"
-		// >
-		<>
+		<View style={[isBlurred && styles.blurredContainer]}>
 			<View style={homePageStyles.container}>
 				<View style={homePageStyles.leftAndCenterContainer}>
 					<View style={homePageStyles.leftContainer}>
@@ -158,7 +158,11 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 						? "Your Car"
 						: "Your Cars"}
 				</Text>
-				<CarList state={state} onDeleteCar={onDeleteCar} />
+				<CarList
+					state={state}
+					onDeleteCar={onDeleteCar}
+					isBlurred={isBlurred}
+				/>
 				<Text
 					style={{
 						fontSize: 14,
@@ -181,11 +185,20 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 						? "Your Home"
 						: "Your Homes"}
 				</Text>
-				<HomeList state={state} onDeleteHome={onDeleteHome} />
+				<HomeList
+					state={state}
+					onDeleteHome={onDeleteHome}
+					isBlurred={isBlurred}
+				/>
 			</View>
-		</>
-		// </BlurView>
+		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	blurredContainer: {
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+	},
+});
 
 export default HomePage;
