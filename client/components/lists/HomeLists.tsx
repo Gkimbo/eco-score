@@ -102,7 +102,7 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 									style={{
 										borderRadius: 20,
 										marginRight: 10,
-										width: deleteConfirmation[item.id] ? 65 : pressed ? 40 : 30,
+										width: deleteConfirmation[item.id] ? 75 : pressed ? 40 : 30,
 										height: deleteConfirmation[item.id]
 											? 25
 											: pressed

@@ -1,10 +1,5 @@
 const reducer = (state: any, action: any) => {
 	switch (action.type) {
-		case "CARBON":
-			return {
-				...state,
-				carbon: state.carbon + action.payload,
-			};
 		case "REMOVE_CLASS":
 			return {
 				...state,

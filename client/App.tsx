@@ -20,8 +20,8 @@ import { AuthProvider } from "./services/AuthContext";
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [state, dispatch] = useReducer(reducer, {
-		carbon: 0,
 		currentUser: { token: null },
 		cars: [],
 		userInformation: null,
@@ -61,7 +61,13 @@ const Home = () => {
 							<>
 								<Route
 									path="/"
-									element={<HomePage state={state} dispatch={dispatch} />}
+									element={
+										<HomePage
+											state={state}
+											dispatch={dispatch}
+											isDrawerOpen={isDrawerOpen}
+										/>
+									}
 								/>
 								<Route path="/basic-form" element={<UserBasicInfoForm />} />
 								<Route path="/car-form" element={<UserCarInfoForm />} />
@@ -84,7 +90,11 @@ const Home = () => {
 					</Routes>
 					{state.currentUser.token ? (
 						<View style={homePageStyles.topBarContainer}>
-							<TopBar dispatch={dispatch} />
+							<TopBar
+								dispatch={dispatch}
+								isDrawerOpen={isDrawerOpen}
+								setIsDrawerOpen={setIsDrawerOpen}
+							/>
 						</View>
 					) : null}
 				</SafeAreaView>

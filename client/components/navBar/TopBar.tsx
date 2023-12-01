@@ -1,22 +1,25 @@
 import React, { useState } from "react";
 import { Drawer, Modal, Portal, PaperProvider } from "react-native-paper";
 import { useNavigate } from "react-router-native";
-
 import SignOutButton from "./SignoutButton";
 import HomeButton from "./HomeButton";
 import { Pressable, View, StyleSheet, Text } from "react-native";
-import CustomDrawerItem from "./CustomDrawerItem";
 import AddHomeButton from "./AddHomeButton";
 import AddBasicsButton from "./AddBasicInfoButton";
 import EditCarButton from "./AddCarButton";
 
 export interface IAppProps {
 	dispatch: any;
+	isDrawerOpen: boolean;
+	setIsDrawerOpen: any;
 }
 
-const TopBar: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
+const TopBar: React.FunctionComponent<IAppProps> = ({
+	dispatch,
+	isDrawerOpen,
+	setIsDrawerOpen,
+}) => {
 	const navigate = useNavigate();
-	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const hideModal = () => setIsDrawerOpen(false);
 
 	const toggleDrawer = () => {
@@ -36,8 +39,9 @@ const TopBar: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 						onDismiss={hideModal}
 						contentContainerStyle={{
 							backgroundColor: "white",
-							padding: 20,
-							marginTop: "69%",
+							padding: 5,
+							marginTop: "80%",
+							alignItems: "center",
 						}}
 					>
 						<AddHomeButton setIsDrawerOpen={setIsDrawerOpen} />
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
-		padding: 10,
+		padding: 5,
 		backgroundColor: "#3498db",
 		position: "relative", // Add position relative to the container
 	},
@@ -68,7 +72,6 @@ const styles = StyleSheet.create({
 		height: 70,
 		width: 70,
 		marginTop: 25,
-
 		borderRadius: 50,
 		backgroundColor: "green",
 		justifyContent: "center",

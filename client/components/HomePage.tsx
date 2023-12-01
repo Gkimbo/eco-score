@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, Pressable, View } from "react-native";
+import { Text, View } from "react-native";
 import homePageStyles from "../services/styles/HomePageStyle";
 import FetchData from "../services/fetchData";
 import CarList from "./lists/CarLists";
@@ -10,16 +10,18 @@ import HomeList from "./lists/HomeLists";
 export interface IAppProps {
 	state: any;
 	dispatch: any;
+	isDrawerOpen: any;
 }
 
-const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
+const HomePage: React.FunctionComponent<IAppProps> = ({
+	state,
+	dispatch,
+	isDrawerOpen,
+}) => {
 	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const [homeCarbon, setHomeCarbon] = useState<number>(0);
 
-	const handlePress = (event: any) => {
-		event.preventDefault();
-		dispatch({ type: "CARBON", payload: 1 });
-	};
+	let totalCarbon = carCarbon + homeCarbon;
 
 	const onDeleteCar = async (id: number) => {
 		try {
@@ -84,6 +86,11 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 	}, []);
 
 	return (
+		// <BlurView
+		// 	style={{ flex: 1, ...(isDrawerOpen && { blurRadius: 10 }) }}
+		// 	blurType="dark"
+		// 	reducedTransparencyFallbackColor="white"
+		// >
 		<>
 			<View style={homePageStyles.container}>
 				<View style={homePageStyles.leftAndCenterContainer}>
@@ -96,29 +103,26 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 							<Text>🏠</Text>
 							<Text>{homeCarbon || 0}</Text>
 						</View>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🏢</Text>
-							<Text>{state.workCount || 0}</Text>
-						</View>
 					</View>
 
 					<View style={homePageStyles.centerContainer}>
 						<Text style={homePageStyles.header}>Your Score!</Text>
-						<Pressable onPress={handlePress}>
-							<View style={homePageStyles.circleContainer}>
-								<View
-									style={[
-										homePageStyles.circle,
-										{ height: `${Math.min(carCarbon + homeCarbon, 100)}%` },
-									]}
-								/>
-								<Text>You Produce</Text>
-								<Text style={homePageStyles.carbonText}>
-									{carCarbon + homeCarbon}
-								</Text>
-								<Text>tons of CO2 annually</Text>
-							</View>
-						</Pressable>
+
+						<View style={homePageStyles.circleContainer}>
+							<View
+								style={[
+									homePageStyles.circle,
+									{
+										height: `${Math.min((carCarbon + homeCarbon) * 2.5, 100)}%`,
+									},
+								]}
+							/>
+							<Text>You Produce</Text>
+							<Text style={homePageStyles.carbonText}>
+								{totalCarbon.toFixed(2)}
+							</Text>
+							<Text>tons of CO2 annually</Text>
+						</View>
 					</View>
 				</View>
 
@@ -180,6 +184,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 				<HomeList state={state} onDeleteHome={onDeleteHome} />
 			</View>
 		</>
+		// </BlurView>
 	);
 };
 

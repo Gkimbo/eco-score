@@ -1982,6 +1982,7 @@ const carsData = {
 		"Corolla Cross",
 		"bZ4X",
 		"Tundra",
+		"Yaris",
 	],
 	Volkswagen: [
 		"Beetle",

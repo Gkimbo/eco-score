@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, Pressable, ViewStyle, TextStyle } from "react-native";
 import { useNavigate } from "react-router-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export interface IAppProps {
 	setIsDrawerOpen: any;
@@ -26,6 +27,7 @@ const AddHomeButton: React.FunctionComponent<IAppProps> = ({
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
+			<Icon name="home" size={20} color="white" style={{ marginRight: 5 }} />
 			<Text style={styles.buttonText}>Add Home</Text>
 		</Pressable>
 	);
@@ -44,6 +46,8 @@ const styles: Styles = {
 		margin: 10,
 		alignItems: "center",
 		justifyContent: "center",
+		width: "50%",
+		height: "20%",
 	},
 	buttonText: {
 		color: "black",
