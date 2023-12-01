@@ -71,7 +71,6 @@ const UserFormStyles = StyleSheet.create({
 		borderColor: "#000",
 		borderRadius: 5,
 		marginBottom: 20,
-		backgroundColor: "#fff",
 	},
 	pickerContainer: {
 		marginBottom: 20,

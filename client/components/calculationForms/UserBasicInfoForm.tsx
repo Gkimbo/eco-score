@@ -7,6 +7,10 @@ import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
 
+export interface IAppProps {
+	isDrawerOpen: any;
+}
+
 type UserBasicInfo = {
 	user: any;
 	zipcode: string;
@@ -26,7 +30,9 @@ type UserBasicInfo = {
 	hasCar: string;
 };
 
-const UserBasicInfoForm = () => {
+const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
+	isDrawerOpen,
+}) => {
 	const { user } = useContext(AuthContext);
 	const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({
 		user: user,
@@ -112,7 +118,10 @@ const UserBasicInfoForm = () => {
 						placeholder="Please Type your zipcode"
 						value={userBasicInfo.zipcode}
 						onChangeText={handleLocationChange}
-						style={UserFormStyles.input}
+						style={{
+							...UserFormStyles.input,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
 					/>
 					<Text style={UserFormStyles.subtitle}>Do you rent or own?</Text>
 					<RNPickerSelect
@@ -126,7 +135,13 @@ const UserBasicInfoForm = () => {
 					/>
 					<View style={UserFormStyles.commuteContainer}>
 						<Text style={UserFormStyles.subtitle}>Do you have a car?</Text>
-						<View style={{ flexDirection: "row", justifyContent: "center" }}>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "center",
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
 							<View>
 								<RadioButton.Group
 									onValueChange={handleHasCarChange}
@@ -157,7 +172,7 @@ const UserBasicInfoForm = () => {
 								borderWidth: 1,
 								borderColor: "#000",
 								borderRadius: 5,
-								backgroundColor: "#fff",
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 								padding: 5,
 							}}
 						>
@@ -187,7 +202,13 @@ const UserBasicInfoForm = () => {
 
 					<View style={UserFormStyles.commuteContainer}>
 						<Text style={UserFormStyles.subtitle}>Do you commute to work?</Text>
-						<View style={{ flexDirection: "row", justifyContent: "center" }}>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "center",
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
 							<View>
 								<RadioButton.Group
 									onValueChange={handleCommuteChange}
@@ -215,7 +236,12 @@ const UserBasicInfoForm = () => {
 									mode="outlined"
 									value={userBasicInfo.daysCommute}
 									onChangeText={handleDaysCommuteChange}
-									style={UserFormStyles.input}
+									style={{
+										...UserFormStyles.input,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+									}}
 								/>
 								<Text style={UserFormStyles.subtitle}>
 									Mode of transportation.
@@ -242,7 +268,14 @@ const UserBasicInfoForm = () => {
 					</View>
 				</View>
 				<Pressable onPress={handleSubmit}>
-					<Text style={UserFormStyles.button}>Submit</Text>
+					<Text
+						style={{
+							...UserFormStyles.button,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#f9bc60",
+						}}
+					>
+						Submit
+					</Text>
 				</Pressable>
 			</form>
 		</ScrollView>

@@ -69,9 +69,18 @@ const Home = () => {
 										/>
 									}
 								/>
-								<Route path="/basic-form" element={<UserBasicInfoForm />} />
-								<Route path="/car-form" element={<UserCarInfoForm />} />
-								<Route path="/home-form" element={<UserHomeInfoForm />} />
+								<Route
+									path="/basic-form"
+									element={<UserBasicInfoForm isDrawerOpen={isDrawerOpen} />}
+								/>
+								<Route
+									path="/car-form"
+									element={<UserCarInfoForm isDrawerOpen={isDrawerOpen} />}
+								/>
+								<Route
+									path="/home-form"
+									element={<UserHomeInfoForm isDrawerOpen={isDrawerOpen} />}
+								/>
 							</>
 						) : (
 							<Route
