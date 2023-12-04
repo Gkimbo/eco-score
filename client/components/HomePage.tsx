@@ -8,6 +8,7 @@ import ListStyles from "../services/styles/ListStyles";
 import { Car, Home } from "../services/types/carAndHomeType";
 import CarHighlights from "./lists/highlights/CarHighlights";
 import HomeHighlights from "./lists/highlights/HomeHighlights";
+import Rewards from "./rewards/RewardsDisplay";
 
 export interface IAppProps {
 	state: any;
@@ -35,13 +36,15 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 		navigate("/homes");
 	};
 
+	const handleRewardsPress = () => {
+		navigate("/rewards");
+	};
+
 	const cars = state.cars.map((car: Car) => {
-		console.log(car);
 		return <CarHighlights key={car.id} car={car} isBlurred={isBlurred} />;
 	});
 
 	const homes = state.homes.map((home: Home) => {
-		console.log(home);
 		return <HomeHighlights key={home.id} home={home} isBlurred={isBlurred} />;
 	});
 
@@ -94,14 +97,18 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 			<View style={homePageStyles.container}>
 				<View style={homePageStyles.leftAndCenterContainer}>
 					<View style={homePageStyles.leftContainer}>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🚗</Text>
-							<Text>{carCarbon || 0}</Text>
-						</View>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🏠</Text>
-							<Text>{homeCarbon || 0}</Text>
-						</View>
+						<Pressable onPress={handleCarsPress}>
+							<View style={homePageStyles.iconWithNumber}>
+								<Text>🚗</Text>
+								<Text>{carCarbon || 0}</Text>
+							</View>
+						</Pressable>
+						<Pressable onPress={handleHomesPress}>
+							<View style={homePageStyles.iconWithNumber}>
+								<Text>🏠</Text>
+								<Text>{homeCarbon || 0}</Text>
+							</View>
+						</Pressable>
 					</View>
 
 					<View style={homePageStyles.centerContainer}>
@@ -127,6 +134,11 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 
 				<View style={homePageStyles.centerAndRightContainer}>
 					<View style={homePageStyles.rightContainer}>
+						<Pressable onPress={handleRewardsPress}>
+							<View style={homePageStyles.iconWithNumber}>
+								<Rewards userRewards={state.rewards} />
+							</View>
+						</Pressable>
 						<View style={homePageStyles.iconWithNumber}>
 							<Text>🌳</Text>
 							<Text>{state.treesPlanted || 0}</Text>

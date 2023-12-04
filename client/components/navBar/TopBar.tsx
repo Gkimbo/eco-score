@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		padding: 5,
 		backgroundColor: "#3498db",
-		position: "relative", // Add position relative to the container
+		position: "relative",
 	},
 	drawerButton: {
 		position: "absolute",

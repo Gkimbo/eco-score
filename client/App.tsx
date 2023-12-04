@@ -19,6 +19,7 @@ import getCurrentUser from "./services/getCurrentUser";
 import { AuthProvider } from "./services/AuthContext";
 import CarList from "./components/lists/CarsList";
 import HomeList from "./components/lists/HomesList";
+import RewardsPage from "./components/rewards/RewardsPage";
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -28,6 +29,8 @@ const Home = () => {
 		cars: [],
 		userInformation: null,
 		homes: [],
+		rewards: 0,
+		treesPlanted: 0,
 	});
 
 	const fetchCurrentUser = async () => {
@@ -97,6 +100,17 @@ const Home = () => {
 									path="/homes"
 									element={
 										<HomeList
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
+
+								<Route
+									path="/rewards"
+									element={
+										<RewardsPage
 											isDrawerOpen={isDrawerOpen}
 											state={state}
 											dispatch={dispatch}
