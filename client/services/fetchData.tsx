@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
+import { Car, Home } from "./types/carAndHomeFormType";
 import type { user } from "./types/userType";
-import { Car, Home } from "./types/carAndHomeType";
 const baseURL = "http://localhost:3000";
 
 interface IFormInput {

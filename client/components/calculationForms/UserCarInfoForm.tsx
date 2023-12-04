@@ -10,7 +10,7 @@ import Autocomplete from "react-native-autocomplete-input";
 import { carMakesUS } from "../../services/carArray";
 import { useNavigate } from "react-router-native";
 import carsData from "../../services/carModelArray";
-import { Car } from "../../services/types/carAndHomeType";
+import { Car } from "../../services/types/carAndHomeFormType";
 
 export interface IAppProps {
 	isDrawerOpen: any;
@@ -36,10 +36,6 @@ const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
 			carBatterySize: "",
 			tank: "",
 			zipCode: "",
-			carbonPerTank: "",
-			carbonPerCharge: "",
-			carbonToMakeBattery: "",
-			carbonPerMile: "",
 			mileage: "",
 			mileageUnit: "daily",
 		},

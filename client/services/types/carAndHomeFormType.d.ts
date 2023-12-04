@@ -1,5 +1,4 @@
 export type Car = {
-    id: number;
     make: string;
     model: string;
     year: string;
@@ -7,16 +6,11 @@ export type Car = {
     fuelType: "gas" | "diesel" | "hybrid" | "electricity";
     carBatterySize: string;
     zipCode: string;
-    carbonPerTank: string;
-    carbonPerCharge: string;
-    carbonToMakeBattery: string;
-    carbonPerMile:string;
     mileage: string;
 	mileageUnit: string;
 } 
 
 export type Home = {
-    id: number;
     zipcode: string;
     yearBuilt: string;
     squareFeet: string;
@@ -34,9 +28,4 @@ export type Home = {
     gas: string;
     batteryBackup: string;
     batteryBankSize: string;
-    totalAnnualCarbon:string;
-    carbonForAnnualPower:string;
-    carbonFromBatteryBank:string;
-    carbonFromAnnualGas:string;
-    carbonFromAnnualOil:string;
 };

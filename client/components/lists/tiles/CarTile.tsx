@@ -30,7 +30,7 @@ export type Car = {
 
 let isBlurredOut;
 
-const CarList: React.FunctionComponent<IAppProps> = ({
+const CarTile: React.FunctionComponent<IAppProps> = ({
 	state,
 	onDeleteCar,
 	isBlurred,
@@ -285,4 +285,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default CarList;
+export default CarTile;

@@ -7,7 +7,7 @@ import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
 import { useNavigate } from "react-router-native";
-import { Home } from "../../services/types/carAndHomeType";
+import { Home } from "../../services/types/carAndHomeFormType";
 
 export interface IAppProps {
 	isDrawerOpen: any;

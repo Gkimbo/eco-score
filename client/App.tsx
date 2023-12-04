@@ -17,6 +17,8 @@ import homePageStyles from "./services/styles/HomePageStyle";
 import reducer from "./services/reducerFunction";
 import getCurrentUser from "./services/getCurrentUser";
 import { AuthProvider } from "./services/AuthContext";
+import CarList from "./components/lists/CarsList";
+import HomeList from "./components/lists/HomesList";
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -80,6 +82,26 @@ const Home = () => {
 								<Route
 									path="/home-form"
 									element={<UserHomeInfoForm isDrawerOpen={isDrawerOpen} />}
+								/>
+								<Route
+									path="/cars"
+									element={
+										<CarList
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
+								<Route
+									path="/homes"
+									element={
+										<HomeList
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
 								/>
 							</>
 						) : (

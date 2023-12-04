@@ -7,40 +7,15 @@ import {
 	Easing,
 	StyleSheet,
 } from "react-native";
+import { Home } from "../../../services/types/carAndHomeType";
 
 export interface IAppProps {
 	state: any;
 	onDeleteHome: (homeId: number) => void;
 	isBlurred: boolean;
 }
-export type Home = {
-	id: number;
-	zipcode: string;
-	yearBuilt: string;
-	squareFeet: string;
-	electricitySource: string;
-	electricityUsage: string;
-	recycling: string;
-	compost: string;
-	electricityUnit: string;
-	gasUnit: string;
-	gasUsage: string;
-	oilUsage: string;
-	oilUnit: string;
-	oilVolume: string;
-	oil: string;
-	gas: string;
-	batteryBackup: string;
-	batteryBankSize: string;
-	carbonForAnnualPower: string;
-	carbonFromAnnualGas: string | null;
-	carbonFromAnnualOil: string | null;
-	carbonFromBatteryBank: string | null;
-	totalAnnualCarbon: string;
-	totalStaticCarbon: string;
-};
 
-const HomeList: React.FunctionComponent<IAppProps> = ({
+const HomeTile: React.FunctionComponent<IAppProps> = ({
 	state,
 	onDeleteHome,
 	isBlurred,
@@ -272,4 +247,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default HomeList;
+export default HomeTile;
