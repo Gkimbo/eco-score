@@ -64,6 +64,112 @@ class UserInfo {
 		});
 	}
 
+	static async addTreeToDb({ userId }) {
+		try {
+			const userInfo = await UserInformation.findOne({
+				where: { userId },
+			});
+			if (userInfo) {
+				const updatedTreesPlanted = userInfo.treesPlanted + 1;
+				await UserInformation.update(
+					{
+						treesPlanted: updatedTreesPlanted,
+					},
+					{
+						where: { userId },
+					}
+				);
+
+				await this.removeStarsFromDb({ userId });
+				console.log(
+					`Tree added for user ${userId}. Total trees planted: ${updatedTreesPlanted}`
+				);
+			} else {
+				return `User with ID ${userId} not found`;
+			}
+		} catch (error) {
+			console.error("Error adding tree to the database:", error);
+		}
+	}
+
+	static async addStarsToDb({ userId, rewards }) {
+		try {
+			const userInfo = await UserInformation.findOne({
+				where: { userId },
+			});
+			if (userInfo) {
+				const updatedStars = userInfo.rewards + rewards;
+				await UserInformation.update(
+					{
+						rewards: updatedStars,
+					},
+					{
+						where: { userId },
+					}
+				);
+				console.log(
+					`Stars added for user ${userId}. Total Stars: ${updatedStars}`
+				);
+			} else {
+				return `User with ID ${userId} not found`;
+			}
+		} catch (error) {
+			console.error("Error adding tree to the database:", error);
+		}
+	}
+
+	static async removeStarsFromDb({ userId }) {
+		try {
+			const userInfo = await UserInformation.findOne({
+				where: { userId },
+			});
+			if (userInfo) {
+				const updatedStars = userInfo.rewards;
+				await UserInformation.update(
+					{
+						rewards: userInfo.rewards - 1000,
+					},
+					{
+						where: { userId },
+					}
+				);
+				console.log(
+					`Stars removed for user ${userId}. Total Stars: ${updatedStars}`
+				);
+			} else {
+				return `User with ID ${userId} not found`;
+			}
+		} catch (error) {
+			console.error("Error adding tree to the database:", error);
+		}
+	}
+
+	// static async removeCustomStars(userId, rewards) {
+	// 	try {
+	// 		const userInfo = await UserInformation.findOne({
+	// 			where: { userId },
+	// 		});
+	// 		if (userInfo) {
+	// 			const updatedStars = userInfo.rewards;
+	// 			await UserInformation.update(
+	// 				{
+	// 					rewards: userInfo.rewards - rewards,
+	// 				},
+	// 				{
+	// 					where: { userId },
+	// 				}
+	// 			);
+	// 			console.log(
+	// 				`Stars removed for user ${userId}. Total Stars: ${updatedStars}`
+	// 			);
+	// 		} else {
+	// 			return `User with ID ${userId} not found`;
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Error adding tree to the database:", error);
+	// 	}
+	// }
+
 	static async addHomeToDB({
 		userId,
 		zipcode,
@@ -129,8 +235,12 @@ class UserInfo {
 		}
 	}
 
-	static async deleteCarInfo(id) {
+	static async deleteCarInfo(id, userId) {
 		try {
+			// const getCar = await UserCars.findOne({ where: { id: id } });
+			// if (getCar.dataValues.fuelType === "electricity") {
+			// 	await this.removeCustomStars(userId, 100);
+			// }
 			const deletedCarInfo = await UserCars.destroy({
 				where: { id: id },
 			});
