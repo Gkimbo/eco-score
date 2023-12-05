@@ -32,7 +32,6 @@ const Home = () => {
 		rewards: 0,
 		treesPlanted: 0,
 	});
-
 	const fetchCurrentUser = async () => {
 		try {
 			const token = await getCurrentUser();

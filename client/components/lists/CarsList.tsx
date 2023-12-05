@@ -27,6 +27,7 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 
 	return (
 		<View style={ListStyles.container}>
+			<Text style={ListStyles.title}>Your Cars!</Text>
 			<CarTile
 				state={state}
 				onDeleteCar={onDeleteCar}

@@ -48,6 +48,14 @@ module.exports = {
 				type: Sequelize.STRING,
 				allowNull: false,
 			},
+			treesPlanted: {
+				type: Sequelize.INTEGER,
+				allowNull: true,
+			},
+			rewards: {
+				type: Sequelize.INTEGER,
+				allowNull: true,
+			},
 			createdAt: {
 				type: Sequelize.DATE,
 				allowNull: false,

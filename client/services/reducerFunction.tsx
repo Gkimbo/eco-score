@@ -55,6 +55,16 @@ const reducer = (state: any, action: any) => {
 				...state,
 				treesPlanted: state.treesPlanted + action.payload,
 			};
+		case "PLANT_TREES_HOME":
+			return {
+				...state,
+				treesPlanted: action.payload,
+			};
+		case "STARS_HOME":
+			return {
+				...state,
+				rewards: action.payload,
+			};
 
 		default:
 			throw new Error();

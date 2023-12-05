@@ -13,7 +13,7 @@ import carsData from "../../services/carModelArray";
 import { Car } from "../../services/types/carAndHomeFormType";
 
 export interface IAppProps {
-	isDrawerOpen: any;
+	isDrawerOpen: boolean;
 }
 
 type UserCarInfoForm = {
@@ -264,6 +264,22 @@ const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
 			if (response === "No car found" || response === "Cannot find zipcode") {
 				setError(response);
 			} else {
+				if (userCarInfo.car.fuelType === "electricity") {
+					const addRewards = FetchData.addReward({
+						user: userCarInfo.user,
+						rewards: 100,
+					}).then((response) => {
+						setError(null);
+					});
+				}
+				if ((userCarInfo.car.zipCode = "off grid")) {
+					const addRewards = FetchData.addReward({
+						user: userCarInfo.user,
+						rewards: 300,
+					}).then((response) => {
+						setError(null);
+					});
+				}
 				setError(null);
 				setRedirect(true);
 			}

@@ -118,21 +118,21 @@ const HomeTile: React.FunctionComponent<IAppProps> = ({
 							<Pressable
 								onPress={() => handleNoPress(item.id)}
 								accessible={true}
-								accessibilityLabel="No Button"
+								accessibilityLabel="Keep Button"
 							>
 								<View
 									style={{
+										backgroundColor: "green",
 										borderRadius: 20,
 										width: 65,
 										height: 25,
-										backgroundColor: "green",
 										justifyContent: "center",
 										alignItems: "center",
 									}}
 								>
 									<Text
 										style={{
-											color: "white",
+											color: "black",
 											fontWeight: "bold",
 											fontSize: 10,
 										}}

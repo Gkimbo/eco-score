@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react-native";
 import { View, Text, StyleSheet, Pressable } from "react-native";
+import FetchData from "../../services/fetchData";
 
 interface RewardsScreenProps {
 	isDrawerOpen: boolean;
@@ -15,22 +16,42 @@ const RewardsPage: React.FC<RewardsScreenProps> = ({
 }) => {
 	const [error, setError] = useState<string | null>(null);
 	const handleWatchAd = () => {
-		dispatch({ type: "ADD_STARS", payload: 10 });
+		const addRewards = FetchData.addReward({
+			user: state.currentUser,
+			rewards: 10,
+		}).then((response) => {
+			dispatch({ type: "ADD_STARS", payload: 10 });
+			setError(null);
+		});
 	};
 
 	const handleDonateStars = () => {
 		if (state.rewards >= 1000) {
-			dispatch({ type: "DEDUCT_STARS", payload: 1000 });
-			dispatch({ type: "PLANT_TREES", payload: 1 });
-
-			alert("Thank you for donating stars! You planted a tree.");
+			const treesPlanted = FetchData.addTrees({
+				user: state.currentUser,
+			}).then((response) => {
+				if (response.message) {
+					setError(
+						"Please update your basic user info before getting rewards or donating"
+					);
+				} else {
+					setError(null);
+					dispatch({ type: "DEDUCT_STARS", payload: 1000 });
+					dispatch({ type: "PLANT_TREES", payload: 1 });
+				}
+			});
 		} else {
-			setError("You need 1000 stars to donate!");
+			setError("You need 1000 stars to plant a tree!");
 		}
 	};
 
 	return (
-		<View style={styles.container}>
+		<View
+			style={{
+				...styles.container,
+				backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "transparent",
+			}}
+		>
 			<Text style={styles.title}>Your Rewards!</Text>
 			<Star color="yellow" size={40} />
 			<Text style={styles.rewardsText}>{state.rewards}</Text>
@@ -40,21 +61,40 @@ const RewardsPage: React.FC<RewardsScreenProps> = ({
 			</Pressable>
 
 			<Pressable onPress={handleDonateStars} style={styles.button}>
-				<Text style={styles.buttonText}>Donate 1000 Stars</Text>
+				<Text style={styles.buttonText}>Donate Stars to plant a tree!</Text>
 			</Pressable>
 
 			{error && <Text style={styles.warningText}>{error}</Text>}
-
-			<Text style={styles.infoText}>
-				You've planted {state.treesPlanted} trees!
-			</Text>
-
-			<Text style={styles.infoText}>
-				On average, a mature tree can absorb about 48 pounds of CO2 per year!
-			</Text>
-
-			<Text style={styles.infoText}>
-				You've helped absorb {state.treesPlanted * 48} pounds of CO2 per year!
+			<View
+				style={{
+					...styles.textContainer,
+					backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+				}}
+			>
+				<Text style={styles.infoText}>
+					You've planted {state.treesPlanted} trees!
+				</Text>
+				<Text style={styles.infoText}>
+					which absorbs{" "}
+					<Text style={{ fontSize: 15, fontWeight: "bold" }}>
+						{state.treesPlanted * 48}
+					</Text>{" "}
+					pounds of CO2 per year!
+				</Text>
+			</View>
+			<Text
+				style={{
+					fontSize: 14,
+					color: "white",
+					marginTop: 30,
+					marginBottom: 20,
+					marginRight: 15,
+					marginLeft: 15,
+					textAlign: "center",
+				}}
+			>
+				On average, a mature tree can absorb about{" "}
+				<Text style={{ color: "orange" }}>{48}</Text> pounds of CO2 per year!
 			</Text>
 		</View>
 	);
@@ -65,7 +105,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: "10%",
+		marginTop: "5%",
 	},
 	title: {
 		fontSize: 24,
@@ -97,9 +137,18 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 	},
 	infoText: {
-		marginVertical: 10,
+		marginVertical: 5,
 		fontSize: 14,
 		textAlign: "center",
+	},
+	textContainer: {
+		backgroundColor: "#fff",
+		borderRadius: 8,
+		marginTop: 15,
+		marginRight: 15,
+		marginLeft: 15,
+		paddingRight: 10,
+		paddingLeft: 10,
 	},
 });
 

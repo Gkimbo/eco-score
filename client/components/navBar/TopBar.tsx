@@ -7,6 +7,7 @@ import { Pressable, View, StyleSheet, Text } from "react-native";
 import AddHomeButton from "./AddHomeButton";
 import AddBasicsButton from "./AddBasicInfoButton";
 import EditCarButton from "./AddCarButton";
+import RewardsButton from "./RewardsButton";
 
 export interface IAppProps {
 	dispatch: any;
@@ -47,6 +48,7 @@ const TopBar: React.FunctionComponent<IAppProps> = ({
 						<AddHomeButton setIsDrawerOpen={setIsDrawerOpen} />
 						<AddBasicsButton setIsDrawerOpen={setIsDrawerOpen} />
 						<EditCarButton setIsDrawerOpen={setIsDrawerOpen} />
+						<RewardsButton setIsDrawerOpen={setIsDrawerOpen} />
 					</Modal>
 				</Portal>
 				<SignOutButton dispatch={dispatch} />

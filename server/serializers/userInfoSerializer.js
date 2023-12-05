@@ -8,6 +8,8 @@ class UserInfoSerializer {
 			"transportation",
 			"daysCommute",
 			"hasCar",
+			"treesPlanted",
+			"rewards",
 		];
 		const serializedUser = {};
 
