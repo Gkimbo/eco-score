@@ -211,10 +211,13 @@ class UserInfo {
 			batteryBackup,
 		});
 	}
-	static async updateUserInfo(id, data) {
+	static async updateUserInfo(data) {
 		try {
+			const information = await UserInformation.findOne({
+				where: { userId: data.userId },
+			});
 			const updatedUserInfo = await UserInformation.update(data, {
-				where: { id: id },
+				where: { id: information.dataValues.id },
 			});
 			return updatedUserInfo;
 		} catch (error) {
@@ -223,10 +226,10 @@ class UserInfo {
 		}
 	}
 
-	static async deleteUserInfo(id) {
+	static async deleteUserInfo(userId) {
 		try {
 			const deletedUserInfo = await UserInformation.destroy({
-				where: { id: id },
+				where: { userId: userId },
 			});
 			return deletedUserInfo;
 		} catch (error) {

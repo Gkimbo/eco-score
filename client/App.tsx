@@ -78,6 +78,7 @@ const Home = () => {
 									element={
 										<UserBasicInfoForm
 											isDrawerOpen={isDrawerOpen}
+											dispatch={dispatch}
 											state={state}
 										/>
 									}
