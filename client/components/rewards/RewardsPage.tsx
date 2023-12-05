@@ -2,14 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Star } from "lucide-react-native";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import FetchData from "../../services/fetchData";
+import AddBasicsButton from "../navBar/AddBasicInfoButton";
 
 interface RewardsScreenProps {
+	setIsDrawerOpen: any;
 	isDrawerOpen: boolean;
 	state: any;
 	dispatch: any;
 }
 
 const RewardsPage: React.FC<RewardsScreenProps> = ({
+	setIsDrawerOpen,
 	isDrawerOpen,
 	state,
 	dispatch,
@@ -52,50 +55,85 @@ const RewardsPage: React.FC<RewardsScreenProps> = ({
 				backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "transparent",
 			}}
 		>
-			<Text style={styles.title}>Your Rewards!</Text>
-			<Star color="yellow" size={40} />
-			<Text style={styles.rewardsText}>{state.rewards}</Text>
+			{state.userInformation ? (
+				<>
+					<Text style={styles.title}>Your Rewards!</Text>
+					<Star color="yellow" size={40} />
+					<Text style={styles.rewardsText}>{state.rewards}</Text>
 
-			<Pressable onPress={handleWatchAd} style={styles.button}>
-				<Text style={styles.buttonText}>Watch Ad (+10 Stars)</Text>
-			</Pressable>
+					<Pressable onPress={handleWatchAd} style={styles.button}>
+						<Text style={styles.buttonText}>Watch Ad (+10 Stars)</Text>
+					</Pressable>
 
-			<Pressable onPress={handleDonateStars} style={styles.button}>
-				<Text style={styles.buttonText}>Donate Stars to plant a tree!</Text>
-			</Pressable>
+					<Pressable onPress={handleDonateStars} style={styles.button}>
+						<Text style={styles.buttonText}>Donate Stars to plant a tree!</Text>
+					</Pressable>
 
-			{error && <Text style={styles.warningText}>{error}</Text>}
-			<View
-				style={{
-					...styles.textContainer,
-					backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-				}}
-			>
-				<Text style={styles.infoText}>
-					You've planted {state.treesPlanted} trees!
-				</Text>
-				<Text style={styles.infoText}>
-					which absorbs{" "}
-					<Text style={{ fontSize: 15, fontWeight: "bold" }}>
-						{state.treesPlanted * 48}
-					</Text>{" "}
-					pounds of CO2 per year!
-				</Text>
-			</View>
-			<Text
-				style={{
-					fontSize: 14,
-					color: "white",
-					marginTop: 30,
-					marginBottom: 20,
-					marginRight: 15,
-					marginLeft: 15,
-					textAlign: "center",
-				}}
-			>
-				On average, a mature tree can absorb about{" "}
-				<Text style={{ color: "orange" }}>{48}</Text> pounds of CO2 per year!
-			</Text>
+					{error && <Text style={styles.warningText}>{error}</Text>}
+					<View
+						style={{
+							...styles.textContainer,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
+					>
+						<Text style={styles.infoText}>
+							You've planted {state.treesPlanted} trees!
+						</Text>
+						<Text style={styles.infoText}>
+							which absorbs{" "}
+							<Text style={{ fontSize: 15, fontWeight: "bold" }}>
+								{state.treesPlanted * 48}
+							</Text>{" "}
+							pounds of CO2 per year!
+						</Text>
+					</View>
+					<Text
+						style={{
+							fontSize: 14,
+							color: "white",
+							marginTop: 30,
+							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							textAlign: "center",
+						}}
+					>
+						On average, a mature tree can absorb about{" "}
+						<Text style={{ color: "orange" }}>{48}</Text> pounds of CO2 per
+						year!
+					</Text>
+				</>
+			) : (
+				<>
+					<Text
+						style={{
+							fontSize: 25,
+							color: "white",
+							marginTop: 30,
+							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							textAlign: "center",
+						}}
+					>
+						Please fill out your basic Information to see rewards and plant
+						trees
+					</Text>
+					<View
+						style={{
+							width: "80%",
+							height: "50%",
+							marginTop: 30,
+							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							alignItems: "center",
+						}}
+					>
+						<AddBasicsButton setIsDrawerOpen={setIsDrawerOpen} />
+					</View>
+				</>
+			)}
 		</View>
 	);
 };

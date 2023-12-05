@@ -75,7 +75,12 @@ const Home = () => {
 								/>
 								<Route
 									path="/basic-form"
-									element={<UserBasicInfoForm isDrawerOpen={isDrawerOpen} />}
+									element={
+										<UserBasicInfoForm
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+										/>
+									}
 								/>
 								<Route
 									path="/car-form"
@@ -110,6 +115,7 @@ const Home = () => {
 									path="/rewards"
 									element={
 										<RewardsPage
+											setIsDrawerOpen={setIsDrawerOpen}
 											isDrawerOpen={isDrawerOpen}
 											state={state}
 											dispatch={dispatch}

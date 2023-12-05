@@ -41,7 +41,7 @@ const TopBar: React.FunctionComponent<IAppProps> = ({
 						contentContainerStyle={{
 							backgroundColor: "white",
 							padding: 5,
-							marginTop: "80%",
+							marginTop: "94%",
 							alignItems: "center",
 						}}
 					>

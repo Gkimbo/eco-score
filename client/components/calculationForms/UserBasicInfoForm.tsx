@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, ScrollView, Switch, Pressable } from "react-native";
 import { TextInput, RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
@@ -6,9 +6,11 @@ import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
+import { useNavigate } from "react-router-native";
 
 export interface IAppProps {
 	isDrawerOpen: any;
+	state: any;
 }
 
 type UserBasicInfo = {
@@ -32,8 +34,10 @@ type UserBasicInfo = {
 
 const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 	isDrawerOpen,
+	state,
 }) => {
 	const { user } = useContext(AuthContext);
+	const [redirect, setRedirect] = useState<boolean>(false);
 	const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({
 		user: user,
 		zipcode: "",
@@ -45,6 +49,7 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 		daysCommute: "",
 		hasCar: "no",
 	});
+	const navigate = useNavigate();
 
 	const handleLocationChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({ ...prevState, zipcode: text }));
@@ -104,180 +109,212 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
 		FetchData.addBasicInfo(userBasicInfo).then((response) => {
-			console.log(response);
+			if (response.user) {
+				setRedirect(true);
+			}
 		});
 	};
+
+	useEffect(() => {
+		if (redirect) {
+			navigate("/");
+			setRedirect(false);
+		}
+	}, [redirect]);
 	return (
 		<ScrollView contentContainerStyle={UserFormStyles.container}>
-			<form onSubmit={handleSubmit}>
-				<View>
-					<Text style={UserFormStyles.title}>User Basic Info form page</Text>
-					<Text style={UserFormStyles.subtitle}>Where do you live?</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="Please Type your zipcode"
-						value={userBasicInfo.zipcode}
-						onChangeText={handleLocationChange}
-						style={{
-							...UserFormStyles.input,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					/>
-					<Text style={UserFormStyles.subtitle}>Do you rent or own?</Text>
-					<RNPickerSelect
-						value={userBasicInfo.homeOwnership}
-						onValueChange={handleHomeOwnershipChange}
-						style={pickerSelectStyles}
-						items={[
-							{ label: "Rent", value: "rent" },
-							{ label: "Own", value: "own" },
-						]}
-					/>
-					<View style={UserFormStyles.commuteContainer}>
-						<Text style={UserFormStyles.subtitle}>Do you have a car?</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							}}
-						>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleHasCarChange}
-									value={userBasicInfo.hasCar}
-								>
-									<RadioButton.Item label="Yes" value="yes" />
-								</RadioButton.Group>
-							</View>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleHasCarChange}
-									value={userBasicInfo.hasCar}
-								>
-									<RadioButton.Item label="No" value="no" />
-								</RadioButton.Group>
-							</View>
-						</View>
-					</View>
+			{state.userInformation === null ? (
+				<form onSubmit={handleSubmit}>
 					<View>
-						<Text style={UserFormStyles.subtitle}>
-							How many miles do you drive?
-						</Text>
-						<View
+						<Text style={UserFormStyles.title}>User Basic Info form page</Text>
+						<Text style={UserFormStyles.subtitle}>Where do you live?</Text>
+						<TextInput
+							mode="outlined"
+							placeholder="Please Type your zipcode"
+							value={userBasicInfo.zipcode}
+							onChangeText={handleLocationChange}
 							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: "#000",
-								borderRadius: 5,
+								...UserFormStyles.input,
 								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								padding: 5,
 							}}
-						>
-							<TextInput
-								value={userBasicInfo.milesDriven}
-								onChangeText={handleMilesDrivenChange}
+						/>
+						<Text style={UserFormStyles.subtitle}>Do you rent or own?</Text>
+						<RNPickerSelect
+							value={userBasicInfo.homeOwnership}
+							onValueChange={handleHomeOwnershipChange}
+							style={pickerSelectStyles}
+							items={[
+								{ label: "Rent", value: "rent" },
+								{ label: "Own", value: "own" },
+							]}
+						/>
+						<View style={UserFormStyles.commuteContainer}>
+							<Text style={UserFormStyles.subtitle}>Do you have a car?</Text>
+							<View
 								style={{
-									...UserFormStyles.input,
-									borderWidth: 0,
-									backgroundColor: "transparent",
+									flexDirection: "row",
+									justifyContent: "center",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 								}}
-							/>
-							<View style={{ marginTop: 10 }}>
-								<RNPickerSelect
-									value={userBasicInfo.milesDrivenUnit}
-									onValueChange={handleMilesDrivenUnitChange}
-									style={pickerSelectStyles}
-									items={[
-										{ label: "Yearly", value: "yearly" },
-										{ label: "Monthly", value: "monthly" },
-										{ label: "Daily", value: "daily" },
-									]}
-								/>
+							>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleHasCarChange}
+										value={userBasicInfo.hasCar}
+									>
+										<RadioButton.Item label="Yes" value="yes" />
+									</RadioButton.Group>
+								</View>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleHasCarChange}
+										value={userBasicInfo.hasCar}
+									>
+										<RadioButton.Item label="No" value="no" />
+									</RadioButton.Group>
+								</View>
 							</View>
 						</View>
-					</View>
-
-					<View style={UserFormStyles.commuteContainer}>
-						<Text style={UserFormStyles.subtitle}>Do you commute to work?</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							}}
-						>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleCommuteChange}
-									value={userBasicInfo.commute}
-								>
-									<RadioButton.Item label="Yes" value="yes" />
-								</RadioButton.Group>
-							</View>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleCommuteChange}
-									value={userBasicInfo.commute}
-								>
-									<RadioButton.Item label="No" value="no" />
-								</RadioButton.Group>
-							</View>
-						</View>
-
-						{userBasicInfo.commute === "yes" && (
-							<>
-								<Text style={UserFormStyles.subtitle}>
-									How many days a week do you commute?
-								</Text>
+						<View>
+							<Text style={UserFormStyles.subtitle}>
+								How many miles do you drive?
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+									padding: 5,
+								}}
+							>
 								<TextInput
-									mode="outlined"
-									value={userBasicInfo.daysCommute}
-									onChangeText={handleDaysCommuteChange}
+									value={userBasicInfo.milesDriven}
+									onChangeText={handleMilesDrivenChange}
 									style={{
 										...UserFormStyles.input,
-										backgroundColor: isDrawerOpen
-											? "rgba(0, 0, 0, 0.5)"
-											: "#fff",
+										borderWidth: 0,
+										backgroundColor: "transparent",
 									}}
 								/>
-								<Text style={UserFormStyles.subtitle}>
-									Mode of transportation.
-								</Text>
-								<RNPickerSelect
-									value={userBasicInfo.transportation}
-									onValueChange={handleTransportationChange}
-									style={pickerSelectStyles}
-									items={[
-										{ label: "Drive own car", value: "drive own car" },
-										{ label: "Train", value: "train" },
-										{ label: "Bus", value: "bus" },
-										{ label: "Walk", value: "walk" },
-										{ label: "Bicycle", value: "bicycle" },
-										{ label: "Electric Scooter", value: "electric scooter" },
-										{
-											label: "Ride Share: Uber, Lyft or equivalent",
-											value: "ride share",
-										},
-									]}
-								/>
-							</>
-						)}
+								<View style={{ marginTop: 10 }}>
+									<RNPickerSelect
+										value={userBasicInfo.milesDrivenUnit}
+										onValueChange={handleMilesDrivenUnitChange}
+										style={pickerSelectStyles}
+										items={[
+											{ label: "Yearly", value: "yearly" },
+											{ label: "Monthly", value: "monthly" },
+											{ label: "Daily", value: "daily" },
+										]}
+									/>
+								</View>
+							</View>
+						</View>
+
+						<View style={UserFormStyles.commuteContainer}>
+							<Text style={UserFormStyles.subtitle}>
+								Do you commute to work?
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								}}
+							>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleCommuteChange}
+										value={userBasicInfo.commute}
+									>
+										<RadioButton.Item label="Yes" value="yes" />
+									</RadioButton.Group>
+								</View>
+								<View>
+									<RadioButton.Group
+										onValueChange={handleCommuteChange}
+										value={userBasicInfo.commute}
+									>
+										<RadioButton.Item label="No" value="no" />
+									</RadioButton.Group>
+								</View>
+							</View>
+
+							{userBasicInfo.commute === "yes" && (
+								<>
+									<Text style={UserFormStyles.subtitle}>
+										How many days a week do you commute?
+									</Text>
+									<TextInput
+										mode="outlined"
+										value={userBasicInfo.daysCommute}
+										onChangeText={handleDaysCommuteChange}
+										style={{
+											...UserFormStyles.input,
+											backgroundColor: isDrawerOpen
+												? "rgba(0, 0, 0, 0.5)"
+												: "#fff",
+										}}
+									/>
+									<Text style={UserFormStyles.subtitle}>
+										Mode of transportation.
+									</Text>
+									<RNPickerSelect
+										value={userBasicInfo.transportation}
+										onValueChange={handleTransportationChange}
+										style={pickerSelectStyles}
+										items={[
+											{ label: "Drive own car", value: "drive own car" },
+											{ label: "Train", value: "train" },
+											{ label: "Bus", value: "bus" },
+											{ label: "Walk", value: "walk" },
+											{ label: "Bicycle", value: "bicycle" },
+											{ label: "Electric Scooter", value: "electric scooter" },
+											{
+												label: "Ride Share: Uber, Lyft or equivalent",
+												value: "ride share",
+											},
+										]}
+									/>
+								</>
+							)}
+						</View>
 					</View>
-				</View>
-				<Pressable onPress={handleSubmit}>
+					<Pressable onPress={handleSubmit}>
+						<Text
+							style={{
+								...UserFormStyles.button,
+								backgroundColor: isDrawerOpen
+									? "rgba(0, 0, 0, 0.5)"
+									: "#f9bc60",
+							}}
+						>
+							Submit
+						</Text>
+					</Pressable>
+				</form>
+			) : (
+				<>
 					<Text
 						style={{
-							...UserFormStyles.button,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#f9bc60",
+							fontSize: 25,
+							color: "white",
+							marginTop: 30,
+							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							textAlign: "center",
 						}}
 					>
-						Submit
+						{" "}
+						You have already filled out your information!
 					</Text>
-				</Pressable>
-			</form>
+				</>
+			)}
 		</ScrollView>
 	);
 };

@@ -22,6 +22,10 @@ const SignOutButton: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 						type: "PLANT_TREES_HOME",
 						payload: 0,
 					});
+					dispatch({
+						type: "STARS_HOME",
+						payload: 0,
+					});
 					dispatch({ type: "CURRENT_USER", payload: null });
 					navigate("/");
 				} else {

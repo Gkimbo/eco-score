@@ -132,7 +132,7 @@ const HomeTile: React.FunctionComponent<IAppProps> = ({
 								>
 									<Text
 										style={{
-											color: "black",
+											color: "white",
 											fontWeight: "bold",
 											fontSize: 10,
 										}}

@@ -261,16 +261,29 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 							alignItems: "center",
 							marginTop: 5,
 							backgroundColor: "#fff",
-							borderRadius: 5,
+							borderRadius: 10,
+							padding: 10,
 						}}
 					>
-						<Text>{state.treesPlanted} Trees Planted!</Text>
+						<Text>
+							<Text
+								style={{ color: "green", fontWeight: "bold", fontSize: 15 }}
+							>
+								{state.treesPlanted}
+							</Text>{" "}
+							Trees Planted!
+						</Text>
 						<Text style={styles.infoText}>
 							which absorbs{" "}
-							<Text style={{ fontSize: 15, fontWeight: "bold" }}>
-								{state.treesPlanted * 48}
+							<Text
+								style={{ fontSize: 15, fontWeight: "bold", color: "green" }}
+							>
+								{state.treesPlanted * 48 < 2000
+									? state.treesPlanted * 48
+									: (state.treesPlanted * 48) / 2000}
 							</Text>{" "}
-							pounds of CO2 per year!
+							{state.treesPlanted * 48 < 2000 ? "pounds" : "tons"} of CO2 per
+							year!
 						</Text>
 					</View>
 				</Pressable>
