@@ -65,26 +65,27 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 	};
 
 	const onSubmit = async () => {
+		console.log(validate());
 		if (!validate()) {
 			return;
-		}
-
-		const data: IFormInput = {
-			userName,
-			password,
-			email,
-		};
-
-		const response = await FetchData.makeNewUser(data);
-		if (
-			response === "An account already has this email" ||
-			response === "Username already exists"
-		) {
-			setErrors([response]);
-		} else if (response.user) {
-			dispatch({ type: "CURRENT_USER", payload: response.token });
-			login(response.token);
-			setRedirect(true);
+		} else {
+			const data: IFormInput = {
+				userName,
+				password,
+				email,
+			};
+			const response = await FetchData.makeNewUser(data);
+			if (
+				response === "An account already has this email" ||
+				response === "Username already exists"
+			) {
+				setErrors([response]);
+			} else {
+				console.log(response);
+				dispatch({ type: "CURRENT_USER", payload: response.token });
+				login(response.token);
+				setRedirect(true);
+			}
 		}
 	};
 

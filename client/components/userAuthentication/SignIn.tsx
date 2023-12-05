@@ -8,7 +8,7 @@ import {
 	View,
 } from "react-native";
 import * as Animatable from "react-native-animatable";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigate } from "react-router-native";
 
 import formStyles from "../../services/styles/FormStyle";
@@ -64,7 +64,20 @@ const SignIn: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 						<Pressable onPress={handlePress}>
 							<View style={LandingPageStyles.buttonContainer}>
 								<Text style={LandingPageStyles.textSign}>Sign Up Here</Text>
-								<MaterialIcons name="navigate-next" color="black" size={25} />
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										marginLeft: 10,
+									}}
+								>
+									<Icon
+										name="arrow-right"
+										size={20}
+										color="black"
+										style={{ marginRight: 10 }}
+									/>
+								</View>
 							</View>
 						</Pressable>
 					</ScrollView>

@@ -7,14 +7,20 @@ import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
 import { useNavigate } from "react-router-native";
-import { Home } from "../../services/types/carAndHomeType";
+import { Home } from "../../services/types/carAndHomeFormType";
+
+export interface IAppProps {
+	isDrawerOpen: any;
+}
 
 type UserHomeInfoForm = {
 	user: any;
 	home: Home;
 };
 
-const UserHomeInfoForm = () => {
+const UserHomeInfoForm: React.FunctionComponent<IAppProps> = ({
+	isDrawerOpen,
+}) => {
 	const { user } = useContext(AuthContext);
 	const [userHomeInfo, setUserHomeInfoForm] = useState<UserHomeInfoForm>({
 		user: user,
@@ -329,7 +335,13 @@ const UserHomeInfoForm = () => {
 	}, [redirect]);
 
 	return (
-		<ScrollView contentContainerStyle={UserFormStyles.container}>
+		<ScrollView
+			contentContainerStyle={{
+				marginTop: 85,
+				marginLeft: 15,
+				marginRight: 15,
+			}}
+		>
 			<form onSubmit={handleSubmit}>
 				<View>
 					<Text style={UserFormStyles.title}>Your home</Text>
@@ -340,7 +352,10 @@ const UserHomeInfoForm = () => {
 						placeholder="02531..."
 						value={userHomeInfo.home.zipcode}
 						onChangeText={handleZipCodeChange}
-						style={UserFormStyles.input}
+						style={{
+							...UserFormStyles.input,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
 					/>
 					<Text style={UserFormStyles.smallTitle}>Square Feet:</Text>
 					<View
@@ -350,7 +365,7 @@ const UserHomeInfoForm = () => {
 							borderWidth: 1,
 							borderColor: "#000",
 							borderRadius: 5,
-							backgroundColor: "#fff",
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 							padding: 5,
 							marginBottom: 20,
 						}}
@@ -374,9 +389,17 @@ const UserHomeInfoForm = () => {
 						placeholder="1772..."
 						value={userHomeInfo.home.yearBuilt}
 						onChangeText={handleYearBuiltChange}
-						style={UserFormStyles.input}
+						style={{
+							...UserFormStyles.input,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
 					/>
-					<View style={UserFormStyles.pickerContainer}>
+					<View
+						style={{
+							...UserFormStyles.pickerContainer,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
+					>
 						<Text style={UserFormStyles.smallTitle}>Electricity Source:</Text>
 						<RNPickerSelect
 							value={userHomeInfo.home.electricitySource}
@@ -410,7 +433,7 @@ const UserHomeInfoForm = () => {
 							borderWidth: 1,
 							borderColor: "#000",
 							borderRadius: 5,
-							backgroundColor: "#fff",
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 							padding: 5,
 							marginBottom: 20,
 						}}
@@ -431,7 +454,12 @@ const UserHomeInfoForm = () => {
 						Electricity usage time period:
 					</Text>
 
-					<View style={UserFormStyles.radioButtonContainer}>
+					<View
+						style={{
+							...UserFormStyles.radioButtonContainer,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
+					>
 						<View>
 							<RadioButton.Group
 								onValueChange={handleElectricityUnitChange}
@@ -453,7 +481,12 @@ const UserHomeInfoForm = () => {
 					<Text style={UserFormStyles.smallTitle}>
 						Do you use have a Battery backup or off grid battery bank?
 					</Text>
-					<View style={UserFormStyles.radioButtonContainer}>
+					<View
+						style={{
+							...UserFormStyles.radioButtonContainer,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
+					>
 						<View>
 							<RadioButton.Group
 								onValueChange={handleUsesBatteryBankChange}
@@ -481,7 +514,7 @@ const UserHomeInfoForm = () => {
 									borderWidth: 1,
 									borderColor: "#000",
 									borderRadius: 5,
-									backgroundColor: "#fff",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 									padding: 5,
 									marginBottom: 20,
 								}}
@@ -503,7 +536,12 @@ const UserHomeInfoForm = () => {
 					<Text style={UserFormStyles.smallTitle}>
 						Do you use Gas in this home?
 					</Text>
-					<View style={UserFormStyles.radioButtonContainer}>
+					<View
+						style={{
+							...UserFormStyles.radioButtonContainer,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
+					>
 						<View>
 							<RadioButton.Group
 								onValueChange={handleUsesGasChange}
@@ -535,7 +573,7 @@ const UserHomeInfoForm = () => {
 									borderWidth: 1,
 									borderColor: "#000",
 									borderRadius: 5,
-									backgroundColor: "#fff",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 									padding: 5,
 									marginBottom: 20,
 								}}
@@ -556,7 +594,12 @@ const UserHomeInfoForm = () => {
 							<Text style={UserFormStyles.smallTitle}>
 								Gas usage time period:
 							</Text>
-							<View style={UserFormStyles.radioButtonContainer}>
+							<View
+								style={{
+									...UserFormStyles.radioButtonContainer,
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								}}
+							>
 								<View>
 									<RadioButton.Group
 										onValueChange={handleGasUnitChange}
@@ -580,7 +623,12 @@ const UserHomeInfoForm = () => {
 					<Text style={UserFormStyles.smallTitle}>
 						Do you use Oil in this home?
 					</Text>
-					<View style={UserFormStyles.radioButtonContainer}>
+					<View
+						style={{
+							...UserFormStyles.radioButtonContainer,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
+					>
 						<View>
 							<RadioButton.Group
 								onValueChange={handleUsesOilChange}
@@ -613,7 +661,7 @@ const UserHomeInfoForm = () => {
 									borderWidth: 1,
 									borderColor: "#000",
 									borderRadius: 5,
-									backgroundColor: "#fff",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 									padding: 5,
 									marginBottom: 20,
 								}}
@@ -640,7 +688,12 @@ const UserHomeInfoForm = () => {
 							<Text style={UserFormStyles.smallTitle}>
 								Oil unit of measurement:
 							</Text>
-							<View style={UserFormStyles.radioButtonContainer}>
+							<View
+								style={{
+									...UserFormStyles.radioButtonContainer,
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								}}
+							>
 								<View>
 									<RadioButton.Group
 										onValueChange={handleOilVolumeChange}
@@ -662,7 +715,12 @@ const UserHomeInfoForm = () => {
 								Oil usage time period:
 							</Text>
 
-							<View style={UserFormStyles.radioButtonContainer}>
+							<View
+								style={{
+									...UserFormStyles.radioButtonContainer,
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								}}
+							>
 								<View>
 									<RadioButton.Group
 										onValueChange={handleOilUnitChange}
@@ -694,7 +752,7 @@ const UserHomeInfoForm = () => {
 							marginBottom: 20,
 							paddingLeft: 50,
 							paddingRight: 50,
-							backgroundColor: "#fff",
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 						}}
 					>
 						<View>
@@ -726,7 +784,7 @@ const UserHomeInfoForm = () => {
 							marginBottom: 20,
 							paddingLeft: 50,
 							paddingRight: 50,
-							backgroundColor: "#fff",
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 						}}
 					>
 						<View>
@@ -748,7 +806,14 @@ const UserHomeInfoForm = () => {
 					</View>
 				</View>
 				<Pressable onPress={handleSubmit}>
-					<Text style={UserFormStyles.button}>Submit</Text>
+					<Text
+						style={{
+							...UserFormStyles.button,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#f9bc60",
+						}}
+					>
+						Submit
+					</Text>
 				</Pressable>
 				{error ? (
 					<View>

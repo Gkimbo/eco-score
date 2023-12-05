@@ -1,40 +1,24 @@
 import React, { useState } from "react";
-import { Text, View, Pressable, Animated, Easing } from "react-native";
+import {
+	Text,
+	View,
+	Pressable,
+	Animated,
+	Easing,
+	StyleSheet,
+} from "react-native";
+import { Home } from "../../../services/types/carAndHomeType";
 
 export interface IAppProps {
 	state: any;
 	onDeleteHome: (homeId: number) => void;
+	isBlurred: boolean;
 }
-export type Home = {
-	id: number;
-	zipcode: string;
-	yearBuilt: string;
-	squareFeet: string;
-	electricitySource: string;
-	electricityUsage: string;
-	recycling: string;
-	compost: string;
-	electricityUnit: string;
-	gasUnit: string;
-	gasUsage: string;
-	oilUsage: string;
-	oilUnit: string;
-	oilVolume: string;
-	oil: string;
-	gas: string;
-	batteryBackup: string;
-	batteryBankSize: string;
-	carbonForAnnualPower: string;
-	carbonFromAnnualGas: string | null;
-	carbonFromAnnualOil: string | null;
-	carbonFromBatteryBank: string | null;
-	totalAnnualCarbon: string;
-	totalStaticCarbon: string;
-};
 
-const HomeList: React.FunctionComponent<IAppProps> = ({
+const HomeTile: React.FunctionComponent<IAppProps> = ({
 	state,
 	onDeleteHome,
+	isBlurred,
 }) => {
 	const homes = state.homes;
 
@@ -84,7 +68,7 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 						borderWidth: 1,
 						borderRadius: 10,
 						borderColor: "#ddd",
-						backgroundColor: "#fff",
+						backgroundColor: isBlurred ? "rgba(0, 0, 0, 0.5)" : "#fff",
 						margin: 10,
 						padding: 10,
 						height: "auto",
@@ -102,7 +86,7 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 									style={{
 										borderRadius: 20,
 										marginRight: 10,
-										width: deleteConfirmation[item.id] ? 65 : pressed ? 40 : 30,
+										width: deleteConfirmation[item.id] ? 75 : pressed ? 40 : 30,
 										height: deleteConfirmation[item.id]
 											? 25
 											: pressed
@@ -257,4 +241,10 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 	);
 };
 
-export default HomeList;
+const styles = StyleSheet.create({
+	blurredContainer: {
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+	},
+});
+
+export default HomeTile;

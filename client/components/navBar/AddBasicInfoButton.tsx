@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, Pressable, ViewStyle, TextStyle } from "react-native";
 import { useNavigate } from "react-router-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export interface IAppProps {
 	setIsDrawerOpen: any;
@@ -26,6 +27,12 @@ const AddBasicsButton: React.FunctionComponent<IAppProps> = ({
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
+			<Icon
+				name="user-plus"
+				size={20}
+				color="white"
+				style={{ marginRight: 5 }}
+			/>
 			<Text style={styles.buttonText}>Add Basic info</Text>
 		</Pressable>
 	);
@@ -41,9 +48,11 @@ const styles: Styles = {
 		backgroundColor: "grey",
 		padding: 10,
 		borderRadius: 50,
-		margin: 10,
+		margin: 5,
 		alignItems: "center",
 		justifyContent: "center",
+		width: "50%",
+		height: "20%",
 	},
 	buttonText: {
 		color: "black",

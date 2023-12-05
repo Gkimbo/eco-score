@@ -19,10 +19,9 @@ usersRouter.post("/", async (req, res) => {
 					password,
 					email,
 				});
-				const serializedUser = UserSerializer.serializeOne(newUser);
-				const token = jwt.sign({ userId: serializedUser.id }, secretKey, {
-					expiresIn: "8h",
-				});
+				console.log(newUser.dataValues);
+				const serializedUser = UserSerializer.login(newUser.dataValues);
+				const token = jwt.sign({ userId: serializedUser.id }, secretKey);
 				return res.status(201).json({ user: serializedUser, token: token });
 			} else {
 				return res.status(410).json("Username already exists");

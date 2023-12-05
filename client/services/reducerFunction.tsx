@@ -1,10 +1,5 @@
 const reducer = (state: any, action: any) => {
 	switch (action.type) {
-		case "CARBON":
-			return {
-				...state,
-				carbon: state.carbon + action.payload,
-			};
 		case "REMOVE_CLASS":
 			return {
 				...state,
@@ -45,6 +40,22 @@ const reducer = (state: any, action: any) => {
 				...state,
 				homes: state.homes.filter((home: any) => home.id !== action.payload),
 			};
+		case "ADD_STARS":
+			return {
+				...state,
+				rewards: state.rewards + action.payload,
+			};
+		case "DEDUCT_STARS":
+			return {
+				...state,
+				rewards: state.rewards - action.payload,
+			};
+		case "PLANT_TREES":
+			return {
+				...state,
+				treesPlanted: state.treesPlanted + action.payload,
+			};
+
 		default:
 			throw new Error();
 	}

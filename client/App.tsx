@@ -17,15 +17,20 @@ import homePageStyles from "./services/styles/HomePageStyle";
 import reducer from "./services/reducerFunction";
 import getCurrentUser from "./services/getCurrentUser";
 import { AuthProvider } from "./services/AuthContext";
+import CarList from "./components/lists/CarsList";
+import HomeList from "./components/lists/HomesList";
+import RewardsPage from "./components/rewards/RewardsPage";
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [state, dispatch] = useReducer(reducer, {
-		carbon: 0,
 		currentUser: { token: null },
 		cars: [],
 		userInformation: null,
 		homes: [],
+		rewards: 0,
+		treesPlanted: 0,
 	});
 
 	const fetchCurrentUser = async () => {
@@ -61,11 +66,57 @@ const Home = () => {
 							<>
 								<Route
 									path="/"
-									element={<HomePage state={state} dispatch={dispatch} />}
+									element={
+										<HomePage
+											state={state}
+											dispatch={dispatch}
+											isDrawerOpen={isDrawerOpen}
+										/>
+									}
 								/>
-								<Route path="/basic-form" element={<UserBasicInfoForm />} />
-								<Route path="/car-form" element={<UserCarInfoForm />} />
-								<Route path="/home-form" element={<UserHomeInfoForm />} />
+								<Route
+									path="/basic-form"
+									element={<UserBasicInfoForm isDrawerOpen={isDrawerOpen} />}
+								/>
+								<Route
+									path="/car-form"
+									element={<UserCarInfoForm isDrawerOpen={isDrawerOpen} />}
+								/>
+								<Route
+									path="/home-form"
+									element={<UserHomeInfoForm isDrawerOpen={isDrawerOpen} />}
+								/>
+								<Route
+									path="/cars"
+									element={
+										<CarList
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
+								<Route
+									path="/homes"
+									element={
+										<HomeList
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
+
+								<Route
+									path="/rewards"
+									element={
+										<RewardsPage
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
 							</>
 						) : (
 							<Route
@@ -84,7 +135,11 @@ const Home = () => {
 					</Routes>
 					{state.currentUser.token ? (
 						<View style={homePageStyles.topBarContainer}>
-							<TopBar dispatch={dispatch} />
+							<TopBar
+								dispatch={dispatch}
+								isDrawerOpen={isDrawerOpen}
+								setIsDrawerOpen={setIsDrawerOpen}
+							/>
 						</View>
 					) : null}
 				</SafeAreaView>

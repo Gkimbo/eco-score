@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
+import { Car, Home } from "./types/carAndHomeFormType";
 import type { user } from "./types/userType";
-import { Car, Home } from "./types/carAndHomeType";
 const baseURL = "http://localhost:3000";
 
 interface IFormInput {
@@ -34,6 +34,10 @@ interface UserCarInfo {
 interface UserHomeInfo {
 	user: user;
 	home: Home;
+}
+
+interface Trees {
+	trees: number;
 }
 
 class FetchData {
@@ -114,6 +118,26 @@ class FetchData {
 	static async addBasicInfo(data: UserBasicInfo) {
 		try {
 			const response = await fetch(baseURL + "/api/v1/user-info/basic", {
+				method: "post",
+				body: JSON.stringify(data),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				const error = new Error(`${response.status}(${response.statusText})`);
+				throw error;
+			}
+			const responseData = await response.json();
+			return responseData;
+		} catch (err) {
+			return err;
+		}
+	}
+
+	static async addTrees(data: Trees) {
+		try {
+			const response = await fetch(baseURL + "/api/v1/user-info/trees", {
 				method: "post",
 				body: JSON.stringify(data),
 				headers: {

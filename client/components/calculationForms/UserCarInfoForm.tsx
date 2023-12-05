@@ -10,14 +10,20 @@ import Autocomplete from "react-native-autocomplete-input";
 import { carMakesUS } from "../../services/carArray";
 import { useNavigate } from "react-router-native";
 import carsData from "../../services/carModelArray";
-import { Car } from "../../services/types/carAndHomeType";
+import { Car } from "../../services/types/carAndHomeFormType";
+
+export interface IAppProps {
+	isDrawerOpen: any;
+}
 
 type UserCarInfoForm = {
 	user: any;
 	car: Car;
 };
 
-const UserCarInfoForm = () => {
+const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
+	isDrawerOpen,
+}) => {
 	const { user } = useContext(AuthContext);
 	const [chargeOnGrid, setChargeOnGrid] = useState<string>("yes");
 	const [userCarInfo, setUserCarInfoForm] = useState<UserCarInfoForm>({
@@ -30,10 +36,6 @@ const UserCarInfoForm = () => {
 			carBatterySize: "",
 			tank: "",
 			zipCode: "",
-			carbonPerTank: "",
-			carbonPerCharge: "",
-			carbonToMakeBattery: "",
-			carbonPerMile: "",
 			mileage: "",
 			mileageUnit: "daily",
 		},
@@ -298,6 +300,7 @@ const UserCarInfoForm = () => {
 								borderBottomWidth: 1,
 								borderBottomColor: "#ccc",
 								borderRadius: 5,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 							}}
 							flatListProps={{
 								renderItem: ({ item }) => (
@@ -332,6 +335,7 @@ const UserCarInfoForm = () => {
 									borderBottomWidth: 1,
 									borderBottomColor: "#ccc",
 									borderRadius: 5,
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 								}}
 								flatListProps={{
 									renderItem: ({ item }) => (
@@ -358,7 +362,10 @@ const UserCarInfoForm = () => {
 						placeholder="2019..."
 						value={userCarInfo.car.year}
 						onChangeText={handleCarYearChange}
-						style={UserFormStyles.input}
+						style={{
+							...UserFormStyles.input,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
 					/>
 
 					<Text style={UserFormStyles.smallTitle}>
@@ -372,7 +379,7 @@ const UserCarInfoForm = () => {
 							borderWidth: 1,
 							borderColor: "#000",
 							borderRadius: 5,
-							backgroundColor: "#fff",
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 							padding: 5,
 							marginBottom: 20,
 						}}
@@ -392,7 +399,12 @@ const UserCarInfoForm = () => {
 						</Text>
 					</View>
 
-					<View style={UserFormStyles.radioButtonContainer}>
+					<View
+						style={{
+							...UserFormStyles.radioButtonContainer,
+							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+						}}
+					>
 						<View>
 							<RadioButton.Group
 								onValueChange={handleMileageUnitChange}
@@ -424,7 +436,7 @@ const UserCarInfoForm = () => {
 					<RNPickerSelect
 						value={userCarInfo.car.fuelType}
 						onValueChange={handleFuelTypeChange}
-						style={pickerSelectStyles}
+						style={{ ...pickerSelectStyles }}
 						items={[
 							{ label: "Gas", value: "gas" },
 							{ label: "Diesel", value: "diesel" },
@@ -442,7 +454,7 @@ const UserCarInfoForm = () => {
 									borderWidth: 1,
 									borderColor: "#000",
 									borderRadius: 5,
-									backgroundColor: "#fff",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 									padding: 5,
 								}}
 							>
@@ -462,7 +474,13 @@ const UserCarInfoForm = () => {
 							<Text style={UserFormStyles.smallTitle}>
 								Do you mainly charge your car on the grid?
 							</Text>
-							<View style={{ flexDirection: "row", justifyContent: "center" }}>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "center",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								}}
+							>
 								<View>
 									<RadioButton.Group
 										onValueChange={handleChargeMeansChange}
@@ -492,7 +510,10 @@ const UserCarInfoForm = () => {
 								mode="outlined"
 								value={`${userCarInfo.car.zipCode}`}
 								onChangeText={handleZipCodeChange}
-								style={UserFormStyles.input}
+								style={{
+									...UserFormStyles.input,
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								}}
 							/>
 						</>
 					) : null}
@@ -506,7 +527,7 @@ const UserCarInfoForm = () => {
 									borderWidth: 1,
 									borderColor: "#000",
 									borderRadius: 5,
-									backgroundColor: "#fff",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 									padding: 5,
 								}}
 							>
@@ -534,7 +555,7 @@ const UserCarInfoForm = () => {
 									borderWidth: 1,
 									borderColor: "#000",
 									borderRadius: 5,
-									backgroundColor: "#fff",
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 									padding: 5,
 								}}
 							>
@@ -560,7 +581,16 @@ const UserCarInfoForm = () => {
 					}}
 				>
 					<Pressable onPress={handleSubmit}>
-						<Text style={UserFormStyles.button}>Submit</Text>
+						<Text
+							style={{
+								...UserFormStyles.button,
+								backgroundColor: isDrawerOpen
+									? "rgba(0, 0, 0, 0.5)"
+									: "#f9bc60",
+							}}
+						>
+							Submit
+						</Text>
 					</Pressable>
 					{error ? (
 						<View>

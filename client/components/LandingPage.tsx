@@ -4,6 +4,7 @@ import type React from "react";
 import { Image, Text, Pressable, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { useNavigate } from "react-router-native";
 import LandingPageStyles from "../services/styles/LandingPageStyle";
 import { AuthContext } from "../services/AuthContext";
@@ -57,7 +58,20 @@ const LandingPage: React.FunctionComponent<IAppProps> = () => {
 						<Pressable onPress={handlePress}>
 							<View style={LandingPageStyles.signIn}>
 								<Text style={LandingPageStyles.textSign}>Get Started</Text>
-								<MaterialIcons name="navigate-next" color="black" size={25} />
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										marginLeft: 10,
+									}}
+								>
+									<Icon
+										name="arrow-right"
+										size={20}
+										color="black"
+										style={{ marginRight: 10 }}
+									/>
+								</View>
 							</View>
 						</Pressable>
 					</View>

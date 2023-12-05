@@ -1,9 +1,17 @@
 import React, { useState } from "react";
-import { Text, View, Pressable, Animated, Easing } from "react-native";
+import {
+	Text,
+	View,
+	Pressable,
+	Animated,
+	Easing,
+	StyleSheet,
+} from "react-native";
 
 export interface IAppProps {
 	state: any;
 	onDeleteCar: (carId: number) => void;
+	isBlurred: boolean;
 }
 export type Car = {
 	id: number;
@@ -20,12 +28,15 @@ export type Car = {
 	carbonPerMile: string;
 };
 
-const CarList: React.FunctionComponent<IAppProps> = ({
+let isBlurredOut;
+
+const CarTile: React.FunctionComponent<IAppProps> = ({
 	state,
 	onDeleteCar,
+	isBlurred,
 }) => {
 	const cars = state.cars;
-
+	isBlurredOut = isBlurred;
 	const [deleteAnimation] = useState(new Animated.Value(0));
 	const [deleteConfirmation, setDeleteConfirmation] = useState<any>({});
 
@@ -72,7 +83,7 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 						borderWidth: 1,
 						borderRadius: 10,
 						borderColor: "#ddd",
-						backgroundColor: "#fff",
+						backgroundColor: isBlurred ? "rgba(0, 0, 0, 0.5)" : "#fff",
 						margin: 10,
 						padding: 10,
 						height: "auto",
@@ -125,16 +136,7 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 								accessible={true}
 								accessibilityLabel="No Button"
 							>
-								<View
-									style={{
-										borderRadius: 20,
-										width: 65,
-										height: 25,
-										backgroundColor: "green",
-										justifyContent: "center",
-										alignItems: "center",
-									}}
-								>
+								<View style={styles.infoContainer}>
 									<Text
 										style={{
 											color: "white",
@@ -166,31 +168,13 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 					>
 						{item.year}
 					</Text>
-					<Text
-						style={{
-							borderWidth: 1,
-							borderRadius: 10,
-							borderColor: "#ddd",
-							backgroundColor: "#fff",
-							margin: 5,
-							padding: 5,
-						}}
-					>
+					<Text style={styles.infoContainer}>
 						{item.fuelType === "electricity"
 							? `CO2 produced per charge: (${item.carbonPerCharge} lbs of CO2)`
 							: `CO2 produced per tank: (${item.carbonPerTank} lbs of CO2)`}
 					</Text>
 					{item.fuelType === "electricity" && item.zipcode !== "off grid" && (
-						<Text
-							style={{
-								borderWidth: 1,
-								borderRadius: 10,
-								borderColor: "#ddd",
-								backgroundColor: "#fff",
-								margin: 5,
-								padding: 5,
-							}}
-						>
+						<Text style={styles.infoContainer}>
 							{`CO2 produced for 100,000 miles: (${(
 								(Number(item.carbonPerMile) * 100000) /
 								2000
@@ -199,45 +183,18 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 					)}
 					{item.fuelType === "hybrid" ? (
 						<>
-							<Text
-								style={{
-									borderWidth: 1,
-									borderRadius: 10,
-									borderColor: "#ddd",
-									backgroundColor: "#fff",
-									margin: 5,
-									padding: 5,
-								}}
-							>
+							<Text style={styles.infoContainer}>
 								{`CO2 produced for 100,000 miles: (${(
 									(Number(item.carbonPerMile) * 100000) /
 									2000
 								).toFixed(2)} tons of CO2)`}
 							</Text>
-							<Text
-								style={{
-									borderWidth: 1,
-									borderRadius: 10,
-									borderColor: "#ddd",
-									backgroundColor: "#fff",
-									margin: 5,
-									padding: 5,
-								}}
-							>
+							<Text style={styles.infoContainer}>
 								{`CO2 produced manufacturing battery: (${(
 									Number(item.carbonToMakeBattery) / 2000
 								).toFixed(2)} tons of CO2)`}
 							</Text>
-							<View
-								style={{
-									borderWidth: 1,
-									borderRadius: 10,
-									borderColor: "#ddd",
-									backgroundColor: "#fff",
-									margin: 5,
-									padding: 5,
-								}}
-							>
+							<View style={styles.infoContainer}>
 								<Text>Total CO2 after 100,000 miles:</Text>
 								<Text>
 									{`(${(
@@ -252,31 +209,13 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 					) : null}
 					{item.fuelType === "gas" || item.fuelType === "diesel" ? (
 						<>
-							<Text
-								style={{
-									borderWidth: 1,
-									borderRadius: 10,
-									borderColor: "#ddd",
-									backgroundColor: "#fff",
-									margin: 5,
-									padding: 5,
-								}}
-							>
+							<Text style={styles.infoContainer}>
 								{`CO2 produced for 100,000 miles: (${(
 									(Number(item.carbonPerMile) * 100000) /
 									2000
 								).toFixed(2)} tons of CO2)`}
 							</Text>
-							<View
-								style={{
-									borderWidth: 1,
-									borderRadius: 10,
-									borderColor: "#ddd",
-									backgroundColor: "#fff",
-									margin: 5,
-									padding: 5,
-								}}
-							>
+							<View style={styles.infoContainer}>
 								<Text>Total CO2 after 100,000 miles:</Text>
 								<Text>
 									{`(${(
@@ -289,30 +228,12 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 					) : null}
 					{item.fuelType === "electricity" ? (
 						<>
-							<Text
-								style={{
-									borderWidth: 1,
-									borderRadius: 10,
-									borderColor: "#ddd",
-									backgroundColor: "#fff",
-									margin: 5,
-									padding: 5,
-								}}
-							>
+							<Text style={styles.infoContainer}>
 								{`CO2 produced manufacturing battery: (${(
 									Number(item.carbonToMakeBattery) / 2000
 								).toFixed(2)} tons of CO2)`}
 							</Text>
-							<View
-								style={{
-									borderWidth: 1,
-									borderRadius: 10,
-									borderColor: "#ddd",
-									backgroundColor: "#fff",
-									margin: 5,
-									padding: 5,
-								}}
-							>
+							<View style={styles.infoContainer}>
 								<Text>Total CO2 after 100,000 miles:</Text>
 
 								{item.zipcode === "off grid" ? (
@@ -353,4 +274,15 @@ const CarList: React.FunctionComponent<IAppProps> = ({
 	);
 };
 
-export default CarList;
+const styles = StyleSheet.create({
+	infoContainer: {
+		borderWidth: 1,
+		borderRadius: 10,
+		borderColor: "#ddd",
+		backgroundColor: isBlurredOut ? "rgba(0, 0, 0, 0.5)" : "#fff",
+		margin: 5,
+		padding: 5,
+	},
+});
+
+export default CarTile;

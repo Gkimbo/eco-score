@@ -1,47 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { Text, Pressable, View } from "react-native";
+import { Text, View, StyleSheet, Pressable } from "react-native";
 import homePageStyles from "../services/styles/HomePageStyle";
 import FetchData from "../services/fetchData";
-import CarList from "./lists/CarLists";
-import UserFormStyles from "../services/styles/UserInputFormStyle";
-import DeleteData from "../services/DeleteData";
-import HomeList from "./lists/HomeLists";
+import { useNavigate } from "react-router-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import ListStyles from "../services/styles/ListStyles";
+import { Car, Home } from "../services/types/carAndHomeType";
+import CarHighlights from "./lists/highlights/CarHighlights";
+import HomeHighlights from "./lists/highlights/HomeHighlights";
+import Rewards from "./rewards/RewardsDisplay";
 
 export interface IAppProps {
 	state: any;
 	dispatch: any;
+	isDrawerOpen: any;
 }
 
-const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
+const HomePage: React.FunctionComponent<IAppProps> = ({
+	state,
+	dispatch,
+	isDrawerOpen,
+}) => {
 	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const [homeCarbon, setHomeCarbon] = useState<number>(0);
+	const [isBlurred, setIsBlurred] = useState<boolean>(false);
+	const navigate = useNavigate();
 
-	const handlePress = (event: any) => {
-		event.preventDefault();
-		dispatch({ type: "CARBON", payload: 1 });
+	let totalCarbon = carCarbon + homeCarbon;
+
+	const handleCarsPress = () => {
+		navigate("/cars");
 	};
 
-	const onDeleteCar = async (id: number) => {
-		try {
-			const deleteCar = await DeleteData.deleteCar(id);
-			if (deleteCar) {
-				dispatch({ type: "DELETE_CAR", payload: id });
-			}
-		} catch (error) {
-			console.error("Error deleting car:", error);
-		}
+	const handleHomesPress = () => {
+		navigate("/homes");
 	};
 
-	const onDeleteHome = async (id: number) => {
-		try {
-			const deleteHome = await DeleteData.deleteHome(id);
-			if (deleteHome) {
-				dispatch({ type: "DELETE_HOME", payload: id });
-			}
-		} catch (error) {
-			console.error("Error deleting car:", error);
-		}
+	const handleRewardsPress = () => {
+		navigate("/rewards");
 	};
+
+	const cars = state.cars.map((car: Car) => {
+		return <CarHighlights key={car.id} car={car} isBlurred={isBlurred} />;
+	});
+
+	const homes = state.homes.map((home: Home) => {
+		return <HomeHighlights key={home.id} home={home} isBlurred={isBlurred} />;
+	});
 
 	useEffect(() => {
 		const averageCarbonToProduceAnyCar = 16526;
@@ -83,58 +88,60 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 		}
 	}, []);
 
+	useEffect(() => {
+		setIsBlurred(isDrawerOpen);
+	}, [isDrawerOpen]);
+
 	return (
-		<>
+		<View style={[isBlurred && styles.blurredContainer]}>
 			<View style={homePageStyles.container}>
 				<View style={homePageStyles.leftAndCenterContainer}>
 					<View style={homePageStyles.leftContainer}>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🚗</Text>
-							<Text>{carCarbon || 0}</Text>
-						</View>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🏠</Text>
-							<Text>{homeCarbon || 0}</Text>
-						</View>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🏢</Text>
-							<Text>{state.workCount || 0}</Text>
-						</View>
+						<Pressable onPress={handleCarsPress}>
+							<View style={homePageStyles.iconWithNumber}>
+								<Text>🚗</Text>
+								<Text>{carCarbon || 0}</Text>
+							</View>
+						</Pressable>
+						<Pressable onPress={handleHomesPress}>
+							<View style={homePageStyles.iconWithNumber}>
+								<Text>🏠</Text>
+								<Text>{homeCarbon || 0}</Text>
+							</View>
+						</Pressable>
 					</View>
 
 					<View style={homePageStyles.centerContainer}>
 						<Text style={homePageStyles.header}>Your Score!</Text>
-						<Pressable onPress={handlePress}>
-							<View style={homePageStyles.circleContainer}>
-								<View
-									style={[
-										homePageStyles.circle,
-										{ height: `${Math.min(carCarbon + homeCarbon, 100)}%` },
-									]}
-								/>
-								<Text>You Produce</Text>
-								<Text style={homePageStyles.carbonText}>
-									{carCarbon + homeCarbon}
-								</Text>
-								<Text>tons of CO2 annually</Text>
-							</View>
-						</Pressable>
+
+						<View style={homePageStyles.circleContainer}>
+							<View
+								style={[
+									homePageStyles.circle,
+									{
+										height: `${Math.min((carCarbon + homeCarbon) * 2.5, 100)}%`,
+									},
+								]}
+							/>
+							<Text>You Produce</Text>
+							<Text style={homePageStyles.carbonText}>
+								{totalCarbon.toFixed(2)}
+							</Text>
+							<Text>tons of CO2 annually</Text>
+						</View>
 					</View>
 				</View>
 
 				<View style={homePageStyles.centerAndRightContainer}>
 					<View style={homePageStyles.rightContainer}>
+						<Pressable onPress={handleRewardsPress}>
+							<View style={homePageStyles.iconWithNumber}>
+								<Rewards userRewards={state.rewards} />
+							</View>
+						</Pressable>
 						<View style={homePageStyles.iconWithNumber}>
 							<Text>🌳</Text>
 							<Text>{state.treesPlanted || 0}</Text>
-						</View>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>☀️</Text>
-							<Text>{state.solarPanelsBuilt || 0}</Text>
-						</View>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🌬️</Text>
-							<Text>{state.windTurbinesBuilt || 0}</Text>
 						</View>
 					</View>
 				</View>
@@ -147,40 +154,68 @@ const HomePage: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 					marginTop: 20,
 				}}
 			>
-				<Text style={UserFormStyles.title}>
-					{state.cars.length === 0
-						? ""
-						: state.cars.length === 1
-						? "Your Car"
-						: "Your Cars"}
-				</Text>
-				<CarList state={state} onDeleteCar={onDeleteCar} />
-				<Text
-					style={{
-						fontSize: 14,
-						color: "white",
-						marginTop: 30,
-						marginBottom: 20,
-						textAlign: "center",
-						marginRight: 5,
-						marginLeft: 5,
-					}}
-				>
-					Average amount of CO2 to produce a car:{" "}
-					<Text style={{ color: "orange" }}>{16526 / 2000}</Text> Tons not
-					including high voltage battery
-				</Text>
-				<Text style={UserFormStyles.title}>
-					{state.homes.length === 0
-						? ""
-						: state.homes.length === 1
-						? "Your Home"
-						: "Your Homes"}
-				</Text>
-				<HomeList state={state} onDeleteHome={onDeleteHome} />
+				<Pressable onPress={handleCarsPress}>
+					<View style={ListStyles.buttonContainer}>
+						<Text style={ListStyles.buttonText}>
+							{state.cars.length === 0
+								? ""
+								: state.cars.length === 1
+								? "Your Car"
+								: "Your Cars"}
+						</Text>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginLeft: 15,
+							}}
+						>
+							<Icon
+								name="arrow-right"
+								size={20}
+								color="black"
+								style={{ marginRight: 10 }}
+							/>
+						</View>
+					</View>
+					{cars}
+				</Pressable>
+
+				<Pressable onPress={handleHomesPress}>
+					<View style={ListStyles.buttonContainer}>
+						<Text style={ListStyles.buttonText}>
+							{state.homes.length === 0
+								? ""
+								: state.homes.length === 1
+								? "Your Home"
+								: "Your Homes"}
+						</Text>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								marginLeft: 15,
+							}}
+						>
+							<Icon
+								name="arrow-right"
+								size={20}
+								color="black"
+								style={{ marginRight: 10 }}
+							/>
+						</View>
+					</View>
+					{homes}
+				</Pressable>
 			</View>
-		</>
+		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	blurredContainer: {
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+	},
+});
 
 export default HomePage;
