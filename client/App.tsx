@@ -78,18 +78,29 @@ const Home = () => {
 									element={
 										<UserBasicInfoForm
 											isDrawerOpen={isDrawerOpen}
-											dispatch={dispatch}
 											state={state}
 										/>
 									}
 								/>
 								<Route
 									path="/car-form"
-									element={<UserCarInfoForm isDrawerOpen={isDrawerOpen} />}
+									element={
+										<UserCarInfoForm
+											setIsDrawerOpen={setIsDrawerOpen}
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+										/>
+									}
 								/>
 								<Route
 									path="/home-form"
-									element={<UserHomeInfoForm isDrawerOpen={isDrawerOpen} />}
+									element={
+										<UserHomeInfoForm
+											setIsDrawerOpen={setIsDrawerOpen}
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+										/>
+									}
 								/>
 								<Route
 									path="/cars"

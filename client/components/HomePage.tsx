@@ -120,13 +120,13 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 						<Pressable onPress={handleCarsPress}>
 							<View style={homePageStyles.iconWithNumber}>
 								<Text>🚗</Text>
-								<Text>{carCarbon || 0}</Text>
+								<Text style={{ color: "white" }}>{carCarbon || 0}</Text>
 							</View>
 						</Pressable>
 						<Pressable onPress={handleHomesPress}>
 							<View style={homePageStyles.iconWithNumber}>
 								<Text>🏠</Text>
-								<Text>{homeCarbon || 0}</Text>
+								<Text style={{ color: "white" }}>{homeCarbon || 0}</Text>
 							</View>
 						</Pressable>
 					</View>
@@ -162,7 +162,9 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 						<Pressable onPress={handleRewardsPress}>
 							<View style={homePageStyles.iconWithNumber}>
 								<Text>🌳</Text>
-								<Text>{(state.treesPlanted * 48) / 2000}</Text>
+								<Text style={{ color: "white" }}>
+									{(state.treesPlanted * 48) / 2000}
+								</Text>
 							</View>
 						</Pressable>
 					</View>

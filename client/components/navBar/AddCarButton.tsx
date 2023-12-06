@@ -40,7 +40,7 @@ interface Styles {
 
 const styles: Styles = {
 	button: {
-		backgroundColor: "grey",
+		backgroundColor: "#f9bc60",
 		padding: 10,
 		borderRadius: 50,
 		margin: 10,

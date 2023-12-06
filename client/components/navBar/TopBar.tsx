@@ -39,15 +39,17 @@ const TopBar: React.FunctionComponent<IAppProps> = ({
 						visible={isDrawerOpen}
 						onDismiss={hideModal}
 						contentContainerStyle={{
-							backgroundColor: "white",
-							padding: 5,
+							backgroundColor: "#abd1c6",
+							padding: 20,
 							marginTop: "94%",
 							alignItems: "center",
+							height: "auto",
 						}}
 					>
-						<AddHomeButton setIsDrawerOpen={setIsDrawerOpen} />
 						<AddBasicsButton setIsDrawerOpen={setIsDrawerOpen} />
+						<AddHomeButton setIsDrawerOpen={setIsDrawerOpen} />
 						<EditCarButton setIsDrawerOpen={setIsDrawerOpen} />
+						<Text>________________________________________</Text>
 						<RewardsButton setIsDrawerOpen={setIsDrawerOpen} />
 					</Modal>
 				</Portal>
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-between",
 		padding: 5,
-		backgroundColor: "#3498db",
+		backgroundColor: "#004643",
 		position: "relative",
 	},
 	drawerButton: {

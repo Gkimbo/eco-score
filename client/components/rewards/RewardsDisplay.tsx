@@ -10,7 +10,7 @@ const Rewards: React.FC<RewardsScreenProps> = ({ userRewards }) => {
 	return (
 		<>
 			<Star color="yellow" size={20} />
-			<Text>{userRewards}</Text>
+			<Text style={{ color: "white" }}>{userRewards}</Text>
 		</>
 	);
 };

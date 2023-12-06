@@ -11,7 +11,6 @@ import DeleteData from "../../services/DeleteData";
 
 export interface IAppProps {
 	isDrawerOpen: any;
-	dispatch: any;
 	state: any;
 }
 
@@ -36,7 +35,6 @@ type UserBasicInfo = {
 
 const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 	isDrawerOpen,
-	dispatch,
 	state,
 }) => {
 	const { user } = useContext(AuthContext);
