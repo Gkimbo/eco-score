@@ -32,7 +32,6 @@ const Home = () => {
 		rewards: 0,
 		treesPlanted: 0,
 	});
-
 	const fetchCurrentUser = async () => {
 		try {
 			const token = await getCurrentUser();
@@ -76,15 +75,32 @@ const Home = () => {
 								/>
 								<Route
 									path="/basic-form"
-									element={<UserBasicInfoForm isDrawerOpen={isDrawerOpen} />}
+									element={
+										<UserBasicInfoForm
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+										/>
+									}
 								/>
 								<Route
 									path="/car-form"
-									element={<UserCarInfoForm isDrawerOpen={isDrawerOpen} />}
+									element={
+										<UserCarInfoForm
+											setIsDrawerOpen={setIsDrawerOpen}
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+										/>
+									}
 								/>
 								<Route
 									path="/home-form"
-									element={<UserHomeInfoForm isDrawerOpen={isDrawerOpen} />}
+									element={
+										<UserHomeInfoForm
+											setIsDrawerOpen={setIsDrawerOpen}
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+										/>
+									}
 								/>
 								<Route
 									path="/cars"
@@ -111,6 +127,7 @@ const Home = () => {
 									path="/rewards"
 									element={
 										<RewardsPage
+											setIsDrawerOpen={setIsDrawerOpen}
 											isDrawerOpen={isDrawerOpen}
 											state={state}
 											dispatch={dispatch}

@@ -23,14 +23,14 @@ const HomeButton: React.FunctionComponent<IAppProps> = () => {
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
-			<Icon name="home" size={20} color="white" />
+			<Icon name="home" size={20} color="black" />
 		</Pressable>
 	);
 };
 
 const styles = {
 	button: {
-		backgroundColor: "blue",
+		backgroundColor: "#f9bc60",
 		padding: 10,
 		borderRadius: 50,
 	},

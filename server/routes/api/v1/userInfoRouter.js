@@ -162,6 +162,54 @@ userInfoRouter.post("/car", async (req, res) => {
 	}
 });
 
+userInfoRouter.post("/tree", async (req, res) => {
+	const { token } = req.body.user;
+	try {
+		const decodedToken = jwt.verify(token, secretKey);
+		const userId = decodedToken.userId;
+		const user = await User.findOne({
+			where: { id: userId },
+		});
+		if (user) {
+			const addTree = await UserInfo.addTreeToDb({
+				userId,
+			});
+			if (addTree === `User with ID ${userId} not found`) {
+				return res.status(401).json({ message: addTree });
+			}
+		}
+		return res.status(201).json("Tree has been planted");
+	} catch (error) {
+		console.log(error);
+		return res.status(401).json({ error: "Invalid or expired token" });
+	}
+});
+
+userInfoRouter.post("/stars", async (req, res) => {
+	const { token } = req.body.user;
+	const rewards = req.body.rewards;
+	try {
+		const decodedToken = jwt.verify(token, secretKey);
+		const userId = decodedToken.userId;
+		const user = await User.findOne({
+			where: { id: userId },
+		});
+		if (user) {
+			const addStars = await UserInfo.addStarsToDb({
+				userId,
+				rewards,
+			});
+			if (addStars === `User with ID ${userId} not found`) {
+				return res.status(401).json({ message: addStars });
+			}
+		}
+		return res.status(201).json("Reward has been added to DB");
+	} catch (error) {
+		console.log(error);
+		return res.status(401).json({ error: "Invalid or expired token" });
+	}
+});
+
 userInfoRouter.delete("/car", async (req, res) => {
 	const id = req.body.id;
 	try {
@@ -237,6 +285,44 @@ userInfoRouter.delete("/home", async (req, res) => {
 	try {
 		const deleteHome = await UserInfo.deleteHomeInfo(id);
 		return res.status(201).json({ message: "home deleted" });
+	} catch (error) {
+		console.log(error);
+		return res.status(401).json({ error: "Invalid or expired token" });
+	}
+});
+
+userInfoRouter.patch("/basic", async (req, res) => {
+	const { token } = req.body.data.user;
+	const {
+		zipcode,
+		homeOwnership,
+		milesDriven,
+		milesDrivenUnit,
+		commute,
+		transportation,
+		daysCommute,
+		hasCar,
+	} = req.body.data;
+	try {
+		const decodedToken = jwt.verify(token, secretKey);
+		const userId = decodedToken.userId;
+		const user = await User.findOne({
+			where: { id: userId },
+		});
+		if (user) {
+			await UserInfo.updateUserInfo({
+				userId,
+				zipcode,
+				homeOwnership,
+				milesDriven,
+				milesDrivenUnit,
+				commute,
+				transportation,
+				daysCommute,
+				hasCar,
+			});
+		}
+		return res.status(201).json("User Information has been deleted!");
 	} catch (error) {
 		console.log(error);
 		return res.status(401).json({ error: "Invalid or expired token" });

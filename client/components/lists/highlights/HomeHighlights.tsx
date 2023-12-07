@@ -25,7 +25,8 @@ const HomeHighlights: React.FunctionComponent<IAppProps> = ({
 				padding: 10,
 				height: "auto",
 				alignItems: "stretch",
-				width: "auto",
+				paddingRight: 30,
+				paddingLeft: 30,
 			}}
 		>
 			<View style={{ flexDirection: "column", justifyContent: "center" }}>
@@ -51,7 +52,17 @@ const HomeHighlights: React.FunctionComponent<IAppProps> = ({
 			<View style={ListStyles.infoContainer}>
 				<Text> Total CO2 produced per Year: </Text>
 				<Text>
-					({(Number(home.totalAnnualCarbon) / 2000).toFixed(2)} tons of CO2)
+					(
+					<Text
+						style={{
+							fontSize: 15,
+							color: "brown",
+							fontWeight: "bold",
+						}}
+					>
+						{(Number(home.totalAnnualCarbon) / 2000).toFixed(2)}
+					</Text>{" "}
+					tons of CO2 )
 				</Text>
 			</View>
 		</View>

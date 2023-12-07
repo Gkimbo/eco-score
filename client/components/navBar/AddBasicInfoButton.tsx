@@ -45,7 +45,7 @@ interface Styles {
 
 const styles: Styles = {
 	button: {
-		backgroundColor: "grey",
+		backgroundColor: "#004643",
 		padding: 10,
 		borderRadius: 50,
 		margin: 5,
@@ -55,7 +55,7 @@ const styles: Styles = {
 		height: "20%",
 	},
 	buttonText: {
-		color: "black",
+		color: "white",
 		fontSize: 15,
 	},
 };

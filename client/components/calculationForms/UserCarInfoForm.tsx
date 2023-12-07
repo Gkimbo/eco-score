@@ -11,9 +11,12 @@ import { carMakesUS } from "../../services/carArray";
 import { useNavigate } from "react-router-native";
 import carsData from "../../services/carModelArray";
 import { Car } from "../../services/types/carAndHomeFormType";
+import AddBasicsButton from "../navBar/AddBasicInfoButton";
 
 export interface IAppProps {
-	isDrawerOpen: any;
+	isDrawerOpen: boolean;
+	setIsDrawerOpen: any;
+	state: any;
 }
 
 type UserCarInfoForm = {
@@ -23,6 +26,8 @@ type UserCarInfoForm = {
 
 const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
 	isDrawerOpen,
+	setIsDrawerOpen,
+	state,
 }) => {
 	const { user } = useContext(AuthContext);
 	const [chargeOnGrid, setChargeOnGrid] = useState<string>("yes");
@@ -264,6 +269,14 @@ const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
 			if (response === "No car found" || response === "Cannot find zipcode") {
 				setError(response);
 			} else {
+				if (userCarInfo.car.fuelType === "electricity") {
+					const addRewards = FetchData.addReward({
+						user: userCarInfo.user,
+						rewards: 100,
+					}).then((response) => {
+						setError(null);
+					});
+				}
 				setError(null);
 				setRedirect(true);
 			}
@@ -279,57 +292,23 @@ const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
 
 	return (
 		<ScrollView contentContainerStyle={UserFormStyles.container}>
-			<form onSubmit={handleSubmit}>
-				<View>
-					<Text style={UserFormStyles.title}>Your Car</Text>
-					<Text style={UserFormStyles.subtitle}>
-						What kind of car do you drive?
-					</Text>
-					<View
-						style={{
-							zIndex: 3,
-						}}
-					>
-						<Text style={UserFormStyles.smallTitle}>Make:</Text>
-						<Autocomplete
-							data={carMakes}
-							value={userCarInfo.car.make}
-							onChangeText={handleCarMakeChange}
-							style={{
-								padding: 10,
-								borderBottomWidth: 1,
-								borderBottomColor: "#ccc",
-								borderRadius: 5,
-								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							}}
-							flatListProps={{
-								renderItem: ({ item }) => (
-									<Pressable
-										style={{
-											padding: 10,
-											borderBottomWidth: 1,
-											borderBottomColor: "#ccc",
-										}}
-										onPress={() => handleCarMakeSelect(item)}
-									>
-										<Text style={{ fontSize: 16 }}>{item}</Text>
-									</Pressable>
-								),
-								keyExtractor: (_, index) => index.toString(),
-							}}
-						/>
-					</View>
-					{userCarInfo.car.make ? (
+			{state.userInformation ? (
+				<form onSubmit={handleSubmit}>
+					<View>
+						<Text style={UserFormStyles.title}>Your Car</Text>
+						<Text style={UserFormStyles.subtitle}>
+							What kind of car do you drive?
+						</Text>
 						<View
 							style={{
-								zIndex: 2,
+								zIndex: 3,
 							}}
 						>
-							<Text style={UserFormStyles.smallTitle}>Model:</Text>
+							<Text style={UserFormStyles.smallTitle}>Make:</Text>
 							<Autocomplete
-								data={carModels}
-								value={userCarInfo.car.model}
-								onChangeText={handleCarModelChange}
+								data={carMakes}
+								value={userCarInfo.car.make}
+								onChangeText={handleCarMakeChange}
 								style={{
 									padding: 10,
 									borderBottomWidth: 1,
@@ -345,7 +324,7 @@ const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
 												borderBottomWidth: 1,
 												borderBottomColor: "#ccc",
 											}}
-											onPress={() => handleCarModelSelect(item)}
+											onPress={() => handleCarMakeSelect(item)}
 										>
 											<Text style={{ fontSize: 16 }}>{item}</Text>
 										</Pressable>
@@ -354,251 +333,333 @@ const UserCarInfoForm: React.FunctionComponent<IAppProps> = ({
 								}}
 							/>
 						</View>
-					) : null}
+						{userCarInfo.car.make ? (
+							<View
+								style={{
+									zIndex: 2,
+								}}
+							>
+								<Text style={UserFormStyles.smallTitle}>Model:</Text>
+								<Autocomplete
+									data={carModels}
+									value={userCarInfo.car.model}
+									onChangeText={handleCarModelChange}
+									style={{
+										padding: 10,
+										borderBottomWidth: 1,
+										borderBottomColor: "#ccc",
+										borderRadius: 5,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+									}}
+									flatListProps={{
+										renderItem: ({ item }) => (
+											<Pressable
+												style={{
+													padding: 10,
+													borderBottomWidth: 1,
+													borderBottomColor: "#ccc",
+												}}
+												onPress={() => handleCarModelSelect(item)}
+											>
+												<Text style={{ fontSize: 16 }}>{item}</Text>
+											</Pressable>
+										),
+										keyExtractor: (_, index) => index.toString(),
+									}}
+								/>
+							</View>
+						) : null}
 
-					<Text style={UserFormStyles.smallTitle}>Year:</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="2019..."
-						value={userCarInfo.car.year}
-						onChangeText={handleCarYearChange}
+						<Text style={UserFormStyles.smallTitle}>Year:</Text>
+						<TextInput
+							mode="outlined"
+							placeholder="2019..."
+							value={userCarInfo.car.year}
+							onChangeText={handleCarYearChange}
+							style={{
+								...UserFormStyles.input,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						/>
+
+						<Text style={UserFormStyles.smallTitle}>
+							How many Miles do you drive on average{" "}
+							{userCarInfo.car.mileageUnit}?
+						</Text>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								borderWidth: 1,
+								borderColor: "#000",
+								borderRadius: 5,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								padding: 5,
+								marginBottom: 20,
+							}}
+						>
+							<TextInput
+								placeholder="100"
+								value={userCarInfo.car.mileage}
+								onChangeText={handleMileageChange}
+								style={{
+									...UserFormStyles.input,
+									borderWidth: 0,
+									backgroundColor: "transparent",
+								}}
+							/>
+							<Text style={{ paddingLeft: 10, color: "#000" }}>
+								{userCarInfo.car.mileageUnit} miles
+							</Text>
+						</View>
+
+						<View
+							style={{
+								...UserFormStyles.radioButtonContainer,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleMileageUnitChange}
+									value={userCarInfo.car.mileageUnit}
+								>
+									<RadioButton.Item label="Yearly" value="yearly" />
+								</RadioButton.Group>
+							</View>
+
+							<View>
+								<RadioButton.Group
+									onValueChange={handleMileageUnitChange}
+									value={userCarInfo.car.mileageUnit}
+								>
+									<RadioButton.Item label="Monthly" value="monthly" />
+								</RadioButton.Group>
+							</View>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleMileageUnitChange}
+									value={userCarInfo.car.mileageUnit}
+								>
+									<RadioButton.Item label="Daily" value="daily" />
+								</RadioButton.Group>
+							</View>
+						</View>
+
+						<Text style={UserFormStyles.smallTitle}>Fuel Type:</Text>
+						<RNPickerSelect
+							value={userCarInfo.car.fuelType}
+							onValueChange={handleFuelTypeChange}
+							style={{ ...pickerSelectStyles }}
+							items={[
+								{ label: "Gas", value: "gas" },
+								{ label: "Diesel", value: "diesel" },
+								{ label: "Hybrid", value: "hybrid" },
+								{ label: "Electric", value: "electricity" },
+							]}
+						/>
+						{userCarInfo.car.fuelType === "electricity" ? (
+							<>
+								<Text style={UserFormStyles.smallTitle}>Battery Size:</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										borderWidth: 1,
+										borderColor: "#000",
+										borderRadius: 5,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+										padding: 5,
+									}}
+								>
+									<TextInput
+										value={`${userCarInfo.car.carBatterySize}`}
+										onChangeText={handleCarBatterySizeChange}
+										placeholder="68.6..."
+										style={{
+											...UserFormStyles.input,
+											borderWidth: 0,
+											backgroundColor: "transparent",
+										}}
+									/>
+									<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+								</View>
+
+								<Text style={UserFormStyles.smallTitle}>
+									Do you mainly charge your car on the grid?
+								</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "center",
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+									}}
+								>
+									<View>
+										<RadioButton.Group
+											onValueChange={handleChargeMeansChange}
+											value={chargeOnGrid}
+										>
+											<RadioButton.Item label="Yes" value="yes" />
+										</RadioButton.Group>
+									</View>
+									<View>
+										<RadioButton.Group
+											onValueChange={handleChargeMeansChange}
+											value={chargeOnGrid}
+										>
+											<RadioButton.Item label="No" value="no" />
+										</RadioButton.Group>
+									</View>
+								</View>
+							</>
+						) : null}
+						{userCarInfo.car.fuelType === "electricity" &&
+						chargeOnGrid === "yes" ? (
+							<>
+								<Text style={UserFormStyles.smallTitle}>
+									Zipcode of cars primary charging location:
+								</Text>
+								<TextInput
+									mode="outlined"
+									value={`${userCarInfo.car.zipCode}`}
+									onChangeText={handleZipCodeChange}
+									style={{
+										...UserFormStyles.input,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+									}}
+								/>
+							</>
+						) : null}
+						{userCarInfo.car.fuelType !== "electricity" ? (
+							<>
+								<Text style={UserFormStyles.smallTitle}>Tank size:</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										borderWidth: 1,
+										borderColor: "#000",
+										borderRadius: 5,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+										padding: 5,
+									}}
+								>
+									<TextInput
+										placeholder="10..."
+										value={`${userCarInfo.car.tank}`}
+										onChangeText={handleTankSizeChange}
+										style={{
+											...UserFormStyles.input,
+											borderWidth: 0,
+											backgroundColor: "transparent",
+										}}
+									/>
+									<Text style={{ paddingLeft: 10, color: "#000" }}>gal</Text>
+								</View>
+							</>
+						) : null}
+						{userCarInfo.car.fuelType === "hybrid" && (
+							<>
+								<Text style={UserFormStyles.smallTitle}>Battery Size:</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										borderWidth: 1,
+										borderColor: "#000",
+										borderRadius: 5,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+										padding: 5,
+									}}
+								>
+									<TextInput
+										value={`${userCarInfo.car.carBatterySize}`}
+										onChangeText={handleCarBatterySizeChange}
+										placeholder="68.6..."
+										style={{
+											...UserFormStyles.input,
+											borderWidth: 0,
+											backgroundColor: "transparent",
+										}}
+									/>
+									<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+								</View>
+							</>
+						)}
+					</View>
+					<View
 						style={{
-							...UserFormStyles.input,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							zIndex: 1,
+							elevation: Platform.OS === "android" ? 50 : 0,
 						}}
-					/>
-
-					<Text style={UserFormStyles.smallTitle}>
-						How many Miles do you drive on average {userCarInfo.car.mileageUnit}
-						?
+					>
+						<Pressable onPress={handleSubmit}>
+							<Text
+								style={{
+									...UserFormStyles.button,
+									backgroundColor: isDrawerOpen
+										? "rgba(0, 0, 0, 0.5)"
+										: "#f9bc60",
+								}}
+							>
+								Submit
+							</Text>
+						</Pressable>
+						{error ? (
+							<View>
+								<Text style={UserFormStyles.error}>{error}</Text>
+							</View>
+						) : null}
+					</View>
+				</form>
+			) : (
+				<View
+					style={{
+						alignItems: "center",
+					}}
+				>
+					<Text
+						style={{
+							fontSize: 25,
+							color: "white",
+							marginTop: 30,
+							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							textAlign: "center",
+						}}
+					>
+						Please fill out your basic Information to add a car and gain
+						rewards!
 					</Text>
 					<View
 						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							borderWidth: 1,
-							borderColor: "#000",
-							borderRadius: 5,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							padding: 5,
+							width: "80%",
+							height: "90%",
+							marginTop: 30,
 							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							alignItems: "center",
 						}}
 					>
-						<TextInput
-							placeholder="100"
-							value={userCarInfo.car.mileage}
-							onChangeText={handleMileageChange}
-							style={{
-								...UserFormStyles.input,
-								borderWidth: 0,
-								backgroundColor: "transparent",
-							}}
-						/>
-						<Text style={{ paddingLeft: 10, color: "#000" }}>
-							{userCarInfo.car.mileageUnit} miles
-						</Text>
+						<AddBasicsButton setIsDrawerOpen={setIsDrawerOpen} />
 					</View>
-
-					<View
-						style={{
-							...UserFormStyles.radioButtonContainer,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleMileageUnitChange}
-								value={userCarInfo.car.mileageUnit}
-							>
-								<RadioButton.Item label="Yearly" value="yearly" />
-							</RadioButton.Group>
-						</View>
-
-						<View>
-							<RadioButton.Group
-								onValueChange={handleMileageUnitChange}
-								value={userCarInfo.car.mileageUnit}
-							>
-								<RadioButton.Item label="Monthly" value="monthly" />
-							</RadioButton.Group>
-						</View>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleMileageUnitChange}
-								value={userCarInfo.car.mileageUnit}
-							>
-								<RadioButton.Item label="Daily" value="daily" />
-							</RadioButton.Group>
-						</View>
-					</View>
-
-					<Text style={UserFormStyles.smallTitle}>Fuel Type:</Text>
-					<RNPickerSelect
-						value={userCarInfo.car.fuelType}
-						onValueChange={handleFuelTypeChange}
-						style={{ ...pickerSelectStyles }}
-						items={[
-							{ label: "Gas", value: "gas" },
-							{ label: "Diesel", value: "diesel" },
-							{ label: "Hybrid", value: "hybrid" },
-							{ label: "Electric", value: "electricity" },
-						]}
-					/>
-					{userCarInfo.car.fuelType === "electricity" ? (
-						<>
-							<Text style={UserFormStyles.smallTitle}>Battery Size:</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									borderWidth: 1,
-									borderColor: "#000",
-									borderRadius: 5,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-									padding: 5,
-								}}
-							>
-								<TextInput
-									value={`${userCarInfo.car.carBatterySize}`}
-									onChangeText={handleCarBatterySizeChange}
-									placeholder="68.6..."
-									style={{
-										...UserFormStyles.input,
-										borderWidth: 0,
-										backgroundColor: "transparent",
-									}}
-								/>
-								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
-							</View>
-
-							<Text style={UserFormStyles.smallTitle}>
-								Do you mainly charge your car on the grid?
-							</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "center",
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								}}
-							>
-								<View>
-									<RadioButton.Group
-										onValueChange={handleChargeMeansChange}
-										value={chargeOnGrid}
-									>
-										<RadioButton.Item label="Yes" value="yes" />
-									</RadioButton.Group>
-								</View>
-								<View>
-									<RadioButton.Group
-										onValueChange={handleChargeMeansChange}
-										value={chargeOnGrid}
-									>
-										<RadioButton.Item label="No" value="no" />
-									</RadioButton.Group>
-								</View>
-							</View>
-						</>
-					) : null}
-					{userCarInfo.car.fuelType === "electricity" &&
-					chargeOnGrid === "yes" ? (
-						<>
-							<Text style={UserFormStyles.smallTitle}>
-								Zipcode of cars primary charging location:
-							</Text>
-							<TextInput
-								mode="outlined"
-								value={`${userCarInfo.car.zipCode}`}
-								onChangeText={handleZipCodeChange}
-								style={{
-									...UserFormStyles.input,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								}}
-							/>
-						</>
-					) : null}
-					{userCarInfo.car.fuelType !== "electricity" ? (
-						<>
-							<Text style={UserFormStyles.smallTitle}>Tank size:</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									borderWidth: 1,
-									borderColor: "#000",
-									borderRadius: 5,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-									padding: 5,
-								}}
-							>
-								<TextInput
-									placeholder="10..."
-									value={`${userCarInfo.car.tank}`}
-									onChangeText={handleTankSizeChange}
-									style={{
-										...UserFormStyles.input,
-										borderWidth: 0,
-										backgroundColor: "transparent",
-									}}
-								/>
-								<Text style={{ paddingLeft: 10, color: "#000" }}>gal</Text>
-							</View>
-						</>
-					) : null}
-					{userCarInfo.car.fuelType === "hybrid" && (
-						<>
-							<Text style={UserFormStyles.smallTitle}>Battery Size:</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									borderWidth: 1,
-									borderColor: "#000",
-									borderRadius: 5,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-									padding: 5,
-								}}
-							>
-								<TextInput
-									value={`${userCarInfo.car.carBatterySize}`}
-									onChangeText={handleCarBatterySizeChange}
-									placeholder="68.6..."
-									style={{
-										...UserFormStyles.input,
-										borderWidth: 0,
-										backgroundColor: "transparent",
-									}}
-								/>
-								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
-							</View>
-						</>
-					)}
 				</View>
-				<View
-					style={{
-						zIndex: 1,
-						elevation: Platform.OS === "android" ? 50 : 0,
-					}}
-				>
-					<Pressable onPress={handleSubmit}>
-						<Text
-							style={{
-								...UserFormStyles.button,
-								backgroundColor: isDrawerOpen
-									? "rgba(0, 0, 0, 0.5)"
-									: "#f9bc60",
-							}}
-						>
-							Submit
-						</Text>
-					</Pressable>
-					{error ? (
-						<View>
-							<Text style={UserFormStyles.error}>{error}</Text>
-						</View>
-					) : null}
-				</View>
-			</form>
+			)}
 		</ScrollView>
 	);
 };

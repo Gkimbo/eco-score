@@ -36,8 +36,13 @@ interface UserHomeInfo {
 	home: Home;
 }
 
-interface Trees {
-	trees: number;
+interface Tree {
+	user: user;
+}
+
+interface Stars {
+	user: user;
+	rewards: number;
 }
 
 class FetchData {
@@ -135,16 +140,44 @@ class FetchData {
 		}
 	}
 
-	static async addTrees(data: Trees) {
+	static async addTrees(tree: Tree) {
 		try {
-			const response = await fetch(baseURL + "/api/v1/user-info/trees", {
+			const response = await fetch(baseURL + "/api/v1/user-info/tree", {
 				method: "post",
-				body: JSON.stringify(data),
+				body: JSON.stringify(tree),
 				headers: {
 					"Content-Type": "application/json",
 				},
 			});
 			if (!response.ok) {
+				if (response.status === 401) {
+					const responseData = await response.json();
+					return responseData;
+				}
+				const error = new Error(`${response.status}(${response.statusText})`);
+				throw error;
+			}
+			const responseData = await response.json();
+			return responseData;
+		} catch (err) {
+			return err;
+		}
+	}
+
+	static async addReward(stars: Stars) {
+		try {
+			const response = await fetch(baseURL + "/api/v1/user-info/stars", {
+				method: "post",
+				body: JSON.stringify(stars),
+				headers: {
+					"Content-Type": "application/json",
+				},
+			});
+			if (!response.ok) {
+				if (response.status === 401) {
+					const responseData = await response.json();
+					return responseData;
+				}
 				const error = new Error(`${response.status}(${response.statusText})`);
 				throw error;
 			}
@@ -202,8 +235,6 @@ class FetchData {
 			return err;
 		}
 	}
-
-	static async deleteCar(id: number, user: user) {}
 }
 
 export default FetchData;

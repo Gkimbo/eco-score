@@ -7,6 +7,7 @@ import { Pressable, View, StyleSheet, Text } from "react-native";
 import AddHomeButton from "./AddHomeButton";
 import AddBasicsButton from "./AddBasicInfoButton";
 import EditCarButton from "./AddCarButton";
+import RewardsButton from "./RewardsButton";
 
 export interface IAppProps {
 	dispatch: any;
@@ -38,15 +39,18 @@ const TopBar: React.FunctionComponent<IAppProps> = ({
 						visible={isDrawerOpen}
 						onDismiss={hideModal}
 						contentContainerStyle={{
-							backgroundColor: "white",
-							padding: 5,
-							marginTop: "80%",
+							backgroundColor: "#abd1c6",
+							padding: 20,
+							marginTop: "94%",
 							alignItems: "center",
+							height: "auto",
 						}}
 					>
-						<AddHomeButton setIsDrawerOpen={setIsDrawerOpen} />
 						<AddBasicsButton setIsDrawerOpen={setIsDrawerOpen} />
+						<AddHomeButton setIsDrawerOpen={setIsDrawerOpen} />
 						<EditCarButton setIsDrawerOpen={setIsDrawerOpen} />
+						<Text>________________________________________</Text>
+						<RewardsButton setIsDrawerOpen={setIsDrawerOpen} />
 					</Modal>
 				</Portal>
 				<SignOutButton dispatch={dispatch} />
@@ -61,7 +65,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "space-between",
 		padding: 5,
-		backgroundColor: "#3498db",
+		backgroundColor: "#004643",
 		position: "relative",
 	},
 	drawerButton: {

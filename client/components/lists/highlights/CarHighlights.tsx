@@ -46,12 +46,22 @@ const CarHighlights: React.FunctionComponent<IAppProps> = ({
 				<View style={ListStyles.infoContainer}>
 					<Text>Total CO2 after 100,000 miles:</Text>
 					<Text>
-						{`(${(
-							(Number(car.carbonPerMile) * 100000 +
-								Number(car.carbonToMakeBattery)) /
-								2000 +
-							8.263
-						).toFixed(2)} tons of CO2)`}
+						(
+						<Text
+							style={{
+								fontSize: 15,
+								color: "brown",
+								fontWeight: "bold",
+							}}
+						>
+							{(
+								(Number(car.carbonPerMile) * 100000 +
+									Number(car.carbonToMakeBattery)) /
+									2000 +
+								8.263
+							).toFixed(2)}
+						</Text>{" "}
+						tons of CO2)
 					</Text>
 				</View>
 			) : null}
@@ -60,10 +70,19 @@ const CarHighlights: React.FunctionComponent<IAppProps> = ({
 					<View style={ListStyles.infoContainer}>
 						<Text>Total CO2 after 100,000 miles:</Text>
 						<Text>
-							{`(${(
-								(Number(car.carbonPerMile) * 100000) / 2000 +
-								8.263
-							).toFixed(2)} tons of CO2)`}
+							(
+							<Text
+								style={{
+									fontSize: 15,
+									color: "brown",
+									fontWeight: "bold",
+								}}
+							>
+								{((Number(car.carbonPerMile) * 100000) / 2000 + 8.263).toFixed(
+									2
+								)}
+							</Text>{" "}
+							tons of CO2)
 						</Text>
 					</View>
 				</>
@@ -74,18 +93,36 @@ const CarHighlights: React.FunctionComponent<IAppProps> = ({
 
 					{car.zipCode === "off grid" ? (
 						<Text>
-							{`(${(Number(car.carbonToMakeBattery) / 2000 + 8.263).toFixed(
-								2
-							)} tons of CO2)`}
+							({" "}
+							<Text
+								style={{
+									fontSize: 15,
+									color: "brown",
+									fontWeight: "bold",
+								}}
+							>
+								{(Number(car.carbonToMakeBattery) / 2000 + 8.263).toFixed(2)}
+							</Text>{" "}
+							tons of CO2)
 						</Text>
 					) : (
 						<Text>
-							{`(${(
-								(Number(car.carbonPerMile) * 100000 +
-									Number(car.carbonToMakeBattery)) /
-									2000 +
-								8.263
-							).toFixed(2)} tons of CO2)`}
+							(
+							<Text
+								style={{
+									fontSize: 15,
+									color: "brown",
+									fontWeight: "bold",
+								}}
+							>
+								{(
+									(Number(car.carbonPerMile) * 100000 +
+										Number(car.carbonToMakeBattery)) /
+										2000 +
+									8.263
+								).toFixed(2)}
+							</Text>{" "}
+							tons of CO2)
 						</Text>
 					)}
 				</View>

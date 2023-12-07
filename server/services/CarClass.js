@@ -17,7 +17,6 @@ class CarCalculation {
 					contentType: "application/json",
 				}
 			);
-
 			return response.data;
 		} catch (error) {
 			return error;

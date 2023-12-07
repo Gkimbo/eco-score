@@ -37,8 +37,9 @@ const homePageStyles = StyleSheet.create({
 		alignItems: "center",
 		marginBottom: 10,
 		borderRadius: 10,
-		backgroundColor: "lightgreen",
-		width: 40,
+		backgroundColor: "green",
+		width: 60,
+		padding: 10,
 	},
 	centerContainer: {
 		flex: 1,
@@ -64,7 +65,7 @@ const homePageStyles = StyleSheet.create({
 		left: 0,
 		width: "100%",
 		borderRadius: 100,
-		backgroundColor: "green",
+		backgroundColor: "#e16162",
 	},
 	carbonText: {
 		fontSize: 48,

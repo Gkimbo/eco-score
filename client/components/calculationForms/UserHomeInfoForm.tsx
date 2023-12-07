@@ -8,9 +8,12 @@ import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
 import { useNavigate } from "react-router-native";
 import { Home } from "../../services/types/carAndHomeFormType";
+import AddBasicsButton from "../navBar/AddBasicInfoButton";
 
 export interface IAppProps {
-	isDrawerOpen: any;
+	isDrawerOpen: boolean;
+	setIsDrawerOpen: any;
+	state: any;
 }
 
 type UserHomeInfoForm = {
@@ -20,6 +23,8 @@ type UserHomeInfoForm = {
 
 const UserHomeInfoForm: React.FunctionComponent<IAppProps> = ({
 	isDrawerOpen,
+	setIsDrawerOpen,
+	state,
 }) => {
 	const { user } = useContext(AuthContext);
 	const [userHomeInfo, setUserHomeInfoForm] = useState<UserHomeInfoForm>({
@@ -342,485 +347,539 @@ const UserHomeInfoForm: React.FunctionComponent<IAppProps> = ({
 				marginRight: 15,
 			}}
 		>
-			<form onSubmit={handleSubmit}>
-				<View>
-					<Text style={UserFormStyles.title}>Your home</Text>
-					<Text style={UserFormStyles.subtitle}>Home features!</Text>
-					<Text style={UserFormStyles.smallTitle}>Zipcode:</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="02531..."
-						value={userHomeInfo.home.zipcode}
-						onChangeText={handleZipCodeChange}
-						style={{
-							...UserFormStyles.input,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					/>
-					<Text style={UserFormStyles.smallTitle}>Square Feet:</Text>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							borderWidth: 1,
-							borderColor: "#000",
-							borderRadius: 5,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							padding: 5,
-							marginBottom: 20,
-						}}
-					>
+			{state.userInformation ? (
+				<form onSubmit={handleSubmit}>
+					<View>
+						<Text style={UserFormStyles.title}>Your home</Text>
+						<Text style={UserFormStyles.subtitle}>Home features!</Text>
+						<Text style={UserFormStyles.smallTitle}>Zipcode:</Text>
 						<TextInput
-							value={`${userHomeInfo.home.squareFeet}`}
-							onChangeText={handleSquareFeetChange}
-							placeholder="1500..."
+							mode="outlined"
+							placeholder="02531..."
+							value={userHomeInfo.home.zipcode}
+							onChangeText={handleZipCodeChange}
 							style={{
 								...UserFormStyles.input,
-								borderWidth: 0,
-								backgroundColor: "transparent",
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 							}}
 						/>
-						<Text style={{ paddingLeft: 10, color: "#000" }}>Square Feet</Text>
-					</View>
+						<Text style={UserFormStyles.smallTitle}>Square Feet:</Text>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								borderWidth: 1,
+								borderColor: "#000",
+								borderRadius: 5,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								padding: 5,
+								marginBottom: 20,
+							}}
+						>
+							<TextInput
+								value={`${userHomeInfo.home.squareFeet}`}
+								onChangeText={handleSquareFeetChange}
+								placeholder="1500..."
+								style={{
+									...UserFormStyles.input,
+									borderWidth: 0,
+									backgroundColor: "transparent",
+								}}
+							/>
+							<Text style={{ paddingLeft: 10, color: "#000" }}>
+								Square Feet
+							</Text>
+						</View>
 
-					<Text style={UserFormStyles.smallTitle}>Year Built:</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="1772..."
-						value={userHomeInfo.home.yearBuilt}
-						onChangeText={handleYearBuiltChange}
-						style={{
-							...UserFormStyles.input,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					/>
-					<View
-						style={{
-							...UserFormStyles.pickerContainer,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<Text style={UserFormStyles.smallTitle}>Electricity Source:</Text>
-						<RNPickerSelect
-							value={userHomeInfo.home.electricitySource}
-							onValueChange={handleElectricitySource}
-							style={pickerSelectStyles}
-							items={[
-								{ label: "Grid", value: "grid" },
-								{ label: "Solar", value: "solar" },
-								{ label: "Wind", value: "wind" },
-								{ label: "Hydro Electric", value: "hydro" },
-							]}
-						/>
-					</View>
-					{userHomeInfo.home.electricitySource !== "grid" ? (
-						<Text style={UserFormStyles.smallTitle}>
-							{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
-								userHomeInfo.home.electricityUnit.slice(1)}{" "}
-							Electricity Usage from the grid:
-						</Text>
-					) : (
-						<Text style={UserFormStyles.smallTitle}>
-							{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
-								userHomeInfo.home.electricityUnit.slice(1)}{" "}
-							Electricity Usage:
-						</Text>
-					)}
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							borderWidth: 1,
-							borderColor: "#000",
-							borderRadius: 5,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							padding: 5,
-							marginBottom: 20,
-						}}
-					>
+						<Text style={UserFormStyles.smallTitle}>Year Built:</Text>
 						<TextInput
-							placeholder="10,094..."
-							value={userHomeInfo.home.electricityUsage}
-							onChangeText={handleElectricityUsage}
+							mode="outlined"
+							placeholder="1772..."
+							value={userHomeInfo.home.yearBuilt}
+							onChangeText={handleYearBuiltChange}
 							style={{
 								...UserFormStyles.input,
-								borderWidth: 0,
-								backgroundColor: "transparent",
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
 							}}
 						/>
-						<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
-					</View>
-					<Text style={UserFormStyles.smallTitle}>
-						Electricity usage time period:
-					</Text>
-
-					<View
-						style={{
-							...UserFormStyles.radioButtonContainer,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleElectricityUnitChange}
-								value={userHomeInfo.home.electricityUnit}
-							>
-								<RadioButton.Item label="Yearly" value="yearly" />
-							</RadioButton.Group>
+						<View
+							style={{
+								...UserFormStyles.pickerContainer,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<Text style={UserFormStyles.smallTitle}>Electricity Source:</Text>
+							<RNPickerSelect
+								value={userHomeInfo.home.electricitySource}
+								onValueChange={handleElectricitySource}
+								style={pickerSelectStyles}
+								items={[
+									{ label: "Grid", value: "grid" },
+									{ label: "Solar", value: "solar" },
+									{ label: "Wind", value: "wind" },
+									{ label: "Hydro Electric", value: "hydro" },
+								]}
+							/>
 						</View>
-
-						<View>
-							<RadioButton.Group
-								onValueChange={handleElectricityUnitChange}
-								value={userHomeInfo.home.electricityUnit}
-							>
-								<RadioButton.Item label="Monthly" value="monthly" />
-							</RadioButton.Group>
-						</View>
-					</View>
-					<Text style={UserFormStyles.smallTitle}>
-						Do you use have a Battery backup or off grid battery bank?
-					</Text>
-					<View
-						style={{
-							...UserFormStyles.radioButtonContainer,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleUsesBatteryBankChange}
-								value={userHomeInfo.home.batteryBackup}
-							>
-								<RadioButton.Item label="Yes" value="yes" />
-							</RadioButton.Group>
-						</View>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleUsesBatteryBankChange}
-								value={userHomeInfo.home.batteryBackup}
-							>
-								<RadioButton.Item label="No" value="no" />
-							</RadioButton.Group>
-						</View>
-					</View>
-					{userHomeInfo.home.batteryBackup === "yes" ? (
-						<>
-							<Text style={UserFormStyles.smallTitle}>Battery Bank size:</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									borderWidth: 1,
-									borderColor: "#000",
-									borderRadius: 5,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-									padding: 5,
-									marginBottom: 20,
-								}}
-							>
-								<TextInput
-									placeholder="24..."
-									value={userHomeInfo.home.batteryBankSize}
-									onChangeText={handleBatteryBankSize}
-									style={{
-										...UserFormStyles.input,
-										borderWidth: 0,
-										backgroundColor: "transparent",
-									}}
-								/>
-								<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
-							</View>
-						</>
-					) : null}
-					<Text style={UserFormStyles.smallTitle}>
-						Do you use Gas in this home?
-					</Text>
-					<View
-						style={{
-							...UserFormStyles.radioButtonContainer,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleUsesGasChange}
-								value={userHomeInfo.home.gas}
-							>
-								<RadioButton.Item label="Yes" value="yes" />
-							</RadioButton.Group>
-						</View>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleUsesGasChange}
-								value={userHomeInfo.home.gas}
-							>
-								<RadioButton.Item label="No" value="no" />
-							</RadioButton.Group>
-						</View>
-					</View>
-					{userHomeInfo.home.gas === "yes" ? (
-						<>
+						{userHomeInfo.home.electricitySource !== "grid" ? (
 							<Text style={UserFormStyles.smallTitle}>
-								{userHomeInfo.home.gasUnit.charAt(0).toUpperCase() +
-									userHomeInfo.home.gasUnit.slice(1)}{" "}
-								Gas Usage:
+								{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
+									userHomeInfo.home.electricityUnit.slice(1)}{" "}
+								Electricity Usage from the grid:
 							</Text>
-							<View
+						) : (
+							<Text style={UserFormStyles.smallTitle}>
+								{userHomeInfo.home.electricityUnit.charAt(0).toUpperCase() +
+									userHomeInfo.home.electricityUnit.slice(1)}{" "}
+								Electricity Usage:
+							</Text>
+						)}
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								borderWidth: 1,
+								borderColor: "#000",
+								borderRadius: 5,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+								padding: 5,
+								marginBottom: 20,
+							}}
+						>
+							<TextInput
+								placeholder="10,094..."
+								value={userHomeInfo.home.electricityUsage}
+								onChangeText={handleElectricityUsage}
 								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									borderWidth: 1,
-									borderColor: "#000",
-									borderRadius: 5,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-									padding: 5,
-									marginBottom: 20,
+									...UserFormStyles.input,
+									borderWidth: 0,
+									backgroundColor: "transparent",
 								}}
-							>
-								<TextInput
-									placeholder="1440..."
-									value={userHomeInfo.home.gasUsage}
-									onChangeText={handleGasUsage}
-									style={{
-										...UserFormStyles.input,
-										borderWidth: 0,
-										backgroundColor: "transparent",
-									}}
-								/>
-								<Text style={{ paddingLeft: 10, color: "#000" }}>therms</Text>
+							/>
+							<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
+						</View>
+						<Text style={UserFormStyles.smallTitle}>
+							Electricity usage time period:
+						</Text>
+
+						<View
+							style={{
+								...UserFormStyles.radioButtonContainer,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleElectricityUnitChange}
+									value={userHomeInfo.home.electricityUnit}
+								>
+									<RadioButton.Item label="Yearly" value="yearly" />
+								</RadioButton.Group>
 							</View>
 
-							<Text style={UserFormStyles.smallTitle}>
-								Gas usage time period:
-							</Text>
-							<View
-								style={{
-									...UserFormStyles.radioButtonContainer,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								}}
-							>
-								<View>
-									<RadioButton.Group
-										onValueChange={handleGasUnitChange}
-										value={userHomeInfo.home.gasUnit}
-									>
-										<RadioButton.Item label="Yearly" value="yearly" />
-									</RadioButton.Group>
-								</View>
-
-								<View>
-									<RadioButton.Group
-										onValueChange={handleGasUnitChange}
-										value={userHomeInfo.home.gasUnit}
-									>
-										<RadioButton.Item label="Monthly" value="monthly" />
-									</RadioButton.Group>
-								</View>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleElectricityUnitChange}
+									value={userHomeInfo.home.electricityUnit}
+								>
+									<RadioButton.Item label="Monthly" value="monthly" />
+								</RadioButton.Group>
 							</View>
-						</>
-					) : null}
-					<Text style={UserFormStyles.smallTitle}>
-						Do you use Oil in this home?
-					</Text>
-					<View
-						style={{
-							...UserFormStyles.radioButtonContainer,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleUsesOilChange}
-								value={userHomeInfo.home.oil}
-							>
-								<RadioButton.Item label="Yes" value="yes" />
-							</RadioButton.Group>
 						</View>
-
-						<View>
-							<RadioButton.Group
-								onValueChange={handleUsesOilChange}
-								value={userHomeInfo.home.oil}
-							>
-								<RadioButton.Item label="No" value="no" />
-							</RadioButton.Group>
+						<Text style={UserFormStyles.smallTitle}>
+							Do you use have a Battery backup or off grid battery bank?
+						</Text>
+						<View
+							style={{
+								...UserFormStyles.radioButtonContainer,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleUsesBatteryBankChange}
+									value={userHomeInfo.home.batteryBackup}
+								>
+									<RadioButton.Item label="Yes" value="yes" />
+								</RadioButton.Group>
+							</View>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleUsesBatteryBankChange}
+									value={userHomeInfo.home.batteryBackup}
+								>
+									<RadioButton.Item label="No" value="no" />
+								</RadioButton.Group>
+							</View>
 						</View>
-					</View>
-					{userHomeInfo.home.oil === "yes" ? (
-						<>
-							<Text style={UserFormStyles.smallTitle}>
-								{userHomeInfo.home.oilUnit.charAt(0).toUpperCase() +
-									userHomeInfo.home.oilUnit.slice(1)}{" "}
-								Oil Usage:
-							</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									borderWidth: 1,
-									borderColor: "#000",
-									borderRadius: 5,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-									padding: 5,
-									marginBottom: 20,
-								}}
-							>
-								<TextInput
-									placeholder={
-										userHomeInfo.home.oilVolume === "gallons"
-											? "700..."
-											: "2649..."
-									}
-									value={userHomeInfo.home.oilUsage}
-									onChangeText={handleOilUsage}
-									style={{
-										...UserFormStyles.input,
-										borderWidth: 0,
-										backgroundColor: "transparent",
-									}}
-								/>
-								<Text style={{ paddingLeft: 10, color: "#000" }}>
-									{userHomeInfo.home.oilVolume.charAt(0).toUpperCase() +
-										userHomeInfo.home.oilVolume.slice(1)}
+						{userHomeInfo.home.batteryBackup === "yes" ? (
+							<>
+								<Text style={UserFormStyles.smallTitle}>
+									Battery Bank size:
 								</Text>
-							</View>
-							<Text style={UserFormStyles.smallTitle}>
-								Oil unit of measurement:
-							</Text>
-							<View
-								style={{
-									...UserFormStyles.radioButtonContainer,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								}}
-							>
-								<View>
-									<RadioButton.Group
-										onValueChange={handleOilVolumeChange}
-										value={userHomeInfo.home.oilVolume}
-									>
-										<RadioButton.Item label="Gallons" value="gallons" />
-									</RadioButton.Group>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										borderWidth: 1,
+										borderColor: "#000",
+										borderRadius: 5,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+										padding: 5,
+										marginBottom: 20,
+									}}
+								>
+									<TextInput
+										placeholder="24..."
+										value={userHomeInfo.home.batteryBankSize}
+										onChangeText={handleBatteryBankSize}
+										style={{
+											...UserFormStyles.input,
+											borderWidth: 0,
+											backgroundColor: "transparent",
+										}}
+									/>
+									<Text style={{ paddingLeft: 10, color: "#000" }}>kWh</Text>
 								</View>
-								<View>
-									<RadioButton.Group
-										onValueChange={handleOilVolumeChange}
-										value={userHomeInfo.home.oilVolume}
-									>
-										<RadioButton.Item label="Liters" value="liters" />
-									</RadioButton.Group>
-								</View>
+							</>
+						) : null}
+						<Text style={UserFormStyles.smallTitle}>
+							Do you use Gas in this home?
+						</Text>
+						<View
+							style={{
+								...UserFormStyles.radioButtonContainer,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleUsesGasChange}
+									value={userHomeInfo.home.gas}
+								>
+									<RadioButton.Item label="Yes" value="yes" />
+								</RadioButton.Group>
 							</View>
-							<Text style={UserFormStyles.smallTitle}>
-								Oil usage time period:
-							</Text>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleUsesGasChange}
+									value={userHomeInfo.home.gas}
+								>
+									<RadioButton.Item label="No" value="no" />
+								</RadioButton.Group>
+							</View>
+						</View>
+						{userHomeInfo.home.gas === "yes" ? (
+							<>
+								<Text style={UserFormStyles.smallTitle}>
+									{userHomeInfo.home.gasUnit.charAt(0).toUpperCase() +
+										userHomeInfo.home.gasUnit.slice(1)}{" "}
+									Gas Usage:
+								</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										borderWidth: 1,
+										borderColor: "#000",
+										borderRadius: 5,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+										padding: 5,
+										marginBottom: 20,
+									}}
+								>
+									<TextInput
+										placeholder="1440..."
+										value={userHomeInfo.home.gasUsage}
+										onChangeText={handleGasUsage}
+										style={{
+											...UserFormStyles.input,
+											borderWidth: 0,
+											backgroundColor: "transparent",
+										}}
+									/>
+									<Text style={{ paddingLeft: 10, color: "#000" }}>therms</Text>
+								</View>
 
-							<View
-								style={{
-									...UserFormStyles.radioButtonContainer,
-									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								}}
-							>
-								<View>
-									<RadioButton.Group
-										onValueChange={handleOilUnitChange}
-										value={userHomeInfo.home.oilUnit}
-									>
-										<RadioButton.Item label="Yearly" value="yearly" />
-									</RadioButton.Group>
+								<Text style={UserFormStyles.smallTitle}>
+									Gas usage time period:
+								</Text>
+								<View
+									style={{
+										...UserFormStyles.radioButtonContainer,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+									}}
+								>
+									<View>
+										<RadioButton.Group
+											onValueChange={handleGasUnitChange}
+											value={userHomeInfo.home.gasUnit}
+										>
+											<RadioButton.Item label="Yearly" value="yearly" />
+										</RadioButton.Group>
+									</View>
+
+									<View>
+										<RadioButton.Group
+											onValueChange={handleGasUnitChange}
+											value={userHomeInfo.home.gasUnit}
+										>
+											<RadioButton.Item label="Monthly" value="monthly" />
+										</RadioButton.Group>
+									</View>
 								</View>
-								<View>
-									<RadioButton.Group
-										onValueChange={handleOilUnitChange}
-										value={userHomeInfo.home.oilUnit}
-									>
-										<RadioButton.Item label="Monthly" value="monthly" />
-									</RadioButton.Group>
-								</View>
+							</>
+						) : null}
+						<Text style={UserFormStyles.smallTitle}>
+							Do you use Oil in this home?
+						</Text>
+						<View
+							style={{
+								...UserFormStyles.radioButtonContainer,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleUsesOilChange}
+									value={userHomeInfo.home.oil}
+								>
+									<RadioButton.Item label="Yes" value="yes" />
+								</RadioButton.Group>
 							</View>
-						</>
+
+							<View>
+								<RadioButton.Group
+									onValueChange={handleUsesOilChange}
+									value={userHomeInfo.home.oil}
+								>
+									<RadioButton.Item label="No" value="no" />
+								</RadioButton.Group>
+							</View>
+						</View>
+						{userHomeInfo.home.oil === "yes" ? (
+							<>
+								<Text style={UserFormStyles.smallTitle}>
+									{userHomeInfo.home.oilUnit.charAt(0).toUpperCase() +
+										userHomeInfo.home.oilUnit.slice(1)}{" "}
+									Oil Usage:
+								</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										borderWidth: 1,
+										borderColor: "#000",
+										borderRadius: 5,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+										padding: 5,
+										marginBottom: 20,
+									}}
+								>
+									<TextInput
+										placeholder={
+											userHomeInfo.home.oilVolume === "gallons"
+												? "700..."
+												: "2649..."
+										}
+										value={userHomeInfo.home.oilUsage}
+										onChangeText={handleOilUsage}
+										style={{
+											...UserFormStyles.input,
+											borderWidth: 0,
+											backgroundColor: "transparent",
+										}}
+									/>
+									<Text style={{ paddingLeft: 10, color: "#000" }}>
+										{userHomeInfo.home.oilVolume.charAt(0).toUpperCase() +
+											userHomeInfo.home.oilVolume.slice(1)}
+									</Text>
+								</View>
+								<Text style={UserFormStyles.smallTitle}>
+									Oil unit of measurement:
+								</Text>
+								<View
+									style={{
+										...UserFormStyles.radioButtonContainer,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+									}}
+								>
+									<View>
+										<RadioButton.Group
+											onValueChange={handleOilVolumeChange}
+											value={userHomeInfo.home.oilVolume}
+										>
+											<RadioButton.Item label="Gallons" value="gallons" />
+										</RadioButton.Group>
+									</View>
+									<View>
+										<RadioButton.Group
+											onValueChange={handleOilVolumeChange}
+											value={userHomeInfo.home.oilVolume}
+										>
+											<RadioButton.Item label="Liters" value="liters" />
+										</RadioButton.Group>
+									</View>
+								</View>
+								<Text style={UserFormStyles.smallTitle}>
+									Oil usage time period:
+								</Text>
+
+								<View
+									style={{
+										...UserFormStyles.radioButtonContainer,
+										backgroundColor: isDrawerOpen
+											? "rgba(0, 0, 0, 0.5)"
+											: "#fff",
+									}}
+								>
+									<View>
+										<RadioButton.Group
+											onValueChange={handleOilUnitChange}
+											value={userHomeInfo.home.oilUnit}
+										>
+											<RadioButton.Item label="Yearly" value="yearly" />
+										</RadioButton.Group>
+									</View>
+									<View>
+										<RadioButton.Group
+											onValueChange={handleOilUnitChange}
+											value={userHomeInfo.home.oilUnit}
+										>
+											<RadioButton.Item label="Monthly" value="monthly" />
+										</RadioButton.Group>
+									</View>
+								</View>
+							</>
+						) : null}
+
+						<Text style={UserFormStyles.smallTitle}>Do you recycle?</Text>
+						<View
+							style={{
+								flexDirection: "column",
+								justifyContent: "center",
+								borderWidth: 1,
+								borderColor: "#000",
+								borderRadius: 5,
+								marginBottom: 20,
+								paddingLeft: 50,
+								paddingRight: 50,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleRecycleChange}
+									value={userHomeInfo.home.recycling}
+								>
+									<RadioButton.Item label="Yes, I recycle" value="true" />
+								</RadioButton.Group>
+							</View>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleRecycleChange}
+									value={userHomeInfo.home.recycling}
+								>
+									<RadioButton.Item label="No, I don't recycle" value="false" />
+								</RadioButton.Group>
+							</View>
+						</View>
+
+						<Text style={UserFormStyles.smallTitle}>Do you compost?</Text>
+						<View
+							style={{
+								flexDirection: "column",
+								justifyContent: "center",
+								borderWidth: 1,
+								borderColor: "#000",
+								borderRadius: 5,
+								marginBottom: 20,
+								paddingLeft: 50,
+								paddingRight: 50,
+								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+							}}
+						>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleCompostChange}
+									value={userHomeInfo.home.compost}
+								>
+									<RadioButton.Item label="Yes, I compost" value="true" />
+								</RadioButton.Group>
+							</View>
+							<View>
+								<RadioButton.Group
+									onValueChange={handleCompostChange}
+									value={userHomeInfo.home.compost}
+								>
+									<RadioButton.Item label="No, I don't compost" value="false" />
+								</RadioButton.Group>
+							</View>
+						</View>
+					</View>
+					<Pressable onPress={handleSubmit}>
+						<Text
+							style={{
+								...UserFormStyles.button,
+								backgroundColor: isDrawerOpen
+									? "rgba(0, 0, 0, 0.5)"
+									: "#f9bc60",
+							}}
+						>
+							Submit
+						</Text>
+					</Pressable>
+					{error ? (
+						<View>
+							<Text style={UserFormStyles.error}>{error}</Text>
+						</View>
 					) : null}
-
-					<Text style={UserFormStyles.smallTitle}>Do you recycle?</Text>
-					<View
-						style={{
-							flexDirection: "column",
-							justifyContent: "center",
-							borderWidth: 1,
-							borderColor: "#000",
-							borderRadius: 5,
-							marginBottom: 20,
-							paddingLeft: 50,
-							paddingRight: 50,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleRecycleChange}
-								value={userHomeInfo.home.recycling}
-							>
-								<RadioButton.Item label="Yes, I recycle" value="true" />
-							</RadioButton.Group>
-						</View>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleRecycleChange}
-								value={userHomeInfo.home.recycling}
-							>
-								<RadioButton.Item label="No, I don't recycle" value="false" />
-							</RadioButton.Group>
-						</View>
-					</View>
-
-					<Text style={UserFormStyles.smallTitle}>Do you compost?</Text>
-					<View
-						style={{
-							flexDirection: "column",
-							justifyContent: "center",
-							borderWidth: 1,
-							borderColor: "#000",
-							borderRadius: 5,
-							marginBottom: 20,
-							paddingLeft: 50,
-							paddingRight: 50,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleCompostChange}
-								value={userHomeInfo.home.compost}
-							>
-								<RadioButton.Item label="Yes, I compost" value="true" />
-							</RadioButton.Group>
-						</View>
-						<View>
-							<RadioButton.Group
-								onValueChange={handleCompostChange}
-								value={userHomeInfo.home.compost}
-							>
-								<RadioButton.Item label="No, I don't compost" value="false" />
-							</RadioButton.Group>
-						</View>
-					</View>
-				</View>
-				<Pressable onPress={handleSubmit}>
+				</form>
+			) : (
+				<View
+					style={{
+						alignItems: "center",
+					}}
+				>
 					<Text
 						style={{
-							...UserFormStyles.button,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#f9bc60",
+							fontSize: 25,
+							color: "white",
+							marginTop: 30,
+							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							textAlign: "center",
 						}}
 					>
-						Submit
+						Please fill out your basic Information to add a your home and gain
+						rewards!
 					</Text>
-				</Pressable>
-				{error ? (
-					<View>
-						<Text style={UserFormStyles.error}>{error}</Text>
+					<View
+						style={{
+							width: "80%",
+							height: "90%",
+							marginTop: 30,
+							marginBottom: 20,
+							marginRight: 15,
+							marginLeft: 15,
+							alignItems: "center",
+						}}
+					>
+						<AddBasicsButton setIsDrawerOpen={setIsDrawerOpen} />
 					</View>
-				) : null}
-			</form>
+				</View>
+			)}
 		</ScrollView>
 	);
 };

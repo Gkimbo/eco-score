@@ -14,6 +14,7 @@ const ListStyles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		marginBottom: 15,
+		marginTop: 10,
 	},
 	buttonText: {
 		alignSelf: "center",
@@ -27,6 +28,13 @@ const ListStyles = StyleSheet.create({
 		backgroundColor: "#fff",
 		margin: 5,
 		padding: 5,
+	},
+	title: {
+		alignSelf: "center",
+		alignItems: "center",
+		justifyContent: "center",
+		fontSize: 20,
+		fontWeight: "bold",
 	},
 });
 

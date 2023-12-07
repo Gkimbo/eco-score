@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Text, Pressable, ViewStyle, TextStyle } from "react-native";
 import { useNavigate } from "react-router-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { Star } from "lucide-react-native";
 
 export interface IAppProps {
 	setIsDrawerOpen: any;
 }
 
-const EditCarButton: React.FunctionComponent<IAppProps> = ({
+const RewardsButton: React.FunctionComponent<IAppProps> = ({
 	setIsDrawerOpen,
 }) => {
 	const [redirect, setRedirect] = useState<boolean>(false);
@@ -16,7 +16,7 @@ const EditCarButton: React.FunctionComponent<IAppProps> = ({
 	useEffect(() => {
 		if (redirect) {
 			setIsDrawerOpen(false);
-			navigate("/car-form");
+			navigate("/rewards");
 			setRedirect(false);
 		}
 	}, [redirect]);
@@ -27,8 +27,8 @@ const EditCarButton: React.FunctionComponent<IAppProps> = ({
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
-			<Icon name="car" size={20} color="white" style={{ marginRight: 5 }} />
-			<Text style={styles.buttonText}>Add Car</Text>
+			<Star color="yellow" size={20} />
+			<Text style={styles.buttonText}>Your Rewards</Text>
 		</Pressable>
 	);
 };
@@ -40,7 +40,7 @@ interface Styles {
 
 const styles: Styles = {
 	button: {
-		backgroundColor: "#f9bc60",
+		backgroundColor: "grey",
 		padding: 10,
 		borderRadius: 50,
 		margin: 10,
@@ -55,4 +55,4 @@ const styles: Styles = {
 	},
 };
 
-export default EditCarButton;
+export default RewardsButton;

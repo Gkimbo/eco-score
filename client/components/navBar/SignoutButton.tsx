@@ -18,6 +18,14 @@ const SignOutButton: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 			.then((response) => {
 				if (response.ok) {
 					localStorage.removeItem("token");
+					dispatch({
+						type: "PLANT_TREES_HOME",
+						payload: 0,
+					});
+					dispatch({
+						type: "STARS_HOME",
+						payload: 0,
+					});
 					dispatch({ type: "CURRENT_USER", payload: null });
 					navigate("/");
 				} else {
@@ -31,14 +39,14 @@ const SignOutButton: React.FunctionComponent<IAppProps> = ({ dispatch }) => {
 
 	return (
 		<Pressable style={styles.button} onPress={signOut}>
-			<Icon name="sign-out" size={20} color="white" />
+			<Icon name="sign-out" size={20} color="black" />
 		</Pressable>
 	);
 };
 
 const styles = {
 	button: {
-		backgroundColor: "blue",
+		backgroundColor: "#f9bc60",
 		padding: 10,
 		borderRadius: 50,
 	},

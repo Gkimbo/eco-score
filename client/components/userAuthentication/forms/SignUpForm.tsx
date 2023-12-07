@@ -65,7 +65,6 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 	};
 
 	const onSubmit = async () => {
-		console.log(validate());
 		if (!validate()) {
 			return;
 		} else {
@@ -81,7 +80,6 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 			) {
 				setErrors([response]);
 			} else {
-				console.log(response);
 				dispatch({ type: "CURRENT_USER", payload: response.token });
 				login(response.token);
 				setRedirect(true);

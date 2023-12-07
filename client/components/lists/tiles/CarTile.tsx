@@ -136,7 +136,16 @@ const CarTile: React.FunctionComponent<IAppProps> = ({
 								accessible={true}
 								accessibilityLabel="No Button"
 							>
-								<View style={styles.infoContainer}>
+								<View
+									style={{
+										backgroundColor: "green",
+										borderRadius: 20,
+										width: 65,
+										height: 25,
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
 									<Text
 										style={{
 											color: "white",

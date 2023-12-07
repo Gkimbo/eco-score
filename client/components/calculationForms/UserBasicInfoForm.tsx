@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, ScrollView, Switch, Pressable } from "react-native";
 import { TextInput, RadioButton } from "react-native-paper";
 import RNPickerSelect from "react-native-picker-select";
@@ -6,9 +6,12 @@ import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
 import UserFormStyles from "../../services/styles/UserInputFormStyle";
 import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
+import { useNavigate } from "react-router-native";
+import DeleteData from "../../services/DeleteData";
 
 export interface IAppProps {
 	isDrawerOpen: any;
+	state: any;
 }
 
 type UserBasicInfo = {
@@ -32,8 +35,10 @@ type UserBasicInfo = {
 
 const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 	isDrawerOpen,
+	state,
 }) => {
 	const { user } = useContext(AuthContext);
+	const [redirect, setRedirect] = useState<boolean>(false);
 	const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({
 		user: user,
 		zipcode: "",
@@ -45,6 +50,7 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 		daysCommute: "",
 		hasCar: "no",
 	});
+	const navigate = useNavigate();
 
 	const handleLocationChange = (text: string) => {
 		setUserBasicInfo((prevState) => ({ ...prevState, zipcode: text }));
@@ -103,10 +109,29 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
-		FetchData.addBasicInfo(userBasicInfo).then((response) => {
-			console.log(response);
-		});
+		if (!state.userInformation) {
+			FetchData.addBasicInfo(userBasicInfo).then((response) => {
+				if (response.user) {
+					setRedirect(true);
+				}
+			});
+		} else {
+			const updateUser = DeleteData.updateUserInfo(userBasicInfo).then(
+				(response) => {
+					if (response) {
+						setRedirect(true);
+					}
+				}
+			);
+		}
 	};
+
+	useEffect(() => {
+		if (redirect) {
+			navigate("/");
+			setRedirect(false);
+		}
+	}, [redirect]);
 	return (
 		<ScrollView contentContainerStyle={UserFormStyles.container}>
 			<form onSubmit={handleSubmit}>

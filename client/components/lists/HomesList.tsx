@@ -27,6 +27,7 @@ const HomeList: React.FunctionComponent<IAppProps> = ({
 
 	return (
 		<View style={ListStyles.container}>
+			<Text style={ListStyles.title}>Your Homes!</Text>
 			<HomeTile
 				state={state}
 				onDeleteHome={onDeleteHome}

@@ -8,6 +8,8 @@ class UserInfoSerializer {
 			"transportation",
 			"daysCommute",
 			"hasCar",
+			"treesPlanted",
+			"rewards",
 		];
 		const serializedUser = {};
 
@@ -15,6 +17,12 @@ class UserInfoSerializer {
 			serializedUser[attribute] = info[attribute];
 		}
 
+		if (!serializedUser.treesPlanted) {
+			serializedUser.treesPlanted = 0;
+		}
+		if (!serializedUser.rewards) {
+			serializedUser.rewards = 0;
+		}
 		return serializedUser;
 	}
 }

@@ -23,10 +23,11 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 }) => {
 	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const [homeCarbon, setHomeCarbon] = useState<number>(0);
+	const [treeCarbon, setTreeCarbon] = useState<number>(0);
 	const [isBlurred, setIsBlurred] = useState<boolean>(false);
 	const navigate = useNavigate();
 
-	let totalCarbon = carCarbon + homeCarbon;
+	let totalCarbon = carCarbon + homeCarbon - treeCarbon;
 
 	const handleCarsPress = () => {
 		navigate("/cars");
@@ -37,6 +38,10 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 	};
 
 	const handleRewardsPress = () => {
+		navigate("/rewards");
+	};
+
+	const handleTreePress = () => {
 		navigate("/rewards");
 	};
 
@@ -51,7 +56,11 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 	useEffect(() => {
 		const averageCarbonToProduceAnyCar = 16526;
 		const totalCarbon = state.cars.reduce((total: any, car: any) => {
-			return total + car.annualCarbonFromDriving;
+			if (car.annualCarbonFromDriving) {
+				return total + car.annualCarbonFromDriving;
+			} else {
+				return total + 0;
+			}
 		}, 0);
 		const tonsOfCarCarbon = totalCarbon / 2000;
 		let roundedCarNumber: number = Number(tonsOfCarCarbon.toFixed(2));
@@ -64,6 +73,9 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 				parseInt(home.totalStaticCarbon)
 			);
 		}, 0);
+
+		const savedCarbonByTrees = (state.treesPlanted * 48) / 2000;
+		setTreeCarbon(savedCarbonByTrees);
 
 		const homeCarbonInTons = totalHomeCarbon / 2000;
 		let roundedHomeNumber: number = Number(homeCarbonInTons.toFixed(2));
@@ -83,6 +95,14 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 						type: "USER_HOME",
 						payload: response.user.homes,
 					});
+					dispatch({
+						type: "PLANT_TREES_HOME",
+						payload: response.user.info.treesPlanted,
+					});
+					dispatch({
+						type: "STARS_HOME",
+						payload: response.user.info.rewards,
+					});
 				}
 			);
 		}
@@ -100,13 +120,13 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 						<Pressable onPress={handleCarsPress}>
 							<View style={homePageStyles.iconWithNumber}>
 								<Text>🚗</Text>
-								<Text>{carCarbon || 0}</Text>
+								<Text style={{ color: "white" }}>{carCarbon || 0}</Text>
 							</View>
 						</Pressable>
 						<Pressable onPress={handleHomesPress}>
 							<View style={homePageStyles.iconWithNumber}>
 								<Text>🏠</Text>
-								<Text>{homeCarbon || 0}</Text>
+								<Text style={{ color: "white" }}>{homeCarbon || 0}</Text>
 							</View>
 						</Pressable>
 					</View>
@@ -119,7 +139,7 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 								style={[
 									homePageStyles.circle,
 									{
-										height: `${Math.min((carCarbon + homeCarbon) * 2.5, 100)}%`,
+										height: `${Math.min(totalCarbon * 2.5, 100)}%`,
 									},
 								]}
 							/>
@@ -139,10 +159,14 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 								<Rewards userRewards={state.rewards} />
 							</View>
 						</Pressable>
-						<View style={homePageStyles.iconWithNumber}>
-							<Text>🌳</Text>
-							<Text>{state.treesPlanted || 0}</Text>
-						</View>
+						<Pressable onPress={handleRewardsPress}>
+							<View style={homePageStyles.iconWithNumber}>
+								<Text>🌳</Text>
+								<Text style={{ color: "white" }}>
+									{(state.treesPlanted * 48) / 2000}
+								</Text>
+							</View>
+						</Pressable>
 					</View>
 				</View>
 			</View>
@@ -154,14 +178,68 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 					marginTop: 20,
 				}}
 			>
-				<Pressable onPress={handleCarsPress}>
+				{state.cars.length !== 0 ? (
+					<Pressable onPress={handleCarsPress}>
+						<View style={ListStyles.buttonContainer}>
+							<Text style={ListStyles.buttonText}>
+								{state.cars.length === 0
+									? ""
+									: state.cars.length === 1
+									? "Your Car"
+									: "Your Cars"}
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginLeft: 15,
+								}}
+							>
+								<Icon
+									name="arrow-right"
+									size={20}
+									color="black"
+									style={{ marginRight: 10 }}
+								/>
+							</View>
+						</View>
+						{cars}
+					</Pressable>
+				) : null}
+				{state.homes.length !== 0 ? (
+					<Pressable onPress={handleHomesPress}>
+						<View style={ListStyles.buttonContainer}>
+							<Text style={ListStyles.buttonText}>
+								{state.homes.length === 0
+									? ""
+									: state.homes.length === 1
+									? "Your Home"
+									: "Your Homes"}
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginLeft: 15,
+								}}
+							>
+								<Icon
+									name="arrow-right"
+									size={20}
+									color="black"
+									style={{ marginRight: 10 }}
+								/>
+							</View>
+						</View>
+						{homes}
+					</Pressable>
+				) : null}
+				<Pressable onPress={handleTreePress}>
 					<View style={ListStyles.buttonContainer}>
 						<Text style={ListStyles.buttonText}>
-							{state.cars.length === 0
-								? ""
-								: state.cars.length === 1
-								? "Your Car"
-								: "Your Cars"}
+							{state.treesPlanted >= 1
+								? "Trees you've planted! Plant more!"
+								: "Plant trees!"}
 						</Text>
 						<View
 							style={{
@@ -178,34 +256,38 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 							/>
 						</View>
 					</View>
-					{cars}
-				</Pressable>
-
-				<Pressable onPress={handleHomesPress}>
-					<View style={ListStyles.buttonContainer}>
-						<Text style={ListStyles.buttonText}>
-							{state.homes.length === 0
-								? ""
-								: state.homes.length === 1
-								? "Your Home"
-								: "Your Homes"}
+					<View
+						style={{
+							flex: 1,
+							justifyContent: "center",
+							alignItems: "center",
+							marginTop: 5,
+							backgroundColor: "#fff",
+							borderRadius: 10,
+							padding: 10,
+						}}
+					>
+						<Text>
+							<Text
+								style={{ color: "green", fontWeight: "bold", fontSize: 15 }}
+							>
+								{state.treesPlanted}
+							</Text>{" "}
+							Trees Planted!
 						</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								marginLeft: 15,
-							}}
-						>
-							<Icon
-								name="arrow-right"
-								size={20}
-								color="black"
-								style={{ marginRight: 10 }}
-							/>
-						</View>
+						<Text style={styles.infoText}>
+							which absorbs{" "}
+							<Text
+								style={{ fontSize: 15, fontWeight: "bold", color: "green" }}
+							>
+								{state.treesPlanted * 48 < 2000
+									? state.treesPlanted * 48
+									: (state.treesPlanted * 48) / 2000}
+							</Text>{" "}
+							{state.treesPlanted * 48 < 2000 ? "pounds" : "tons"} of CO2 per
+							year!
+						</Text>
 					</View>
-					{homes}
 				</Pressable>
 			</View>
 		</View>
@@ -215,6 +297,11 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 const styles = StyleSheet.create({
 	blurredContainer: {
 		backgroundColor: "rgba(0, 0, 0, 0.5)",
+	},
+	infoText: {
+		marginVertical: 5,
+		fontSize: 14,
+		textAlign: "center",
 	},
 });
 

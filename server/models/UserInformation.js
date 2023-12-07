@@ -37,6 +37,14 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
+			treesPlanted: {
+				type: DataTypes.INTEGER,
+				allowNull: true,
+			},
+			rewards: {
+				type: DataTypes.INTEGER,
+				allowNull: true,
+			},
 			createdAt: {
 				type: DataTypes.DATE,
 				allowNull: false,
