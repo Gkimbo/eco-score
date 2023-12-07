@@ -16,7 +16,6 @@ export interface IAppProps {
 
 type UserBasicInfo = {
 	user: any;
-	zipcode: string;
 	homeOwnership: "rent" | "own";
 	milesDriven: string;
 	milesDrivenUnit: "yearly" | "monthly" | "daily";
@@ -39,22 +38,18 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 }) => {
 	const { user } = useContext(AuthContext);
 	const [redirect, setRedirect] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
 	const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({
 		user: user,
-		zipcode: "",
 		homeOwnership: "rent",
 		milesDriven: "",
 		milesDrivenUnit: "yearly",
 		commute: "no",
-		transportation: "drive own car",
-		daysCommute: "",
 		hasCar: "no",
+		transportation: "walk",
+		daysCommute: "",
 	});
 	const navigate = useNavigate();
-
-	const handleLocationChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, zipcode: text }));
-	};
 
 	const handleHomeOwnershipChange = (value: string) => {
 		setUserBasicInfo((prevState) => ({
@@ -104,11 +99,21 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 	};
 
 	const handleDaysCommuteChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, daysCommute: text }));
+		if (text === "" || (Number(text) >= 1 && Number(text) <= 7)) {
+			setUserBasicInfo((prevState) => ({ ...prevState, daysCommute: text }));
+			setError(null);
+		} else {
+			setError("Days of the week must be a number between 1 and 7");
+		}
 	};
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
+		if (userBasicInfo.commute === "yes" && userBasicInfo.daysCommute == "") {
+			setError("How many days do you commute per week?");
+			return;
+		}
+		setError(null);
 		if (!state.userInformation) {
 			FetchData.addBasicInfo(userBasicInfo).then((response) => {
 				if (response.user) {
@@ -116,13 +121,11 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 				}
 			});
 		} else {
-			const updateUser = DeleteData.updateUserInfo(userBasicInfo).then(
-				(response) => {
-					if (response) {
-						setRedirect(true);
-					}
+			DeleteData.updateUserInfo(userBasicInfo).then((response) => {
+				if (response) {
+					setRedirect(true);
 				}
-			);
+			});
 		}
 	};
 
@@ -137,17 +140,6 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 			<form onSubmit={handleSubmit}>
 				<View>
 					<Text style={UserFormStyles.title}>User Basic Info form page</Text>
-					<Text style={UserFormStyles.subtitle}>Where do you live?</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="Please Type your zipcode"
-						value={userBasicInfo.zipcode}
-						onChangeText={handleLocationChange}
-						style={{
-							...UserFormStyles.input,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					/>
 					<Text style={UserFormStyles.subtitle}>Do you rent or own?</Text>
 					<RNPickerSelect
 						value={userBasicInfo.homeOwnership}
@@ -185,45 +177,47 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 							</View>
 						</View>
 					</View>
-					<View>
-						<Text style={UserFormStyles.subtitle}>
-							How many miles do you drive?
-						</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: "#000",
-								borderRadius: 5,
-								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								padding: 5,
-							}}
-						>
-							<TextInput
-								value={userBasicInfo.milesDriven}
-								onChangeText={handleMilesDrivenChange}
+					{userBasicInfo.hasCar === "yes" && (
+						<View>
+							<Text style={UserFormStyles.subtitle}>
+								How many miles do you drive?
+							</Text>
+							<View
 								style={{
-									...UserFormStyles.input,
-									borderWidth: 0,
-									backgroundColor: "transparent",
+									flexDirection: "row",
+									justifyContent: "center",
+									alignItems: "center",
+									borderWidth: 1,
+									borderColor: "#000",
+									borderRadius: 5,
+									backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
+									padding: 5,
 								}}
-							/>
-							<View style={{ marginTop: 10 }}>
-								<RNPickerSelect
-									value={userBasicInfo.milesDrivenUnit}
-									onValueChange={handleMilesDrivenUnitChange}
-									style={pickerSelectStyles}
-									items={[
-										{ label: "Yearly", value: "yearly" },
-										{ label: "Monthly", value: "monthly" },
-										{ label: "Daily", value: "daily" },
-									]}
+							>
+								<TextInput
+									value={userBasicInfo.milesDriven}
+									onChangeText={handleMilesDrivenChange}
+									style={{
+										...UserFormStyles.input,
+										borderWidth: 0,
+										backgroundColor: "transparent",
+									}}
 								/>
+								<View style={{ marginTop: 10 }}>
+									<RNPickerSelect
+										value={userBasicInfo.milesDrivenUnit}
+										onValueChange={handleMilesDrivenUnitChange}
+										style={pickerSelectStyles}
+										items={[
+											{ label: "Yearly", value: "yearly" },
+											{ label: "Monthly", value: "monthly" },
+											{ label: "Daily", value: "daily" },
+										]}
+									/>
+								</View>
 							</View>
 						</View>
-					</View>
+					)}
 
 					<View style={UserFormStyles.commuteContainer}>
 						<Text style={UserFormStyles.subtitle}>Do you commute to work?</Text>
@@ -254,7 +248,7 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 
 						{userBasicInfo.commute === "yes" && (
 							<>
-								<Text style={UserFormStyles.subtitle}>
+								<Text style={{ ...UserFormStyles.subtitle, marginTop: 15 }}>
 									How many days a week do you commute?
 								</Text>
 								<TextInput
@@ -268,26 +262,61 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 											: "#fff",
 									}}
 								/>
+								{error && (
+									<Text
+										style={{
+											color: "red",
+											alignSelf: "center",
+											fontWeight: "bold",
+											fontSize: 15,
+											marginBottom: 15,
+										}}
+									>
+										{error}
+									</Text>
+								)}
 								<Text style={UserFormStyles.subtitle}>
 									Mode of transportation.
 								</Text>
-								<RNPickerSelect
-									value={userBasicInfo.transportation}
-									onValueChange={handleTransportationChange}
-									style={pickerSelectStyles}
-									items={[
-										{ label: "Drive own car", value: "drive own car" },
-										{ label: "Train", value: "train" },
-										{ label: "Bus", value: "bus" },
-										{ label: "Walk", value: "walk" },
-										{ label: "Bicycle", value: "bicycle" },
-										{ label: "Electric Scooter", value: "electric scooter" },
-										{
-											label: "Ride Share: Uber, Lyft or equivalent",
-											value: "ride share",
-										},
-									]}
-								/>
+								{userBasicInfo.hasCar === "yes" ? (
+									<RNPickerSelect
+										value={userBasicInfo.transportation}
+										onValueChange={handleTransportationChange}
+										style={pickerSelectStyles}
+										items={[
+											{
+												label: "Drive own car",
+												value: "drive own car",
+											},
+											{ label: "Walk", value: "walk" },
+											{ label: "Train", value: "train" },
+											{ label: "Bus", value: "bus" },
+											{ label: "Bicycle", value: "bicycle" },
+											{ label: "Electric Scooter", value: "electric scooter" },
+											{
+												label: "Ride Share: Uber, Lyft or equivalent",
+												value: "ride share",
+											},
+										]}
+									/>
+								) : (
+									<RNPickerSelect
+										value={userBasicInfo.transportation}
+										onValueChange={handleTransportationChange}
+										style={pickerSelectStyles}
+										items={[
+											{ label: "Walk", value: "walk" },
+											{ label: "Train", value: "train" },
+											{ label: "Bus", value: "bus" },
+											{ label: "Bicycle", value: "bicycle" },
+											{ label: "Electric Scooter", value: "electric scooter" },
+											{
+												label: "Ride Share: Uber, Lyft or equivalent",
+												value: "ride share",
+											},
+										]}
+									/>
+								)}
 							</>
 						)}
 					</View>

@@ -4,7 +4,6 @@ const baseURL = "http://localhost:3000";
 
 interface UserBasicInfo {
 	user: user;
-	zipcode: string;
 	homeOwnership: string;
 	milesDriven: string;
 	milesDrivenUnit: string;

@@ -16,7 +16,6 @@ interface ILoginInput {
 
 interface UserBasicInfo {
 	user: user;
-	zipcode: string;
 	homeOwnership: string;
 	milesDriven: string;
 	milesDrivenUnit: string;
