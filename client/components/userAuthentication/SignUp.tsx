@@ -19,9 +19,14 @@ const logoImage = require("../../assets/landing-photo.png");
 export interface IAppProps {
 	state: any;
 	dispatch: any;
+	setLastLoginTimestamp: any;
 }
 
-const SignUp: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
+const SignUp: React.FunctionComponent<IAppProps> = ({
+	state,
+	dispatch,
+	setLastLoginTimestamp,
+}) => {
 	const { colors } = useTheme();
 	const navigate = useNavigate();
 
@@ -56,7 +61,11 @@ const SignUp: React.FunctionComponent<IAppProps> = ({ state, dispatch }) => {
 						Sign Up Here!
 					</Text>
 					<ScrollView contentContainerStyle={formStyles.container}>
-						<SignUpForm state={state} dispatch={dispatch} />
+						<SignUpForm
+							state={state}
+							dispatch={dispatch}
+							setLastLoginTimestamp={setLastLoginTimestamp}
+						/>
 						<Text style={LandingPageStyles.text}>Already have an Account?</Text>
 						<Pressable onPress={handlePress}>
 							<View style={LandingPageStyles.buttonContainer}>

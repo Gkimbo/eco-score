@@ -24,6 +24,7 @@ import RewardsPage from "./components/rewards/RewardsPage";
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+	const [lastLoginTimestamp, setLastLoginTimestamp] = useState<number>(0);
 	const [state, dispatch] = useReducer(reducer, {
 		currentUser: { token: null },
 		cars: [],
@@ -70,6 +71,8 @@ const Home = () => {
 											state={state}
 											dispatch={dispatch}
 											isDrawerOpen={isDrawerOpen}
+											lastLoginTimestamp={lastLoginTimestamp}
+											setLastLoginTimestamp={setLastLoginTimestamp}
 										/>
 									}
 								/>
@@ -143,11 +146,23 @@ const Home = () => {
 						)}
 						<Route
 							path="/sign-in"
-							element={<SignIn state={state} dispatch={dispatch} />}
+							element={
+								<SignIn
+									state={state}
+									dispatch={dispatch}
+									setLastLoginTimestamp={setLastLoginTimestamp}
+								/>
+							}
 						/>
 						<Route
 							path="/sign-up"
-							element={<SignUp state={state} dispatch={dispatch} />}
+							element={
+								<SignUp
+									state={state}
+									dispatch={dispatch}
+									setLastLoginTimestamp={setLastLoginTimestamp}
+								/>
+							}
 						/>
 					</Routes>
 					{state.currentUser.token ? (

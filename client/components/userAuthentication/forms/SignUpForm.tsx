@@ -16,11 +16,13 @@ interface IFormInput {
 export interface IAppProps {
 	state: any;
 	dispatch: any;
+	setLastLoginTimestamp: any;
 }
 
 const SignUpForm: React.FunctionComponent<IAppProps> = ({
 	state,
 	dispatch,
+	setLastLoginTimestamp,
 }) => {
 	const [userName, setUserName] = useState("");
 	const [password, setPassword] = useState("");
@@ -82,6 +84,7 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 			} else {
 				dispatch({ type: "CURRENT_USER", payload: response.token });
 				login(response.token);
+				setLastLoginTimestamp(Date.now());
 				setRedirect(true);
 			}
 		}

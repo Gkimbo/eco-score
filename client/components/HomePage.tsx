@@ -14,17 +14,23 @@ export interface IAppProps {
 	state: any;
 	dispatch: any;
 	isDrawerOpen: any;
+	lastLoginTimestamp: any;
+	setLastLoginTimestamp: any;
 }
 
 const HomePage: React.FunctionComponent<IAppProps> = ({
 	state,
 	dispatch,
 	isDrawerOpen,
+	lastLoginTimestamp,
+	setLastLoginTimestamp,
 }) => {
 	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const [homeCarbon, setHomeCarbon] = useState<number>(0);
 	const [treeCarbon, setTreeCarbon] = useState<number>(0);
 	const [isBlurred, setIsBlurred] = useState<boolean>(false);
+	const [rewardsWindow, setRewardsWindow] = useState<boolean>(false);
+
 	const navigate = useNavigate();
 
 	let totalCarbon = carCarbon + homeCarbon - treeCarbon;
@@ -111,6 +117,19 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 	useEffect(() => {
 		setIsBlurred(isDrawerOpen);
 	}, [isDrawerOpen]);
+
+	useEffect(() => {
+		// Fetch user information and update last login timestamp...
+
+		const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+		const isDayPassed = Date.now() - lastLoginTimestamp > oneDayInMilliseconds;
+
+		if (isDayPassed) {
+			dispatch({ type: "REWARD_USER", payload: 100 });
+			setRewardsWindow(true);
+			setLastLoginTimestamp(Date.now());
+		}
+	}, [lastLoginTimestamp]);
 
 	return (
 		<View style={[isBlurred && styles.blurredContainer]}>
