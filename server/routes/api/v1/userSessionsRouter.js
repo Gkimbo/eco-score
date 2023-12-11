@@ -29,8 +29,6 @@ sessionRouter.post("/login", async (req, res) => {
 		if (user) {
 			const passwordMatch = await bcrypt.compare(password, user.password);
 			if (passwordMatch) {
-				// Update lastLogin timestamp
-				await user.update({ lastLogin: new Date() });
 				req.login(user, (err) => {
 					if (err) {
 						console.error(err);
