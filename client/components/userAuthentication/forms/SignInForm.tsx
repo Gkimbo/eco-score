@@ -10,13 +10,11 @@ import { AuthContext } from "../../../services/AuthContext";
 export interface IAppProps {
 	state: any;
 	dispatch: any;
-	setLastLoginTimestamp: any;
 }
 
 const SignInForm: React.FunctionComponent<IAppProps> = ({
 	state,
 	dispatch,
-	setLastLoginTimestamp,
 }) => {
 	const [userName, setUserName] = useState("");
 	const [password, setPassword] = useState("");
@@ -56,7 +54,6 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 			if (response.user) {
 				dispatch({ type: "CURRENT_USER", payload: response.token });
 				login(response.token);
-				setLastLoginTimestamp(Date.now());
 				setRedirect(true);
 			}
 		}

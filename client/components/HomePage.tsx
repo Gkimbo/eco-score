@@ -13,9 +13,11 @@ import Rewards from "./rewards/RewardsDisplay";
 export interface IAppProps {
 	state: any;
 	dispatch: any;
-	isDrawerOpen: any;
-	lastLoginTimestamp: any;
+	isDrawerOpen: boolean;
+	lastLoginTimestamp: string;
 	setLastLoginTimestamp: any;
+	rewardsWindow: boolean;
+	setRewardsWindow: any;
 }
 
 const HomePage: React.FunctionComponent<IAppProps> = ({
@@ -24,12 +26,13 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 	isDrawerOpen,
 	lastLoginTimestamp,
 	setLastLoginTimestamp,
+	rewardsWindow,
+	setRewardsWindow,
 }) => {
 	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const [homeCarbon, setHomeCarbon] = useState<number>(0);
 	const [treeCarbon, setTreeCarbon] = useState<number>(0);
 	const [isBlurred, setIsBlurred] = useState<boolean>(false);
-	const [rewardsWindow, setRewardsWindow] = useState<boolean>(false);
 
 	const navigate = useNavigate();
 
@@ -58,6 +61,10 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 	const homes = state.homes.map((home: Home) => {
 		return <HomeHighlights key={home.id} home={home} isBlurred={isBlurred} />;
 	});
+
+	const handleRewards = () => {
+		setRewardsWindow(false);
+	};
 
 	useEffect(() => {
 		const averageCarbonToProduceAnyCar = 16526;
@@ -119,160 +126,108 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 	}, [isDrawerOpen]);
 
 	useEffect(() => {
-		// Fetch user information and update last login timestamp...
-
 		const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
-		const isDayPassed = Date.now() - lastLoginTimestamp > oneDayInMilliseconds;
+		const lastLoginTime = new Date(lastLoginTimestamp).valueOf();
+		const isDayPassed = Date.now() - lastLoginTime > oneDayInMilliseconds;
 
 		if (isDayPassed) {
-			dispatch({ type: "REWARD_USER", payload: 100 });
-			setRewardsWindow(true);
-			setLastLoginTimestamp(Date.now());
+			const response = FetchData.updateTimestamp(state.currentUser).then(
+				(response) => {
+					if (response.message) {
+						return;
+					} else {
+						dispatch({ type: "REWARD_USER", payload: 100 });
+						setRewardsWindow(true);
+						setLastLoginTimestamp(Date.now());
+					}
+				}
+			);
 		}
-	}, [lastLoginTimestamp]);
+	}, [lastLoginTimestamp, dispatch, setRewardsWindow, setLastLoginTimestamp]);
 
 	return (
 		<View style={[isBlurred && styles.blurredContainer]}>
-			<View style={homePageStyles.container}>
-				<View style={homePageStyles.leftAndCenterContainer}>
-					<View style={homePageStyles.leftContainer}>
-						<Pressable onPress={handleCarsPress}>
-							<View style={homePageStyles.iconWithNumber}>
-								<Text>🚗</Text>
-								<Text style={{ color: "white" }}>{carCarbon || 0}</Text>
-							</View>
-						</Pressable>
-						<Pressable onPress={handleHomesPress}>
-							<View style={homePageStyles.iconWithNumber}>
-								<Text>🏠</Text>
-								<Text style={{ color: "white" }}>{homeCarbon || 0}</Text>
-							</View>
-						</Pressable>
-					</View>
-
-					<View style={homePageStyles.centerContainer}>
-						<Text style={homePageStyles.header}>Your Score!</Text>
-
-						<View style={homePageStyles.circleContainer}>
-							<View
-								style={[
-									homePageStyles.circle,
-									{
-										height: `${Math.min(totalCarbon * 2.5, 100)}%`,
-									},
-								]}
-							/>
-							<Text>You Produce</Text>
-							<Text style={homePageStyles.carbonText}>
-								{totalCarbon.toFixed(2)}
-							</Text>
-							<Text>tons of CO2 annually</Text>
-						</View>
-					</View>
-				</View>
-
-				<View style={homePageStyles.centerAndRightContainer}>
-					<View style={homePageStyles.rightContainer}>
-						<Pressable onPress={handleRewardsPress}>
-							<View style={homePageStyles.iconWithNumber}>
-								<Rewards userRewards={state.rewards} />
-							</View>
-						</Pressable>
-						<Pressable onPress={handleRewardsPress}>
-							<View style={homePageStyles.iconWithNumber}>
-								<Text>🌳</Text>
-								<Text style={{ color: "white" }}>
-									{(state.treesPlanted * 48) / 2000}
-								</Text>
-							</View>
-						</Pressable>
-					</View>
-				</View>
-			</View>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: "center",
-					alignItems: "center",
-					marginTop: 20,
-				}}
-			>
-				{state.cars.length !== 0 ? (
-					<Pressable onPress={handleCarsPress}>
-						<View style={ListStyles.buttonContainer}>
-							<Text style={ListStyles.buttonText}>
-								{state.cars.length === 0
-									? ""
-									: state.cars.length === 1
-									? "Your Car"
-									: "Your Cars"}
-							</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									marginLeft: 15,
-								}}
-							>
-								<Icon
-									name="arrow-right"
-									size={20}
-									color="black"
-									style={{ marginRight: 10 }}
-								/>
-							</View>
-						</View>
-						{cars}
+			{rewardsWindow ? (
+				<View
+					style={{
+						flex: 1,
+						marginTop: "40%",
+						justifyContent: "center",
+						alignItems: "center",
+						backgroundColor: "#f0f0f0",
+						padding: 20,
+						borderRadius: 8,
+					}}
+				>
+					<Text>Welcome Back! Here's 100 stars!</Text>
+					<Pressable
+						style={{
+							marginTop: 15,
+							backgroundColor: "green",
+							padding: 10,
+							borderRadius: 5,
+						}}
+						onPress={handleRewards}
+					>
+						<Text style={{ color: "white" }}>Collect 100 Stars!</Text>
 					</Pressable>
-				) : null}
-				{state.homes.length !== 0 ? (
-					<Pressable onPress={handleHomesPress}>
-						<View style={ListStyles.buttonContainer}>
-							<Text style={ListStyles.buttonText}>
-								{state.homes.length === 0
-									? ""
-									: state.homes.length === 1
-									? "Your Home"
-									: "Your Homes"}
-							</Text>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									marginLeft: 15,
-								}}
-							>
-								<Icon
-									name="arrow-right"
-									size={20}
-									color="black"
-									style={{ marginRight: 10 }}
-								/>
+				</View>
+			) : (
+				<>
+					<View style={homePageStyles.container}>
+						<View style={homePageStyles.leftAndCenterContainer}>
+							<View style={homePageStyles.leftContainer}>
+								<Pressable onPress={handleCarsPress}>
+									<View style={homePageStyles.iconWithNumber}>
+										<Text>🚗</Text>
+										<Text style={{ color: "white" }}>{carCarbon || 0}</Text>
+									</View>
+								</Pressable>
+								<Pressable onPress={handleHomesPress}>
+									<View style={homePageStyles.iconWithNumber}>
+										<Text>🏠</Text>
+										<Text style={{ color: "white" }}>{homeCarbon || 0}</Text>
+									</View>
+								</Pressable>
+							</View>
+
+							<View style={homePageStyles.centerContainer}>
+								<Text style={homePageStyles.header}>Your Score!</Text>
+
+								<View style={homePageStyles.circleContainer}>
+									<View
+										style={[
+											homePageStyles.circle,
+											{
+												height: `${Math.min(totalCarbon * 2.5, 100)}%`,
+											},
+										]}
+									/>
+									<Text>You Produce</Text>
+									<Text style={homePageStyles.carbonText}>
+										{totalCarbon.toFixed(2)}
+									</Text>
+									<Text>tons of CO2 annually</Text>
+								</View>
 							</View>
 						</View>
-						{homes}
-					</Pressable>
-				) : null}
-				<Pressable onPress={handleTreePress}>
-					<View style={ListStyles.buttonContainer}>
-						<Text style={ListStyles.buttonText}>
-							{state.treesPlanted >= 1
-								? "Trees you've planted! Plant more!"
-								: "Plant trees!"}
-						</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								marginLeft: 15,
-							}}
-						>
-							<Icon
-								name="arrow-right"
-								size={20}
-								color="black"
-								style={{ marginRight: 10 }}
-							/>
+
+						<View style={homePageStyles.centerAndRightContainer}>
+							<View style={homePageStyles.rightContainer}>
+								<Pressable onPress={handleRewardsPress}>
+									<View style={homePageStyles.iconWithNumber}>
+										<Rewards userRewards={state.rewards} />
+									</View>
+								</Pressable>
+								<Pressable onPress={handleRewardsPress}>
+									<View style={homePageStyles.iconWithNumber}>
+										<Text>🌳</Text>
+										<Text style={{ color: "white" }}>
+											{(state.treesPlanted * 48) / 2000}
+										</Text>
+									</View>
+								</Pressable>
+							</View>
 						</View>
 					</View>
 					<View
@@ -280,35 +235,123 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 							flex: 1,
 							justifyContent: "center",
 							alignItems: "center",
-							marginTop: 5,
-							backgroundColor: "#fff",
-							borderRadius: 10,
-							padding: 10,
+							marginTop: 20,
 						}}
 					>
-						<Text>
-							<Text
-								style={{ color: "green", fontWeight: "bold", fontSize: 15 }}
+						{state.cars.length !== 0 ? (
+							<Pressable onPress={handleCarsPress}>
+								<View style={ListStyles.buttonContainer}>
+									<Text style={ListStyles.buttonText}>
+										{state.cars.length === 0
+											? ""
+											: state.cars.length === 1
+											? "Your Car"
+											: "Your Cars"}
+									</Text>
+									<View
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											marginLeft: 15,
+										}}
+									>
+										<Icon
+											name="arrow-right"
+											size={20}
+											color="black"
+											style={{ marginRight: 10 }}
+										/>
+									</View>
+								</View>
+								{cars}
+							</Pressable>
+						) : null}
+						{state.homes.length !== 0 ? (
+							<Pressable onPress={handleHomesPress}>
+								<View style={ListStyles.buttonContainer}>
+									<Text style={ListStyles.buttonText}>
+										{state.homes.length === 0
+											? ""
+											: state.homes.length === 1
+											? "Your Home"
+											: "Your Homes"}
+									</Text>
+									<View
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											marginLeft: 15,
+										}}
+									>
+										<Icon
+											name="arrow-right"
+											size={20}
+											color="black"
+											style={{ marginRight: 10 }}
+										/>
+									</View>
+								</View>
+								{homes}
+							</Pressable>
+						) : null}
+						<Pressable onPress={handleTreePress}>
+							<View style={ListStyles.buttonContainer}>
+								<Text style={ListStyles.buttonText}>
+									{state.treesPlanted >= 1
+										? "Trees you've planted! Plant more!"
+										: "Plant trees!"}
+								</Text>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										marginLeft: 15,
+									}}
+								>
+									<Icon
+										name="arrow-right"
+										size={20}
+										color="black"
+										style={{ marginRight: 10 }}
+									/>
+								</View>
+							</View>
+							<View
+								style={{
+									flex: 1,
+									justifyContent: "center",
+									alignItems: "center",
+									marginTop: 5,
+									backgroundColor: "#fff",
+									borderRadius: 10,
+									padding: 10,
+								}}
 							>
-								{state.treesPlanted}
-							</Text>{" "}
-							Trees Planted!
-						</Text>
-						<Text style={styles.infoText}>
-							which absorbs{" "}
-							<Text
-								style={{ fontSize: 15, fontWeight: "bold", color: "green" }}
-							>
-								{state.treesPlanted * 48 < 2000
-									? state.treesPlanted * 48
-									: (state.treesPlanted * 48) / 2000}
-							</Text>{" "}
-							{state.treesPlanted * 48 < 2000 ? "pounds" : "tons"} of CO2 per
-							year!
-						</Text>
+								<Text>
+									<Text
+										style={{ color: "green", fontWeight: "bold", fontSize: 15 }}
+									>
+										{state.treesPlanted}
+									</Text>{" "}
+									Trees Planted!
+								</Text>
+								<Text style={styles.infoText}>
+									which absorbs{" "}
+									<Text
+										style={{ fontSize: 15, fontWeight: "bold", color: "green" }}
+									>
+										{state.treesPlanted * 48 < 2000
+											? state.treesPlanted * 48
+											: (state.treesPlanted * 48) / 2000}
+									</Text>{" "}
+									{state.treesPlanted * 48 < 2000 ? "pounds" : "tons"} of CO2
+									per year!
+								</Text>
+							</View>
+						</Pressable>
 					</View>
-				</Pressable>
-			</View>
+				</>
+			)}
 		</View>
 	);
 };

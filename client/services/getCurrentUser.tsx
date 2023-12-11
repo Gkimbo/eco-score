@@ -12,7 +12,7 @@ const getCurrentUser = async () => {
 		throw error;
 	}
 	const userData = await response.json();
-	return userData.token;
+	return userData;
 };
 
 export default getCurrentUser;

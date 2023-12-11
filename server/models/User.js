@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
+		lastLogin: {
+			type: DataTypes.DATE,
+			allowNull: true,
+		},
 	});
 
 	// Hash the password before saving the user

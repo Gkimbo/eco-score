@@ -24,7 +24,8 @@ import RewardsPage from "./components/rewards/RewardsPage";
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-	const [lastLoginTimestamp, setLastLoginTimestamp] = useState<number>(0);
+	const [lastLoginTimestamp, setLastLoginTimestamp] = useState<string>("0");
+	const [rewardsWindow, setRewardsWindow] = useState<boolean>(false);
 	const [state, dispatch] = useReducer(reducer, {
 		currentUser: { token: null },
 		cars: [],
@@ -33,10 +34,12 @@ const Home = () => {
 		rewards: 0,
 		treesPlanted: 0,
 	});
+
 	const fetchCurrentUser = async () => {
 		try {
-			const token = await getCurrentUser();
-			dispatch({ type: "CURRENT_USER", payload: token });
+			const user = await getCurrentUser();
+			dispatch({ type: "CURRENT_USER", payload: user.token });
+			setLastLoginTimestamp(user.user.lastLogin);
 		} catch (err) {
 			dispatch({ type: "CURRENT_USER", payload: null });
 		}
@@ -73,6 +76,8 @@ const Home = () => {
 											isDrawerOpen={isDrawerOpen}
 											lastLoginTimestamp={lastLoginTimestamp}
 											setLastLoginTimestamp={setLastLoginTimestamp}
+											rewardsWindow={rewardsWindow}
+											setRewardsWindow={setRewardsWindow}
 										/>
 									}
 								/>
@@ -146,23 +151,11 @@ const Home = () => {
 						)}
 						<Route
 							path="/sign-in"
-							element={
-								<SignIn
-									state={state}
-									dispatch={dispatch}
-									setLastLoginTimestamp={setLastLoginTimestamp}
-								/>
-							}
+							element={<SignIn state={state} dispatch={dispatch} />}
 						/>
 						<Route
 							path="/sign-up"
-							element={
-								<SignUp
-									state={state}
-									dispatch={dispatch}
-									setLastLoginTimestamp={setLastLoginTimestamp}
-								/>
-							}
+							element={<SignUp state={state} dispatch={dispatch} />}
 						/>
 					</Routes>
 					{state.currentUser.token ? (
