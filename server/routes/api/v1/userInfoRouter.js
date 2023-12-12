@@ -42,6 +42,33 @@ userInfoRouter.get("/", async (req, res) => {
 	}
 });
 
+userInfoRouter.post("/collect-rewards", async (req, res) => {
+	const { token } = req.body;
+	const rewards = 100;
+	try {
+		const decodedToken = jwt.verify(token, secretKey);
+		const userId = decodedToken.userId;
+		const user = await User.findOne({
+			where: { id: userId },
+		});
+		if (user) {
+			const addStars = await UserInfo.addStarsToDb({
+				userId,
+				rewards,
+			});
+			if (addStars === `User with ID ${userId} not found`) {
+				return res.status(401).json({ message: addStars });
+			} else {
+				await user.update({ lastLogin: new Date() });
+			}
+		}
+		return res.status(201).json("Reward has been added to DB");
+	} catch (error) {
+		console.log(error);
+		return res.status(401).json({ error: "Invalid or expired token" });
+	}
+});
+
 userInfoRouter.post("/basic", async (req, res) => {
 	const { token } = req.body.user;
 	const {

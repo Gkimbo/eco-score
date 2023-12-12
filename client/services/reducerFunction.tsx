@@ -65,7 +65,6 @@ const reducer = (state: any, action: any) => {
 				...state,
 				rewards: action.payload,
 			};
-
 		default:
 			throw new Error();
 	}

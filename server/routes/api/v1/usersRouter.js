@@ -19,6 +19,7 @@ usersRouter.post("/", async (req, res) => {
 					password,
 					email,
 				});
+				await newUser.update({ lastLogin: new Date() });
 				const serializedUser = UserSerializer.login(newUser.dataValues);
 				const token = jwt.sign({ userId: serializedUser.id }, secretKey);
 				return res.status(201).json({ user: serializedUser, token: token });
