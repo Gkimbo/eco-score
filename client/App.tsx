@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer, useState } from "react";
-import { ActivityIndicator, SafeAreaView, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { NativeRouter, Route, Routes } from "react-router-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { PaperProvider } from "react-native-paper";
 
 import HomePage from "./components/HomePage";
 import LandingPage from "./components/LandingPage";
@@ -19,7 +21,10 @@ import getCurrentUser from "./services/getCurrentUser";
 import { AuthProvider } from "./services/AuthContext";
 import CarList from "./components/lists/CarsList";
 import HomeList from "./components/lists/HomesList";
-import RewardsPage from "./components/rewards/RewardsPage";
+import RewardsHub from "./components/rewards/RewardsHub";
+import EarnStarsPage from "./components/rewards/EarnStarsPage";
+import LearnPage from "./components/rewards/LearnPage";
+import ShopPage from "./components/rewards/ShopPage";
 
 const Home = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -31,6 +36,10 @@ const Home = () => {
 		homes: [],
 		rewards: 0,
 		treesPlanted: 0,
+		achievements: [],
+		checkInStreak: 0,
+		lastCheckIn: null,
+		tipsRead: "[]",
 	});
 	const fetchCurrentUser = async () => {
 		try {
@@ -50,16 +59,20 @@ const Home = () => {
 
 	if (isLoading) {
 		return (
-			<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-				<ActivityIndicator size="large" />
-			</View>
+			<SafeAreaProvider>
+				<View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+					<ActivityIndicator size="large" />
+				</View>
+			</SafeAreaProvider>
 		);
 	}
 
 	return (
-		<AuthProvider>
+		<SafeAreaProvider>
 			<NativeRouter>
-				<SafeAreaView style={{ ...appStyles.container, paddingBottom: 60 }}>
+				<PaperProvider>
+					<AuthProvider>
+						<View style={{ ...appStyles.container, paddingBottom: 60 }}>
 					<Routes>
 						{state.currentUser.token ? (
 							<>
@@ -89,6 +102,7 @@ const Home = () => {
 											setIsDrawerOpen={setIsDrawerOpen}
 											isDrawerOpen={isDrawerOpen}
 											state={state}
+											dispatch={dispatch}
 										/>
 									}
 								/>
@@ -99,6 +113,7 @@ const Home = () => {
 											setIsDrawerOpen={setIsDrawerOpen}
 											isDrawerOpen={isDrawerOpen}
 											state={state}
+											dispatch={dispatch}
 										/>
 									}
 								/>
@@ -126,7 +141,40 @@ const Home = () => {
 								<Route
 									path="/rewards"
 									element={
-										<RewardsPage
+										<RewardsHub
+											setIsDrawerOpen={setIsDrawerOpen}
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
+								<Route
+									path="/rewards/earn"
+									element={
+										<EarnStarsPage
+											setIsDrawerOpen={setIsDrawerOpen}
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
+								<Route
+									path="/rewards/learn"
+									element={
+										<LearnPage
+											setIsDrawerOpen={setIsDrawerOpen}
+											isDrawerOpen={isDrawerOpen}
+											state={state}
+											dispatch={dispatch}
+										/>
+									}
+								/>
+								<Route
+									path="/rewards/shop"
+									element={
+										<ShopPage
 											setIsDrawerOpen={setIsDrawerOpen}
 											isDrawerOpen={isDrawerOpen}
 											state={state}
@@ -159,9 +207,11 @@ const Home = () => {
 							/>
 						</View>
 					) : null}
-				</SafeAreaView>
+						</View>
+					</AuthProvider>
+				</PaperProvider>
 			</NativeRouter>
-		</AuthProvider>
+		</SafeAreaProvider>
 	);
 };
 

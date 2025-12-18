@@ -50,7 +50,7 @@ class UserInfo {
 			zipCode = "Gas and Diesel cars don't need to charge";
 		}
 
-		await UserCars.create({
+		const newCar = await UserCars.create({
 			userId,
 			make,
 			model,
@@ -62,6 +62,7 @@ class UserInfo {
 			mileage,
 			mileageUnit,
 		});
+		return newCar;
 	}
 
 	static async addTreeToDb({ userId }) {
@@ -189,6 +190,12 @@ class UserInfo {
 		oil,
 		batteryBankSize,
 		batteryBackup,
+		propane,
+		propaneUsage,
+		wood,
+		woodUsage,
+		woodType,
+		electricHeat,
 	}) {
 		await UserHomes.create({
 			userId,
@@ -209,6 +216,12 @@ class UserInfo {
 			oil,
 			batteryBankSize,
 			batteryBackup,
+			propane,
+			propaneUsage,
+			wood,
+			woodUsage,
+			woodType,
+			electricHeat,
 		});
 	}
 	static async updateUserInfo(data) {
@@ -261,7 +274,19 @@ class UserInfo {
 			});
 			return deletedHomeInfo;
 		} catch (error) {
-			console.error("Error deleting car info: ", error);
+			console.error("Error deleting home info: ", error);
+			throw error;
+		}
+	}
+
+	static async updateHomeInfo(id, data) {
+		try {
+			const updatedHomeInfo = await UserHomes.update(data, {
+				where: { id: id },
+			});
+			return updatedHomeInfo;
+		} catch (error) {
+			console.error("Error updating home info: ", error);
 			throw error;
 		}
 	}

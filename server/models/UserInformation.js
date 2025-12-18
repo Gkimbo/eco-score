@@ -45,6 +45,20 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.INTEGER,
 				allowNull: true,
 			},
+			lastCheckIn: {
+				type: DataTypes.DATE,
+				allowNull: true,
+			},
+			checkInStreak: {
+				type: DataTypes.INTEGER,
+				allowNull: true,
+				defaultValue: 0,
+			},
+			tipsRead: {
+				type: DataTypes.TEXT,
+				allowNull: true,
+				defaultValue: "[]",
+			},
 			createdAt: {
 				type: DataTypes.DATE,
 				allowNull: false,
@@ -57,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
 			},
 		},
 		{
-			tableName: "UserInformation", // the table name in your database
+			tableName: "UserInformation",
 		}
 	);
 

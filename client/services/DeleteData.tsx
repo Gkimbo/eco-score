@@ -1,6 +1,8 @@
 import type { user } from "./types/userType";
 import { Car, Home } from "./types/carAndHomeType";
-const baseURL = "http://localhost:3000";
+import { API_URL } from "./config";
+
+const baseURL = API_URL;
 
 interface UserBasicInfo {
 	user: user;

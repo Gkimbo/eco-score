@@ -38,6 +38,7 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 
 	const onSubmit = async () => {
 		const isValid = validateForm();
+
 		if (isValid) {
 			const loginData = {
 				userName: userName,
@@ -45,16 +46,15 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 			};
 
 			const response = await FetchData.login(loginData);
-			if (response === "That User Name does not exist, please sign up.") {
-				setErrors([response]);
-			}
-			if (response === "Invalid password") {
-				setErrors([response]);
-			}
-			if (response.user) {
+
+			if (response.error) {
+				setErrors([response.error]);
+			} else if (response.user && response.token) {
 				dispatch({ type: "CURRENT_USER", payload: response.token });
 				login(response.token);
 				setRedirect(true);
+			} else {
+				setErrors(["Something went wrong. Please try again."]);
 			}
 		}
 	};
@@ -66,7 +66,7 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 	}, [redirect]);
 
 	return (
-		<View>
+		<View style={formStyles.container}>
 			{errors.length > 0 && (
 				<View style={formStyles.errorContainer}>
 					{errors.map((error, index) => (
@@ -77,18 +77,21 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 				</View>
 			)}
 			<TextInput
-				mode="outlined"
+				mode="flat"
 				value={userName}
 				onChangeText={setUserName}
 				placeholder="User Name"
+				label="User Name"
 				style={formStyles.input}
+				autoCapitalize="none"
 			/>
 			<TextInput
-				mode="outlined"
+				mode="flat"
 				secureTextEntry={!showPassword}
 				value={password}
 				onChangeText={setPassword}
 				placeholder="Password"
+				label="Password"
 				right={
 					<TextInput.Icon
 						icon={showPassword ? "eye-off" : "eye"}
@@ -97,8 +100,14 @@ const SignInForm: React.FunctionComponent<IAppProps> = ({
 				}
 				style={formStyles.input}
 			/>
-			<Pressable onPress={onSubmit}>
-				<Text style={formStyles.button}>Sign In</Text>
+			<Pressable
+				onPress={onSubmit}
+				style={({ pressed }) => [
+					formStyles.button,
+					pressed && formStyles.buttonPressed
+				]}
+			>
+				<Text style={formStyles.buttonText}>Sign In</Text>
 			</Pressable>
 		</View>
 	);

@@ -34,9 +34,17 @@ export type Home = {
     gas: string;
     batteryBackup: string;
     batteryBankSize: string;
+    propane: string;
+    propaneUsage: string;
+    wood: string;
+    woodUsage: string;
+    woodType: string;
+    electricHeat: string;
     totalAnnualCarbon:string;
     carbonForAnnualPower:string;
     carbonFromBatteryBank:string;
     carbonFromAnnualGas:string;
     carbonFromAnnualOil:string;
+    carbonFromAnnualPropane:string;
+    carbonFromAnnualWood:string;
 };

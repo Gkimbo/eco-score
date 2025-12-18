@@ -79,6 +79,30 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: true,
 		},
+		propane: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		propaneUsage: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		wood: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		woodUsage: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		woodType: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
+		electricHeat: {
+			type: DataTypes.STRING,
+			allowNull: true,
+		},
 		createdAt: {
 			type: DataTypes.DATE,
 			allowNull: false,

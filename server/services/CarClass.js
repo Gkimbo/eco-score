@@ -61,25 +61,33 @@ class CarCalculation {
 				} else {
 					eachCar = await this.getUserCars(car.model, car.fuelType, car.year);
 				}
-				let selectedCar = eachCar[0];
-				if (selectedCar.fuel_type === "electricity") {
+
+				// Handle case where car isn't found in API (common for newer EVs)
+				let selectedCar = eachCar && eachCar.length > 0 ? eachCar[0] : null;
+				const fuelType = selectedCar ? selectedCar.fuel_type : car.fuelType;
+
+				// Default MPGe for EVs not in database (100 MPGe is typical average)
+				const DEFAULT_EV_MPGE = 100;
+
+				if (fuelType === "electricity") {
 					const zipCode = car.zipcode;
-					if (zipCode === "off grid") {
+					if (zipCode === "off grid" || !zipCode) {
 						car.carbonPerCharge = 0;
 						car.carbonPerMile = 0;
+						annualCarbonFromDriving = 0;
 					} else {
-						const latlng = await getCarbonIntensity.getLatLong(zipCode);
-						// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
-						// 	latlng
-						// );
-						const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
+						// Use default US carbon intensity (367 g/kWh average)
+						// Zipcode lookup is optional - if it fails, we still calculate
+						const carbonIntensity = { carbonIntensity: 367 };
 						let carbonPerCharge = this.evChargedOnGrid(
 							carbonIntensity,
 							car.carBatterySize
 						);
 						let roundedNum = carbonPerCharge.toFixed(2);
-						const averageMpg =
-							(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
+						// Use API MPGe if available, otherwise use default
+						const averageMpg = selectedCar
+							? (selectedCar.city_mpg + selectedCar.highway_mpg) / 2
+							: DEFAULT_EV_MPGE;
 						const co2PerMile = carbonPerCharge / averageMpg;
 						if (car.mileageUnit === "daily") {
 							const yearly = Number(car.mileage) * 365;
@@ -98,8 +106,8 @@ class CarCalculation {
 					).toFixed(2);
 					car.carbonToMakeBattery = batteryProduction;
 				} else if (
-					selectedCar.fuel_type === "gas" ||
-					selectedCar.fuel_type === "hybrid"
+					fuelType === "gas" ||
+					fuelType === "hybrid"
 				) {
 					if (car.fuelType === "hybrid") {
 						const batteryProduction = this.evProductionOfBattery(
@@ -107,12 +115,16 @@ class CarCalculation {
 						).toFixed(2);
 						car.carbonToMakeBattery = batteryProduction;
 					}
-					const averageMpg =
-						(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
+					// Use API MPG if available, otherwise use default (25 MPG average for gas)
+					const DEFAULT_GAS_MPG = 25;
+					const averageMpg = selectedCar
+						? (selectedCar.city_mpg + selectedCar.highway_mpg) / 2
+						: DEFAULT_GAS_MPG;
 					const tankSize = car.tank;
 					let carbonPerGal = this.co2PerGallonGas(averageMpg, tankSize);
 					let roundedNum = carbonPerGal.toFixed(2);
-					const co2PerMile = 22.44 / averageMpg;
+					// Gas emits 19.6 lbs CO2 per gallon
+					const co2PerMile = 19.6 / averageMpg;
 					if (car.mileageUnit === "daily") {
 						const yearly = Number(car.mileage) * 365;
 						annualCarbonFromDriving = yearly * co2PerMile;
@@ -125,8 +137,11 @@ class CarCalculation {
 					car.carbonPerMile = co2PerMile.toFixed(2);
 					car.carbonPerTank = roundedNum;
 				} else {
-					const averageMpg =
-						(selectedCar.city_mpg + selectedCar.highway_mpg) / 2;
+					// Diesel - use API MPG if available, otherwise use default (28 MPG average for diesel)
+					const DEFAULT_DIESEL_MPG = 28;
+					const averageMpg = selectedCar
+						? (selectedCar.city_mpg + selectedCar.highway_mpg) / 2
+						: DEFAULT_DIESEL_MPG;
 					const tankSize = car.tank;
 					let carbonPerGal = this.co2PerGallonDiesel(averageMpg, tankSize);
 					let roundedNum = carbonPerGal.toFixed(2);

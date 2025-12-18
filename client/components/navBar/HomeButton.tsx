@@ -1,39 +1,32 @@
-import React, { useState, useEffect } from "react";
-import { Pressable } from "react-native";
+import React from "react";
+import { Pressable, StyleSheet } from "react-native";
 import { useNavigate } from "react-router-native";
-
 import Icon from "react-native-vector-icons/FontAwesome";
+import { colors, borderRadius, shadows, spacing } from "../../services/styles/theme";
 
 export interface IAppProps {}
 
 const HomeButton: React.FunctionComponent<IAppProps> = () => {
-	const [redirect, setRedirect] = useState<boolean>(false);
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (redirect) {
-			navigate("/");
-			setRedirect(false);
-		}
-	}, [redirect]);
-
 	const handlePress = () => {
-		setRedirect(true);
+		navigate("/");
 	};
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
-			<Icon name="home" size={20} color="black" />
+			<Icon name="home" size={20} color={colors.textOnPrimary} />
 		</Pressable>
 	);
 };
 
-const styles = {
+const styles = StyleSheet.create({
 	button: {
-		backgroundColor: "#f9bc60",
-		padding: 10,
-		borderRadius: 50,
+		backgroundColor: colors.primaryLight,
+		padding: spacing.sm,
+		borderRadius: borderRadius.full,
+		...shadows.sm,
 	},
-};
+});
 
 export default HomeButton;

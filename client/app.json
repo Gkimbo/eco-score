@@ -1,29 +1,54 @@
 {
 	"expo": {
 		"name": "Eco Score",
-		"slug": "client",
+		"slug": "eco-score",
 		"version": "1.0.0",
 		"orientation": "portrait",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
+		"newArchEnabled": true,
 		"splash": {
 			"image": "./assets/splash.png",
 			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
+			"backgroundColor": "#4CAF50"
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"supportsTablet": true
-		},
-		"android": {
-			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
-				"backgroundColor": "#ffffff"
+			"supportsTablet": true,
+			"bundleIdentifier": "com.ecoscore.app",
+			"infoPlist": {
+				"NSAppTransportSecurity": {
+					"NSAllowsArbitraryLoads": true,
+					"NSAllowsLocalNetworking": true
+				}
 			}
 		},
-		"web": {
-			"favicon": "./assets/favicon.png"
+		"android": {
+			"package": "com.ecoscore.app",
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/adaptive-icon.png",
+				"backgroundColor": "#4CAF50"
+			},
+			"permissions": ["INTERNET", "ACCESS_NETWORK_STATE"]
 		},
+		"web": {
+			"favicon": "./assets/favicon.png",
+			"bundler": "metro",
+			"output": "single"
+		},
+		"plugins": [
+			[
+				"expo-build-properties",
+				{
+					"android": {
+						"usesCleartextTraffic": true
+					},
+					"ios": {
+						"deploymentTarget": "15.1"
+					}
+				}
+			]
+		],
 		"extra": {
 			"apiUrl": "http://localhost:3000"
 		}

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Text, Pressable, ViewStyle, TextStyle } from "react-native";
+import React from "react";
+import { Text, Pressable, StyleSheet, View } from "react-native";
 import { useNavigate } from "react-router-native";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { colors, borderRadius, shadows, spacing, typography } from "../../services/styles/theme";
 
 export interface IAppProps {
 	setIsDrawerOpen: any;
@@ -10,54 +11,49 @@ export interface IAppProps {
 const AddBasicsButton: React.FunctionComponent<IAppProps> = ({
 	setIsDrawerOpen,
 }) => {
-	const [redirect, setRedirect] = useState<boolean>(false);
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (redirect) {
-			setIsDrawerOpen(false);
-			navigate("/basic-form");
-			setRedirect(false);
-		}
-	}, [redirect]);
-
 	const handlePress = () => {
-		setRedirect(true);
+		setIsDrawerOpen(false);
+		navigate("/basic-form");
 	};
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
-			<Icon
-				name="user-plus"
-				size={20}
-				color="white"
-				style={{ marginRight: 5 }}
-			/>
-			<Text style={styles.buttonText}>Add Basic info</Text>
+			<View style={styles.iconContainer}>
+				<Icon name="user" size={18} color={colors.textOnPrimary} />
+			</View>
+			<Text style={styles.buttonText}>Basic Info</Text>
+			<Icon name="chevron-right" size={14} color={colors.textMuted} />
 		</Pressable>
 	);
 };
 
-interface Styles {
-	button: ViewStyle;
-	buttonText: TextStyle; // Separate TextStyle for text styles
-}
-
-const styles: Styles = {
+const styles = StyleSheet.create({
 	button: {
-		backgroundColor: "#004643",
-		padding: 10,
-		borderRadius: 50,
-		margin: 5,
+		flexDirection: "row",
 		alignItems: "center",
+		backgroundColor: colors.surface,
+		padding: spacing.md,
+		borderRadius: borderRadius.lg,
+		marginVertical: spacing.xs,
+		...shadows.sm,
+	},
+	iconContainer: {
+		width: 36,
+		height: 36,
+		borderRadius: borderRadius.full,
+		backgroundColor: colors.primaryDark,
 		justifyContent: "center",
-		width: "50%",
-		height: "20%",
+		alignItems: "center",
+		marginRight: spacing.md,
 	},
 	buttonText: {
-		color: "white",
-		fontSize: 15,
+		flex: 1,
+		color: colors.textPrimary,
+		fontSize: typography.fontSizes.lg,
+		fontWeight: typography.fontWeights.medium,
 	},
-};
+});
 
 export default AddBasicsButton;

@@ -20,6 +20,11 @@ const reducer = (state: any, action: any) => {
 				...state,
 				cars: action.payload,
 			};
+		case "ADD_CAR":
+			return {
+				...state,
+				cars: [...state.cars, action.payload],
+			};
 		case "USER_INFO":
 			return {
 				...state,
@@ -39,6 +44,13 @@ const reducer = (state: any, action: any) => {
 			return {
 				...state,
 				homes: state.homes.filter((home: any) => home.id !== action.payload),
+			};
+		case "UPDATE_HOME":
+			return {
+				...state,
+				homes: state.homes.map((home: any) =>
+					home.id === action.payload.id ? { ...home, ...action.payload } : home
+				),
 			};
 		case "ADD_STARS":
 			return {
@@ -64,6 +76,27 @@ const reducer = (state: any, action: any) => {
 			return {
 				...state,
 				rewards: action.payload,
+			};
+		case "SET_ACHIEVEMENTS":
+			return {
+				...state,
+				achievements: action.payload,
+			};
+		case "ADD_ACHIEVEMENT":
+			return {
+				...state,
+				achievements: [...state.achievements, action.payload],
+			};
+		case "UPDATE_STREAK":
+			return {
+				...state,
+				checkInStreak: action.payload.streak,
+				lastCheckIn: action.payload.lastCheckIn,
+			};
+		case "UPDATE_TIPS_READ":
+			return {
+				...state,
+				tipsRead: action.payload,
 			};
 
 		default:

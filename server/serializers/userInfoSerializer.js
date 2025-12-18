@@ -10,6 +10,9 @@ class UserInfoSerializer {
 			"hasCar",
 			"treesPlanted",
 			"rewards",
+			"lastCheckIn",
+			"checkInStreak",
+			"tipsRead",
 		];
 		const serializedUser = {};
 
@@ -22,6 +25,12 @@ class UserInfoSerializer {
 		}
 		if (!serializedUser.rewards) {
 			serializedUser.rewards = 0;
+		}
+		if (!serializedUser.checkInStreak) {
+			serializedUser.checkInStreak = 0;
+		}
+		if (!serializedUser.tipsRead) {
+			serializedUser.tipsRead = "[]";
 		}
 		return serializedUser;
 	}

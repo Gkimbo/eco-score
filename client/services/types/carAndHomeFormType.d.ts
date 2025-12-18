@@ -24,8 +24,14 @@ export type Home = {
 	oilUsage: string;
 	oilUnit: string;
     oilVolume: string;
-    oil:string;
+    oil: string;
     gas: string;
     batteryBackup: string;
     batteryBankSize: string;
+    propane: string;
+    propaneUsage: string;
+    wood: string;
+    woodUsage: string;
+    woodType: string;
+    electricHeat: string;
 };

@@ -1,134 +1,111 @@
-import { ScrollView, Text, Pressable, View } from "react-native";
-import ListStyles from "../../../services/styles/ListStyles";
+import React from "react";
+import { Text, View, StyleSheet } from "react-native";
 import { Car } from "../../../services/types/carAndHomeType";
+import { colors, spacing, typography, borderRadius } from "../../../services/styles/theme";
 
 export interface IAppProps {
 	car: Car;
 	isBlurred: boolean;
 }
 
+const getFuelIcon = (fuelType: string) => {
+	switch (fuelType) {
+		case "electricity":
+			return "⚡";
+		case "hybrid":
+			return "🔋";
+		case "diesel":
+			return "🛢️";
+		default:
+			return "⛽";
+	}
+};
+
 const CarHighlights: React.FunctionComponent<IAppProps> = ({
 	car,
 	isBlurred,
 }) => {
+	// Calculate total CO2 after 100k miles
+	const calculateTotal = () => {
+		const manufacturingCO2 = 8.263; // tons
+		const batteryTons = car.carbonToMakeBattery
+			? Number(car.carbonToMakeBattery) / 2000
+			: 0;
+		const drivingTons = car.carbonPerMile
+			? (Number(car.carbonPerMile) * 100000) / 2000
+			: 0;
+
+		if (car.fuelType === "electricity" && car.zipCode === "off grid") {
+			return (batteryTons + manufacturingCO2).toFixed(1);
+		}
+		return (drivingTons + batteryTons + manufacturingCO2).toFixed(1);
+	};
+
 	return (
-		<View
-			style={{
-				flexDirection: "row",
-				flexWrap: "wrap",
-				justifyContent: "center",
-				borderWidth: 1,
-				borderRadius: 10,
-				borderColor: "#ddd",
-				backgroundColor: isBlurred ? "rgba(0, 0, 0, 0.5)" : "#fff",
-				margin: 10,
-				padding: 10,
-				height: "auto",
-				alignItems: "stretch",
-			}}
-		>
-			<View style={{ flexDirection: "column", justifyContent: "center" }}>
-				<Text>
-					{car.make} - {car.model}
-				</Text>
-				<Text
-					style={{
-						fontSize: 10,
-						color: "#333",
-						textAlign: "center",
-					}}
-				>
-					{car.year}
-				</Text>
-			</View>
-
-			{car.fuelType === "hybrid" ? (
-				<View style={ListStyles.infoContainer}>
-					<Text>Total CO2 after 100,000 miles:</Text>
-					<Text>
-						(
-						<Text
-							style={{
-								fontSize: 15,
-								color: "brown",
-								fontWeight: "bold",
-							}}
-						>
-							{(
-								(Number(car.carbonPerMile) * 100000 +
-									Number(car.carbonToMakeBattery)) /
-									2000 +
-								8.263
-							).toFixed(2)}
-						</Text>{" "}
-						tons of CO2)
+		<View style={[styles.container, isBlurred && styles.blurred]}>
+			<View style={styles.leftSection}>
+				<Text style={styles.fuelIcon}>{getFuelIcon(car.fuelType)}</Text>
+				<View style={styles.carDetails}>
+					<Text style={styles.carName} numberOfLines={1}>
+						{car.make} {car.model}
 					</Text>
+					<Text style={styles.carYear}>{car.year}</Text>
 				</View>
-			) : null}
-			{car.fuelType === "gas" || car.fuelType === "diesel" ? (
-				<>
-					<View style={ListStyles.infoContainer}>
-						<Text>Total CO2 after 100,000 miles:</Text>
-						<Text>
-							(
-							<Text
-								style={{
-									fontSize: 15,
-									color: "brown",
-									fontWeight: "bold",
-								}}
-							>
-								{((Number(car.carbonPerMile) * 100000) / 2000 + 8.263).toFixed(
-									2
-								)}
-							</Text>{" "}
-							tons of CO2)
-						</Text>
-					</View>
-				</>
-			) : null}
-			{car.fuelType === "electricity" ? (
-				<View style={ListStyles.infoContainer}>
-					<Text>Total CO2 after 100,000 miles:</Text>
-
-					{car.zipCode === "off grid" ? (
-						<Text>
-							({" "}
-							<Text
-								style={{
-									fontSize: 15,
-									color: "brown",
-									fontWeight: "bold",
-								}}
-							>
-								{(Number(car.carbonToMakeBattery) / 2000 + 8.263).toFixed(2)}
-							</Text>{" "}
-							tons of CO2)
-						</Text>
-					) : (
-						<Text>
-							(
-							<Text
-								style={{
-									fontSize: 15,
-									color: "brown",
-									fontWeight: "bold",
-								}}
-							>
-								{(
-									(Number(car.carbonPerMile) * 100000 +
-										Number(car.carbonToMakeBattery)) /
-										2000 +
-									8.263
-								).toFixed(2)}
-							</Text>{" "}
-							tons of CO2)
-						</Text>
-					)}
-				</View>
-			) : null}
+			</View>
+			<View style={styles.rightSection}>
+				<Text style={styles.co2Value}>{calculateTotal()}</Text>
+				<Text style={styles.co2Label}>tons/100k mi</Text>
+			</View>
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		backgroundColor: colors.backgroundDark,
+		borderRadius: borderRadius.md,
+		padding: spacing.sm,
+		marginTop: spacing.xs,
+	},
+	blurred: {
+		opacity: 0.5,
+	},
+	leftSection: {
+		flexDirection: "row",
+		alignItems: "center",
+		flex: 1,
+	},
+	fuelIcon: {
+		fontSize: 20,
+		marginRight: spacing.sm,
+	},
+	carDetails: {
+		flex: 1,
+	},
+	carName: {
+		fontSize: typography.fontSizes.md,
+		fontWeight: typography.fontWeights.medium,
+		color: colors.textPrimary,
+	},
+	carYear: {
+		fontSize: typography.fontSizes.xs,
+		color: colors.textSecondary,
+	},
+	rightSection: {
+		alignItems: "flex-end",
+	},
+	co2Value: {
+		fontSize: typography.fontSizes.lg,
+		fontWeight: typography.fontWeights.bold,
+		color: colors.primaryDark,
+	},
+	co2Label: {
+		fontSize: typography.fontSizes.xs,
+		color: colors.textMuted,
+	},
+});
 
 export default CarHighlights;

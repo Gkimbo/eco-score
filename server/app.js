@@ -10,28 +10,40 @@ require("dotenv").config();
 require("./passport-config");
 
 const rootRouter = require("./routes/rootRouter");
-const clientURL = "http://localhost:19006";
+
+// Allowed origins for CORS (iOS, Android, and Web)
+const allowedOrigins = [
+	"http://localhost:19006",    // Expo web dev
+	"http://localhost:8081",     // Metro bundler
+	"http://localhost:19000",    // Expo Go
+	"http://localhost:3000",     // Local dev
+	"exp://localhost:8081",      // Expo Go on iOS
+	process.env.PRODUCTION_URL,  // Production URL if set
+].filter(Boolean);
 
 const secretKey = process.env.SESSION_SECRET;
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-// Middleware
+// CORS configuration for all platforms
 app.use(
 	cors({
-		origin: clientURL,
+		origin: function (origin, callback) {
+			// Allow requests with no origin (mobile apps, Postman, etc.)
+			if (!origin) return callback(null, true);
+
+			if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith("exp://") || origin.includes("localhost")) {
+				callback(null, true);
+			} else {
+				callback(null, true); // Allow all origins in development
+			}
+		},
 		credentials: true,
+		methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+		allowedHeaders: ["Content-Type", "Authorization", "Accept"],
 	})
 );
-
-app.use((req, res, next) => {
-	res.setHeader("Access-Control-Allow-Origin", clientURL);
-	res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-	res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-	res.setHeader("Access-Control-Allow-Credentials", "true");
-	next();
-});
 app.use(
 	session({
 		secret: secretKey,

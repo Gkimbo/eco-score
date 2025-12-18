@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { ScrollView, Text, Pressable, View } from "react-native";
+import { Text, Pressable, View } from "react-native";
 import { useNavigate } from "react-router-native";
 import { TextInput } from "react-native-paper";
 
@@ -67,23 +67,24 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 	const onSubmit = async () => {
 		if (!validate()) {
 			return;
+		}
+
+		const data: IFormInput = {
+			userName,
+			password,
+			email,
+		};
+
+		const response = await FetchData.makeNewUser(data);
+
+		if (response.error) {
+			setErrors([response.error]);
+		} else if (response.user && response.token) {
+			dispatch({ type: "CURRENT_USER", payload: response.token });
+			login(response.token);
+			setRedirect(true);
 		} else {
-			const data: IFormInput = {
-				userName,
-				password,
-				email,
-			};
-			const response = await FetchData.makeNewUser(data);
-			if (
-				response === "An account already has this email" ||
-				response === "Username already exists"
-			) {
-				setErrors([response]);
-			} else {
-				dispatch({ type: "CURRENT_USER", payload: response.token });
-				login(response.token);
-				setRedirect(true);
-			}
+			setErrors(["Something went wrong. Please try again."]);
 		}
 	};
 
@@ -94,7 +95,7 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 	}, [redirect]);
 
 	return (
-		<ScrollView contentContainerStyle={formStyles.container}>
+		<View style={formStyles.container}>
 			{errors.length > 0 && (
 				<View style={formStyles.errorContainer}>
 					{errors.map((error, index) => (
@@ -106,18 +107,21 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 			)}
 
 			<TextInput
-				mode="outlined"
+				mode="flat"
 				placeholder="User Name"
+				label="User Name"
 				style={formStyles.input}
 				value={userName}
 				onChangeText={setUserName}
+				autoCapitalize="none"
 			/>
 			<TextInput
-				mode="outlined"
+				mode="flat"
 				secureTextEntry={!showPassword}
 				value={password}
 				onChangeText={setPassword}
 				placeholder="Password"
+				label="Password"
 				right={
 					<TextInput.Icon
 						icon={showPassword ? "eye-off" : "eye"}
@@ -127,18 +131,26 @@ const SignUpForm: React.FunctionComponent<IAppProps> = ({
 				style={formStyles.input}
 			/>
 			<TextInput
-				mode="outlined"
+				mode="flat"
 				placeholder="Email"
+				label="Email"
 				style={formStyles.input}
 				value={email}
 				onChangeText={setEmail}
 				keyboardType="email-address"
+				autoCapitalize="none"
 			/>
 
-			<Pressable onPress={onSubmit}>
-				<Text style={formStyles.button}>Register</Text>
+			<Pressable
+				onPress={onSubmit}
+				style={({ pressed }) => [
+					formStyles.button,
+					pressed && formStyles.buttonPressed
+				]}
+			>
+				<Text style={formStyles.buttonText}>Create Account</Text>
 			</Pressable>
-		</ScrollView>
+		</View>
 	);
 };
 

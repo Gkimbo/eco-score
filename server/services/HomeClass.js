@@ -27,6 +27,24 @@ class HomeClass {
 		}
 	}
 
+	static co2FromPropane(annualPropaneUsage) {
+		// Propane emits ~12.7 lbs CO2 per gallon
+		const propaneInGallons = Number(annualPropaneUsage);
+		return propaneInGallons * 12.7;
+	}
+
+	static co2FromWood(annualWoodUsage, woodType) {
+		// Wood burning CO2 emissions
+		// Cord of wood: ~3,600 lbs CO2 (though often considered carbon neutral)
+		// Pellets (per ton): ~3,000 lbs CO2
+		const usage = Number(annualWoodUsage);
+		if (woodType === "pellets") {
+			return usage * 3000; // per ton of pellets
+		} else {
+			return usage * 3600; // per cord of firewood
+		}
+	}
+
 	static co2ManufacturingSolarPanels(numOfPanels, totalKwH) {}
 
 	static productionOfBatteryBank(batteryBankSize) {
@@ -46,11 +64,9 @@ class HomeClass {
 				} else {
 					electricityUsage = Number(home.electricityUsage) * 12;
 				}
-				const latlng = await getCarbonIntensity.getLatLong(home.zipcode);
-				// const carbonIntensity = await getCarbonIntensity.fetchCarbonIntensity(
-				// 	latlng
-				// );
-				const carbonIntensity = { carbonIntensity: 367 }; //temporary average in US
+				// Using default US average carbon intensity (367 g CO2/kWh)
+				// TODO: Implement location-based carbon intensity when API is configured
+				const carbonIntensity = { carbonIntensity: 367 };
 				let carbonForAnnualPower = this.powerOnGrid(
 					carbonIntensity,
 					electricityUsage
@@ -90,6 +106,24 @@ class HomeClass {
 					home.carbonFromAnnualOil = roundedNum;
 				} else {
 					home.carbonFromAnnualOil = null;
+				}
+
+				if (home.propane === "yes" && home.propaneUsage) {
+					const propaneUsage = Number(home.propaneUsage);
+					const carbonFromPropane = this.co2FromPropane(propaneUsage);
+					totalAnnualCarbon += carbonFromPropane;
+					home.carbonFromAnnualPropane = carbonFromPropane.toFixed(2);
+				} else {
+					home.carbonFromAnnualPropane = null;
+				}
+
+				if (home.wood === "yes" && home.woodUsage) {
+					const woodUsage = Number(home.woodUsage);
+					const carbonFromWood = this.co2FromWood(woodUsage, home.woodType || "firewood");
+					totalAnnualCarbon += carbonFromWood;
+					home.carbonFromAnnualWood = carbonFromWood.toFixed(2);
+				} else {
+					home.carbonFromAnnualWood = null;
 				}
 
 				if (home.batteryBackup === "yes") {

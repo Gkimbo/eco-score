@@ -19,6 +19,12 @@ class HomeSerializer {
 			"oil",
 			"batteryBankSize",
 			"batteryBackup",
+			"propane",
+			"propaneUsage",
+			"wood",
+			"woodUsage",
+			"woodType",
+			"electricHeat",
 		];
 		const serializedHome = homeArray.map((home) => {
 			const newHome = {};

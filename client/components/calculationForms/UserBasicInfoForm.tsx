@@ -1,13 +1,31 @@
 import React, { useState, useContext, useEffect } from "react";
-import { View, Text, ScrollView, Switch, Pressable } from "react-native";
-import { TextInput, RadioButton } from "react-native-paper";
-import RNPickerSelect from "react-native-picker-select";
+import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
+import { TextInput, Checkbox } from "react-native-paper";
 import { AuthContext } from "../../services/AuthContext";
 import FetchData from "../../services/fetchData";
-import UserFormStyles from "../../services/styles/UserInputFormStyle";
-import pickerSelectStyles from "../../services/styles/PickerSelectStyles";
 import { useNavigate } from "react-router-native";
 import DeleteData from "../../services/DeleteData";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { colors, spacing, borderRadius, typography, shadows } from "../../services/styles/theme";
+
+const MILES_DRIVEN_OPTIONS = [
+	{ label: "< 5k", fullLabel: "Less than 5,000", value: "5000" },
+	{ label: "5-10k", fullLabel: "5,000 - 10,000", value: "7500" },
+	{ label: "10-15k", fullLabel: "10,000 - 15,000", value: "12500" },
+	{ label: "15-20k", fullLabel: "15,000 - 20,000", value: "17500" },
+	{ label: "20-30k", fullLabel: "20,000 - 30,000", value: "25000" },
+	{ label: "30k+", fullLabel: "More than 30,000", value: "35000" },
+];
+
+const TRANSPORTATION_OPTIONS = [
+	{ label: "Car", value: "drive own car", icon: "🚗" },
+	{ label: "Train", value: "train", icon: "🚆" },
+	{ label: "Bus", value: "bus", icon: "🚌" },
+	{ label: "Walk", value: "walk", icon: "🚶" },
+	{ label: "Bike", value: "bicycle", icon: "🚲" },
+	{ label: "Scooter", value: "electric scooter", icon: "🛴" },
+	{ label: "Rideshare", value: "ride share", icon: "🚕" },
+];
 
 export interface IAppProps {
 	isDrawerOpen: any;
@@ -38,7 +56,9 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 	state,
 }) => {
 	const { user } = useContext(AuthContext);
+	const insets = useSafeAreaInsets();
 	const [redirect, setRedirect] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
 	const [userBasicInfo, setUserBasicInfo] = useState<UserBasicInfo>({
 		user: user,
 		zipcode: "",
@@ -53,62 +73,64 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 	const navigate = useNavigate();
 
 	const handleLocationChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, zipcode: text }));
+		const numericText = text.replace(/[^0-9]/g, '');
+		setUserBasicInfo((prevState) => ({ ...prevState, zipcode: numericText }));
+		if (numericText.length === 5) {
+			setError(null);
+		}
 	};
 
-	const handleHomeOwnershipChange = (value: string) => {
+	const handleHomeOwnershipChange = (value: "rent" | "own") => {
 		setUserBasicInfo((prevState) => ({
 			...prevState,
-			homeOwnership: value as "rent" | "own",
+			homeOwnership: value,
 		}));
 	};
 
-	const handleMilesDrivenChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, milesDriven: text }));
+	const handleMilesDrivenChange = (value: string) => {
+		setUserBasicInfo((prevState) => ({ ...prevState, milesDriven: value }));
 	};
 
-	const handleMilesDrivenUnitChange = (
-		unit: "yearly" | "monthly" | "daily"
-	) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, milesDrivenUnit: unit }));
-	};
-
-	const handleCommuteChange = (text: string) => {
+	const handleCommuteChange = (value: string) => {
 		setUserBasicInfo((prevState) => ({
 			...prevState,
-			commute: text,
+			commute: value,
 		}));
 	};
 
-	const handleHasCarChange = (text: string) => {
+	const handleHasCarChange = (value: string) => {
 		setUserBasicInfo((prevState) => ({
 			...prevState,
-			hasCar: text,
+			hasCar: value,
 		}));
 	};
 
-	const handleTransportationChange = (
-		unit:
-			| "drive own car"
-			| "train"
-			| "bus"
-			| "walk"
-			| "bicycle"
-			| "electric scooter"
-			| "ride share"
-	) => {
+	const handleTransportationChange = (value: any) => {
 		setUserBasicInfo((prevState) => ({
 			...prevState,
-			transportation: unit,
+			transportation: value,
 		}));
 	};
 
-	const handleDaysCommuteChange = (text: string) => {
-		setUserBasicInfo((prevState) => ({ ...prevState, daysCommute: text }));
+	const handleDaysCommuteChange = (value: string) => {
+		setUserBasicInfo((prevState) => ({ ...prevState, daysCommute: value }));
 	};
 
-	const handleSubmit = (event: any) => {
-		event.preventDefault();
+	const handleSubmit = () => {
+		if (!userBasicInfo.zipcode || userBasicInfo.zipcode.length !== 5) {
+			setError("Please enter a valid 5-digit zipcode");
+			return;
+		}
+		if (userBasicInfo.hasCar === "yes" && !userBasicInfo.milesDriven) {
+			setError("Please select how many miles you drive");
+			return;
+		}
+		if (userBasicInfo.commute === "yes" && !userBasicInfo.daysCommute) {
+			setError("Please select how many days you commute");
+			return;
+		}
+
+		setError(null);
 		if (!state.userInformation) {
 			FetchData.addBasicInfo(userBasicInfo).then((response) => {
 				if (response.user) {
@@ -116,13 +138,11 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 				}
 			});
 		} else {
-			const updateUser = DeleteData.updateUserInfo(userBasicInfo).then(
-				(response) => {
-					if (response) {
-						setRedirect(true);
-					}
+			DeleteData.updateUserInfo(userBasicInfo).then((response) => {
+				if (response) {
+					setRedirect(true);
 				}
-			);
+			});
 		}
 	};
 
@@ -132,179 +152,431 @@ const UserBasicInfoForm: React.FunctionComponent<IAppProps> = ({
 			setRedirect(false);
 		}
 	}, [redirect]);
+
 	return (
-		<ScrollView contentContainerStyle={UserFormStyles.container}>
-			<form onSubmit={handleSubmit}>
-				<View>
-					<Text style={UserFormStyles.title}>User Basic Info form page</Text>
-					<Text style={UserFormStyles.subtitle}>Where do you live?</Text>
-					<TextInput
-						mode="outlined"
-						placeholder="Please Type your zipcode"
-						value={userBasicInfo.zipcode}
-						onChangeText={handleLocationChange}
-						style={{
-							...UserFormStyles.input,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-						}}
-					/>
-					<Text style={UserFormStyles.subtitle}>Do you rent or own?</Text>
-					<RNPickerSelect
-						value={userBasicInfo.homeOwnership}
-						onValueChange={handleHomeOwnershipChange}
-						style={pickerSelectStyles}
-						items={[
-							{ label: "Rent", value: "rent" },
-							{ label: "Own", value: "own" },
-						]}
-					/>
-					<View style={UserFormStyles.commuteContainer}>
-						<Text style={UserFormStyles.subtitle}>Do you have a car?</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							}}
-						>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleHasCarChange}
-									value={userBasicInfo.hasCar}
-								>
-									<RadioButton.Item label="Yes" value="yes" />
-								</RadioButton.Group>
-							</View>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleHasCarChange}
-									value={userBasicInfo.hasCar}
-								>
-									<RadioButton.Item label="No" value="no" />
-								</RadioButton.Group>
-							</View>
-						</View>
-					</View>
-					<View>
-						<Text style={UserFormStyles.subtitle}>
-							How many miles do you drive?
-						</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: "#000",
-								borderRadius: 5,
-								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-								padding: 5,
-							}}
-						>
-							<TextInput
-								value={userBasicInfo.milesDriven}
-								onChangeText={handleMilesDrivenChange}
-								style={{
-									...UserFormStyles.input,
-									borderWidth: 0,
-									backgroundColor: "transparent",
-								}}
-							/>
-							<View style={{ marginTop: 10 }}>
-								<RNPickerSelect
-									value={userBasicInfo.milesDrivenUnit}
-									onValueChange={handleMilesDrivenUnitChange}
-									style={pickerSelectStyles}
-									items={[
-										{ label: "Yearly", value: "yearly" },
-										{ label: "Monthly", value: "monthly" },
-										{ label: "Daily", value: "daily" },
-									]}
-								/>
-							</View>
-						</View>
-					</View>
+		<ScrollView
+			style={styles.scrollView}
+			contentContainerStyle={[styles.container, { paddingTop: insets.top + 80 }]}
+			showsVerticalScrollIndicator={false}
+		>
+			{/* Header */}
+			<View style={styles.header}>
+				<Text style={styles.headerTitle}>Tell Us About You</Text>
+				<Text style={styles.headerSubtitle}>
+					Help us calculate your carbon footprint
+				</Text>
+			</View>
 
-					<View style={UserFormStyles.commuteContainer}>
-						<Text style={UserFormStyles.subtitle}>Do you commute to work?</Text>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#fff",
-							}}
-						>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleCommuteChange}
-									value={userBasicInfo.commute}
-								>
-									<RadioButton.Item label="Yes" value="yes" />
-								</RadioButton.Group>
-							</View>
-							<View>
-								<RadioButton.Group
-									onValueChange={handleCommuteChange}
-									value={userBasicInfo.commute}
-								>
-									<RadioButton.Item label="No" value="no" />
-								</RadioButton.Group>
-							</View>
-						</View>
-
-						{userBasicInfo.commute === "yes" && (
-							<>
-								<Text style={UserFormStyles.subtitle}>
-									How many days a week do you commute?
-								</Text>
-								<TextInput
-									mode="outlined"
-									value={userBasicInfo.daysCommute}
-									onChangeText={handleDaysCommuteChange}
-									style={{
-										...UserFormStyles.input,
-										backgroundColor: isDrawerOpen
-											? "rgba(0, 0, 0, 0.5)"
-											: "#fff",
-									}}
-								/>
-								<Text style={UserFormStyles.subtitle}>
-									Mode of transportation.
-								</Text>
-								<RNPickerSelect
-									value={userBasicInfo.transportation}
-									onValueChange={handleTransportationChange}
-									style={pickerSelectStyles}
-									items={[
-										{ label: "Drive own car", value: "drive own car" },
-										{ label: "Train", value: "train" },
-										{ label: "Bus", value: "bus" },
-										{ label: "Walk", value: "walk" },
-										{ label: "Bicycle", value: "bicycle" },
-										{ label: "Electric Scooter", value: "electric scooter" },
-										{
-											label: "Ride Share: Uber, Lyft or equivalent",
-											value: "ride share",
-										},
-									]}
-								/>
-							</>
-						)}
-					</View>
+			{/* Location Card */}
+			<View style={styles.card}>
+				<View style={styles.cardHeader}>
+					<Text style={styles.cardIcon}>📍</Text>
+					<Text style={styles.cardTitle}>Location</Text>
 				</View>
-				<Pressable onPress={handleSubmit}>
-					<Text
-						style={{
-							...UserFormStyles.button,
-							backgroundColor: isDrawerOpen ? "rgba(0, 0, 0, 0.5)" : "#f9bc60",
-						}}
+				<Text style={styles.label}>What's your zipcode?</Text>
+				<TextInput
+					mode="outlined"
+					placeholder="12345"
+					value={userBasicInfo.zipcode}
+					onChangeText={handleLocationChange}
+					keyboardType="numeric"
+					maxLength={5}
+					style={styles.textInput}
+					outlineColor={colors.border}
+					activeOutlineColor={colors.primary}
+					outlineStyle={{ borderRadius: borderRadius.md }}
+				/>
+			</View>
+
+			{/* Housing Card */}
+			<View style={styles.card}>
+				<View style={styles.cardHeader}>
+					<Text style={styles.cardIcon}>🏠</Text>
+					<Text style={styles.cardTitle}>Housing</Text>
+				</View>
+				<Text style={styles.label}>Do you rent or own?</Text>
+				<View style={styles.segmentedControl}>
+					<Pressable
+						style={[
+							styles.segmentButton,
+							userBasicInfo.homeOwnership === "rent" && styles.segmentButtonActive,
+						]}
+						onPress={() => handleHomeOwnershipChange("rent")}
 					>
-						Submit
-					</Text>
+						<Text style={styles.segmentIcon}>🔑</Text>
+						<Text
+							style={[
+								styles.segmentText,
+								userBasicInfo.homeOwnership === "rent" && styles.segmentTextActive,
+							]}
+						>
+							Rent
+						</Text>
+					</Pressable>
+					<Pressable
+						style={[
+							styles.segmentButton,
+							userBasicInfo.homeOwnership === "own" && styles.segmentButtonActive,
+						]}
+						onPress={() => handleHomeOwnershipChange("own")}
+					>
+						<Text style={styles.segmentIcon}>🏡</Text>
+						<Text
+							style={[
+								styles.segmentText,
+								userBasicInfo.homeOwnership === "own" && styles.segmentTextActive,
+							]}
+						>
+							Own
+						</Text>
+					</Pressable>
+				</View>
+			</View>
+
+			{/* Transportation Card */}
+			<View style={styles.card}>
+				<View style={styles.cardHeader}>
+					<Text style={styles.cardIcon}>🚗</Text>
+					<Text style={styles.cardTitle}>Transportation</Text>
+				</View>
+
+				<Pressable
+					style={styles.checkboxRow}
+					onPress={() => handleHasCarChange(userBasicInfo.hasCar === "yes" ? "no" : "yes")}
+				>
+					<Checkbox
+						status={userBasicInfo.hasCar === "yes" ? "checked" : "unchecked"}
+						onPress={() => handleHasCarChange(userBasicInfo.hasCar === "yes" ? "no" : "yes")}
+						color={colors.primary}
+					/>
+					<Text style={styles.checkboxLabel}>I have a car</Text>
 				</Pressable>
-			</form>
+
+				{userBasicInfo.hasCar === "yes" && (
+					<View style={styles.subSection}>
+						<Text style={styles.label}>Miles driven per year</Text>
+						<View style={styles.chipGrid}>
+							{MILES_DRIVEN_OPTIONS.map((option) => (
+								<Pressable
+									key={option.value}
+									style={[
+										styles.chip,
+										userBasicInfo.milesDriven === option.value && styles.chipActive,
+									]}
+									onPress={() => handleMilesDrivenChange(option.value)}
+								>
+									<Text
+										style={[
+											styles.chipText,
+											userBasicInfo.milesDriven === option.value && styles.chipTextActive,
+										]}
+									>
+										{option.label}
+									</Text>
+								</Pressable>
+							))}
+						</View>
+					</View>
+				)}
+			</View>
+
+			{/* Commute Card */}
+			<View style={styles.card}>
+				<View style={styles.cardHeader}>
+					<Text style={styles.cardIcon}>💼</Text>
+					<Text style={styles.cardTitle}>Work Commute</Text>
+				</View>
+
+				<Pressable
+					style={styles.checkboxRow}
+					onPress={() => handleCommuteChange(userBasicInfo.commute === "yes" ? "no" : "yes")}
+				>
+					<Checkbox
+						status={userBasicInfo.commute === "yes" ? "checked" : "unchecked"}
+						onPress={() => handleCommuteChange(userBasicInfo.commute === "yes" ? "no" : "yes")}
+						color={colors.primary}
+					/>
+					<Text style={styles.checkboxLabel}>I commute to work</Text>
+				</Pressable>
+
+				{userBasicInfo.commute === "yes" && (
+					<View style={styles.subSection}>
+						<Text style={styles.label}>Days per week</Text>
+						<View style={styles.daysRow}>
+							{[1, 2, 3, 4, 5, 6, 7].map((day) => (
+								<Pressable
+									key={day}
+									style={[
+										styles.dayButton,
+										userBasicInfo.daysCommute === String(day) && styles.dayButtonActive,
+									]}
+									onPress={() => handleDaysCommuteChange(String(day))}
+								>
+									<Text
+										style={[
+											styles.dayText,
+											userBasicInfo.daysCommute === String(day) && styles.dayTextActive,
+										]}
+									>
+										{day}
+									</Text>
+								</Pressable>
+							))}
+						</View>
+
+						<Text style={[styles.label, { marginTop: spacing.md }]}>How do you get there?</Text>
+						<View style={styles.transportGrid}>
+							{TRANSPORTATION_OPTIONS.map((option) => (
+								<Pressable
+									key={option.value}
+									style={[
+										styles.transportButton,
+										userBasicInfo.transportation === option.value && styles.transportButtonActive,
+									]}
+									onPress={() => handleTransportationChange(option.value)}
+								>
+									<Text style={styles.transportIcon}>{option.icon}</Text>
+									<Text
+										style={[
+											styles.transportText,
+											userBasicInfo.transportation === option.value && styles.transportTextActive,
+										]}
+									>
+										{option.label}
+									</Text>
+								</Pressable>
+							))}
+						</View>
+					</View>
+				)}
+			</View>
+
+			{/* Error Message */}
+			{error && (
+				<View style={styles.errorContainer}>
+					<Text style={styles.errorText}>{error}</Text>
+				</View>
+			)}
+
+			{/* Submit Button */}
+			<Pressable style={styles.submitButton} onPress={handleSubmit}>
+				<Text style={styles.submitButtonText}>Save Information</Text>
+			</Pressable>
+
+			<View style={{ height: insets.bottom + 40 }} />
 		</ScrollView>
 	);
 };
+
+const styles = StyleSheet.create({
+	scrollView: {
+		flex: 1,
+		backgroundColor: colors.background,
+	},
+	container: {
+		paddingHorizontal: spacing.md,
+		paddingBottom: spacing.xl,
+	},
+	header: {
+		marginBottom: spacing.lg,
+		alignItems: "center",
+	},
+	headerTitle: {
+		fontSize: typography.fontSizes.xxxl,
+		fontWeight: typography.fontWeights.bold,
+		color: colors.primaryDark,
+		marginBottom: spacing.xs,
+	},
+	headerSubtitle: {
+		fontSize: typography.fontSizes.lg,
+		color: colors.textSecondary,
+	},
+	card: {
+		backgroundColor: colors.surface,
+		borderRadius: borderRadius.lg,
+		padding: spacing.lg,
+		marginBottom: spacing.md,
+		...shadows.sm,
+	},
+	cardHeader: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginBottom: spacing.md,
+	},
+	cardIcon: {
+		fontSize: 24,
+		marginRight: spacing.sm,
+	},
+	cardTitle: {
+		fontSize: typography.fontSizes.xl,
+		fontWeight: typography.fontWeights.semibold,
+		color: colors.textPrimary,
+	},
+	label: {
+		fontSize: typography.fontSizes.md,
+		color: colors.textSecondary,
+		marginBottom: spacing.sm,
+	},
+	textInput: {
+		backgroundColor: colors.surface,
+		fontSize: typography.fontSizes.lg,
+	},
+	segmentedControl: {
+		flexDirection: "row",
+		gap: spacing.sm,
+	},
+	segmentButton: {
+		flex: 1,
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		paddingVertical: spacing.md,
+		paddingHorizontal: spacing.md,
+		borderRadius: borderRadius.md,
+		backgroundColor: colors.backgroundDark,
+		borderWidth: 2,
+		borderColor: "transparent",
+	},
+	segmentButtonActive: {
+		backgroundColor: colors.primarySoft + "30",
+		borderColor: colors.primary,
+	},
+	segmentIcon: {
+		fontSize: 20,
+		marginRight: spacing.sm,
+	},
+	segmentText: {
+		fontSize: typography.fontSizes.lg,
+		fontWeight: typography.fontWeights.medium,
+		color: colors.textSecondary,
+	},
+	segmentTextActive: {
+		color: colors.primary,
+		fontWeight: typography.fontWeights.semibold,
+	},
+	checkboxRow: {
+		flexDirection: "row",
+		alignItems: "center",
+		paddingVertical: spacing.xs,
+	},
+	checkboxLabel: {
+		fontSize: typography.fontSizes.lg,
+		color: colors.textPrimary,
+		marginLeft: spacing.xs,
+	},
+	subSection: {
+		marginTop: spacing.md,
+		paddingTop: spacing.md,
+		borderTopWidth: 1,
+		borderTopColor: colors.divider,
+	},
+	chipGrid: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		gap: spacing.sm,
+	},
+	chip: {
+		paddingVertical: spacing.sm,
+		paddingHorizontal: spacing.md,
+		borderRadius: borderRadius.full,
+		backgroundColor: colors.backgroundDark,
+		borderWidth: 1,
+		borderColor: colors.border,
+	},
+	chipActive: {
+		backgroundColor: colors.primary,
+		borderColor: colors.primary,
+	},
+	chipText: {
+		fontSize: typography.fontSizes.md,
+		fontWeight: typography.fontWeights.medium,
+		color: colors.textSecondary,
+	},
+	chipTextActive: {
+		color: colors.textOnPrimary,
+	},
+	daysRow: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+	},
+	dayButton: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: colors.backgroundDark,
+		justifyContent: "center",
+		alignItems: "center",
+		borderWidth: 1,
+		borderColor: colors.border,
+	},
+	dayButtonActive: {
+		backgroundColor: colors.primary,
+		borderColor: colors.primary,
+	},
+	dayText: {
+		fontSize: typography.fontSizes.lg,
+		fontWeight: typography.fontWeights.semibold,
+		color: colors.textSecondary,
+	},
+	dayTextActive: {
+		color: colors.textOnPrimary,
+	},
+	transportGrid: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		gap: spacing.sm,
+	},
+	transportButton: {
+		width: "30%",
+		paddingVertical: spacing.md,
+		borderRadius: borderRadius.md,
+		backgroundColor: colors.backgroundDark,
+		alignItems: "center",
+		borderWidth: 2,
+		borderColor: "transparent",
+	},
+	transportButtonActive: {
+		backgroundColor: colors.primarySoft + "30",
+		borderColor: colors.primary,
+	},
+	transportIcon: {
+		fontSize: 24,
+		marginBottom: spacing.xs,
+	},
+	transportText: {
+		fontSize: typography.fontSizes.sm,
+		fontWeight: typography.fontWeights.medium,
+		color: colors.textSecondary,
+	},
+	transportTextActive: {
+		color: colors.primary,
+		fontWeight: typography.fontWeights.semibold,
+	},
+	errorContainer: {
+		backgroundColor: colors.error + "15",
+		borderRadius: borderRadius.md,
+		padding: spacing.md,
+		marginBottom: spacing.md,
+		borderLeftWidth: 4,
+		borderLeftColor: colors.error,
+	},
+	errorText: {
+		color: colors.error,
+		fontSize: typography.fontSizes.md,
+		fontWeight: typography.fontWeights.medium,
+	},
+	submitButton: {
+		backgroundColor: colors.primary,
+		paddingVertical: spacing.lg,
+		borderRadius: borderRadius.lg,
+		alignItems: "center",
+		...shadows.md,
+	},
+	submitButtonText: {
+		color: colors.textOnPrimary,
+		fontSize: typography.fontSizes.xl,
+		fontWeight: typography.fontWeights.bold,
+	},
+});
 
 export default UserBasicInfoForm;

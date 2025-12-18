@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Text, Pressable, ViewStyle, TextStyle } from "react-native";
+import React from "react";
+import { Text, Pressable, StyleSheet, View } from "react-native";
 import { useNavigate } from "react-router-native";
 import { Star } from "lucide-react-native";
+import { colors, borderRadius, shadows, spacing, typography } from "../../services/styles/theme";
 
 export interface IAppProps {
 	setIsDrawerOpen: any;
@@ -10,49 +11,54 @@ export interface IAppProps {
 const RewardsButton: React.FunctionComponent<IAppProps> = ({
 	setIsDrawerOpen,
 }) => {
-	const [redirect, setRedirect] = useState<boolean>(false);
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (redirect) {
-			setIsDrawerOpen(false);
-			navigate("/rewards");
-			setRedirect(false);
-		}
-	}, [redirect]);
-
 	const handlePress = () => {
-		setRedirect(true);
+		setIsDrawerOpen(false);
+		navigate("/rewards");
 	};
 
 	return (
 		<Pressable style={styles.button} onPress={handlePress}>
-			<Star color="yellow" size={20} />
+			<View style={styles.iconContainer}>
+				<Star color={colors.highlight} fill={colors.highlight} size={20} />
+			</View>
 			<Text style={styles.buttonText}>Your Rewards</Text>
+			<View style={styles.badge}>
+				<Star color={colors.highlight} fill={colors.highlight} size={12} />
+			</View>
 		</Pressable>
 	);
 };
 
-interface Styles {
-	button: ViewStyle;
-	buttonText: TextStyle; // Separate TextStyle for text styles
-}
-
-const styles: Styles = {
+const styles = StyleSheet.create({
 	button: {
-		backgroundColor: "grey",
-		padding: 10,
-		borderRadius: 50,
-		margin: 10,
+		flexDirection: "row",
 		alignItems: "center",
+		backgroundColor: colors.primaryDark,
+		padding: spacing.md,
+		borderRadius: borderRadius.lg,
+		marginVertical: spacing.xs,
+		...shadows.md,
+	},
+	iconContainer: {
+		width: 36,
+		height: 36,
+		borderRadius: borderRadius.full,
+		backgroundColor: colors.primary,
 		justifyContent: "center",
-		width: "50%",
-		height: "20%",
+		alignItems: "center",
+		marginRight: spacing.md,
 	},
 	buttonText: {
-		color: "black",
-		fontSize: 15,
+		flex: 1,
+		color: colors.textOnPrimary,
+		fontSize: typography.fontSizes.lg,
+		fontWeight: typography.fontWeights.semibold,
 	},
-};
+	badge: {
+		padding: spacing.xs,
+	},
+});
 
 export default RewardsButton;
