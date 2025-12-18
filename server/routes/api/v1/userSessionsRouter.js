@@ -40,10 +40,10 @@ sessionRouter.post("/login", async (req, res) => {
 					}
 				});
 			} else {
-				res.status(401).json("Invalid password");
+				res.status(401).json({ error: "Invalid password" });
 			}
 		} else {
-			res.status(404).json("No Username");
+			res.status(404).json({ error: "No Username" });
 		}
 	} catch (error) {
 		console.error(error);

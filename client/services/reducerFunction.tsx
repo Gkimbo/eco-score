@@ -98,7 +98,6 @@ const reducer = (state: any, action: any) => {
 				...state,
 				tipsRead: action.payload,
 			};
-
 		default:
 			throw new Error();
 	}

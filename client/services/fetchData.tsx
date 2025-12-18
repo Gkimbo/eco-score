@@ -42,6 +42,10 @@ interface Tree {
 	user: user;
 }
 
+interface Time {
+	user: user;
+}
+
 interface Stars {
 	user: user;
 	rewards: number;

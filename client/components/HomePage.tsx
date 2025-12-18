@@ -14,18 +14,27 @@ import { colors, borderRadius, shadows, spacing, typography } from "../services/
 export interface IAppProps {
 	state: any;
 	dispatch: any;
-	isDrawerOpen: any;
+	isDrawerOpen: boolean;
+	lastLoginTimestamp: string;
+	setLastLoginTimestamp: any;
+	rewardsWindow: boolean;
+	setRewardsWindow: any;
 }
 
 const HomePage: React.FunctionComponent<IAppProps> = ({
 	state,
 	dispatch,
 	isDrawerOpen,
+	lastLoginTimestamp,
+	setLastLoginTimestamp,
+	rewardsWindow,
+	setRewardsWindow,
 }) => {
 	const [carCarbon, setCarCarbon] = useState<number>(0);
 	const [homeCarbon, setHomeCarbon] = useState<number>(0);
 	const [treeCarbon, setTreeCarbon] = useState<number>(0);
 	const [isBlurred, setIsBlurred] = useState<boolean>(false);
+
 	const navigate = useNavigate();
 
 	let totalCarbon = carCarbon + homeCarbon - treeCarbon;
@@ -63,6 +72,10 @@ const HomePage: React.FunctionComponent<IAppProps> = ({
 	const homes = state.homes.map((home: Home) => {
 		return <HomeHighlights key={home.id} home={home} isBlurred={isBlurred} />;
 	});
+
+	const handleRewards = () => {
+		setRewardsWindow(false);
+	};
 
 	useEffect(() => {
 		const totalCarbon = state.cars.reduce((total: any, car: any) => {

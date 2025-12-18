@@ -4,7 +4,7 @@ const HomeSerializer = require("./homesSerializer");
 
 class UserSerializer {
 	static serializeOne(user) {
-		const allowedAttributes = ["id", "email", "username"];
+		const allowedAttributes = ["id", "email", "username", "lastLogin"];
 		const serializedUser = {};
 		let information;
 		let cars = [];
